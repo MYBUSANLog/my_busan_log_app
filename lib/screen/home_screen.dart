@@ -45,6 +45,60 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 20,),
             sliderWidget(),
+            SizedBox(height: 30,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Icon(Icons.hotel, size: 35),
+                        Text('호텔', style: TextStyle(fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Icon(Icons.attractions_outlined, size: 35),
+                        Text('테마파크', style: TextStyle(fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Icon(Icons.vrpano_outlined, size: 35),
+                        Text('전시회', style: TextStyle(fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Icon(Icons.beach_access_outlined, size: 35),
+                        Text('휴양지', style: TextStyle(fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Icon(Icons.local_mall_outlined, size: 35),
+                        Text('복합쇼핑몰', style: TextStyle(fontSize: 13)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
