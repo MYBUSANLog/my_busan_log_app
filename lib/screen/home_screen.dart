@@ -99,6 +99,75 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 30,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('실시간 핫플레이스',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 23
+                  ),
+                ),
+                Text('더보기 >',
+                  style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w300,
+                      fontSize: 13,
+                      color: Colors.grey,
+                  ),
+                )
+              ],
+            ),
+            Divider(color: Colors.grey, thickness: 1.0,),
+            SizedBox(height: 10,),
+            Row(
+              children: [
+                Text('1',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    'https://naverbooking-phinf.pstatic.net/20231115_165/1700025251077cwP9b_JPEG/%C0%FC%BD%C3_%BF%AC%C0%E5_%C6%F7%BD%BA%C5%CD_1%B4%EB1_%B0%ED%C8%AD%C1%FA.jpg?type=w1500',
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('상실의 징후들',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                        Text('부산 해운대구 · 전시회',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                      ],
+                    )
+                )
+              ],
+            ),
           ],
         ),
       ),
@@ -115,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16.0), // 전체 슬라이더 모서리를 둥글게
+      borderRadius: BorderRadius.circular(15), // 전체 슬라이더 모서리를 둥글게
       child: CarouselSlider(
         carouselController: _controller,
         items: imgList.map(
@@ -125,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), // 이미지 컨테이너도 둥글게
+                    borderRadius: BorderRadius.circular(15), // 이미지 컨테이너도 둥글게
                   ),
                   child: ClipRRect(
                     child: Image.network(
