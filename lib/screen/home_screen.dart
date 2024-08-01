@@ -11,13 +11,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
-  int _selectedIndex = 0;
+  int _selectedIndex = 2; // 홈을 기본 선택으로 설정  영욱 수정
   final CarouselController _controller = CarouselController();
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    // 페이지 이동 처리 영욱 수정
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/restaurant'); // 맛집 페이지로 이동
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/ai_recommend'); // AI추천 페이지로 이동
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/home'); // 홈 페이지로 이동
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/notifications'); // 알림 페이지로 이동
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/profile'); // 프로필 페이지로 이동
+        break;
+    }
   }
 
   @override

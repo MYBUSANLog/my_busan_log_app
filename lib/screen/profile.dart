@@ -1,6 +1,37 @@
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  int _selectedIndex = 4; // 기본 프로필 선택
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/restaurant');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/ai_recommend');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/notifications');
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/profile');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             Divider(color: Colors.grey),
             ListTile(
-              leading: Icon(Icons.person, color: Colors.deepPurple),
+              leading: Icon(Icons.person, color: Colors.blueAccent),
               title: Text('프로필 변경', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -63,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.payment, color: Colors.deepPurple),
+              leading: Icon(Icons.payment, color: Colors.blueAccent),
               title: Text('결제', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -74,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.receipt, color: Colors.deepPurple),
+              leading: Icon(Icons.receipt, color: Colors.blueAccent),
               title: Text('결제내역', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -85,7 +116,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.favorite, color: Colors.deepPurple),
+              leading: Icon(Icons.favorite, color: Colors.blueAccent),
               title: Text('찜목록', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -96,7 +127,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.rate_review, color: Colors.deepPurple),
+              leading: Icon(Icons.rate_review, color: Colors.blueAccent),
               title: Text('내가 쓴 리뷰', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -107,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.bookmark, color: Colors.deepPurple),
+              leading: Icon(Icons.bookmark, color: Colors.blueAccent),
               title: Text('북마크 목록', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -118,7 +149,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.announcement, color: Colors.deepPurple),
+              leading: Icon(Icons.announcement, color: Colors.blueAccent),
               title: Text('공지사항', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -129,7 +160,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.support_agent, color: Colors.deepPurple),
+              leading: Icon(Icons.support_agent, color: Colors.blueAccent),
               title: Text('고객센터', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -140,7 +171,7 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings, color: Colors.deepPurple),
+              leading: Icon(Icons.settings, color: Colors.blueAccent),
               title: Text('환경 설정', style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontSize: 16,
@@ -158,7 +189,48 @@ class ProfileScreen extends StatelessWidget {
           Navigator.pushNamed(context, '/chatbot');
         },
         child: Icon(Icons.chat, color: Colors.white),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.blueAccent,
+      ),
+      // 추가된 부분
+      bottomNavigationBar: Container(
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Color(0xff0e4194),
+            selectedItemColor: Colors.amberAccent,
+            unselectedItemColor: Colors.white,
+            selectedLabelStyle: TextStyle(fontSize: 10),
+            unselectedLabelStyle: TextStyle(fontSize: 10),
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.location_on),
+                label: '맛집',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                label: 'AI추천',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: '홈',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.notifications),
+                label: '알림',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: '프로필',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+          ),
+        ),
       ),
     );
   }
