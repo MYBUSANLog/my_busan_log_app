@@ -51,11 +51,15 @@ class MyApp extends StatelessWidget {
       home: HomeScreen(),
       //영욱 추가
       routes: {
+        /* '/restaurant': (context) => RestaurantScreen(),
+        '/ai_recommend': (context) => AIRecommendScreen(),
+        '/notifications': (context) => NotificationsScreen(),*/
+        '/home': (context) => HomeScreen(),
+        '/profile': (context) => ProfileScreen(),
         '/chatbot': (context) => ChatbotScreen(),
         '/receipt': (context) => ReceiptScreen(),
         '/pay': (context) => PayScreen(),
         '/profile_alter': (context) => ProfileAlterScreen(),
-        '/profile': (context) => ProfileScreen(),
       },
     );
   }
