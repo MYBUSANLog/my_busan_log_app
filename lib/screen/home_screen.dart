@@ -510,13 +510,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(height: 35,),
                   Column(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          'https://i.namu.wiki/i/SfOtPBKLQsoKnp73v8bQ0llPsi9wuhM9HaIcf7TUjf5qNXjbjHPx4YKbJTsloZZiYCmEUnK8arhWXzaK-pQtIXKXi-HqZEk_QfQt0p0pmggqrYOOgOuIYGSDHEjI_LxiTJ1lH3AFaw6KAv7TznUbsw.webp',
+                          'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjVfNTUg%2FMDAxNzIxODkwNTkwMzU5.YEYe-tSqM0YZ4LcjruvVppEJF93Qhw2h_f3Slli_aEUg.lgD2YFS88Wy9BeCzykPo-dG70Q3j0AefL3RIDfQl5Zwg.JPEG%2F1721650628775-27.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,
@@ -527,7 +527,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(50),
                             child: Image.network(
-                              'https://i.pinimg.com/200x/76/17/5f/76175f3a4ec11409e2c7523f242600e8.jpg',
+                              'https://i.pinimg.com/564x/62/00/71/620071d0751e8cd562580a83ec834f7e.jpg',
                               width: 50,
                               height: 50,
                               fit: BoxFit.cover,
@@ -542,11 +542,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '달나라 초능력자',
+                                      '주먹밥 쿵야',
                                       style: TextStyle(
                                         fontFamily: 'NotoSansKR',
                                         fontWeight: FontWeight.w500,
                                         fontSize: 17,
+                                        height: 1.0,
                                       ),
                                     ),
                                     Row(
@@ -582,16 +583,428 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.w400,
                                         fontSize: 12,
                                         color: Colors.grey,
+                                        height: 1.0,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: 5,),
                               ],
                             ),
                           ),
                         ],
                       ),
+                      SizedBox(height: 20,),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjdfMjU3%2FMDAxNzIyMDg4MTA4NDc5.CFowxdIGwlqyEfClez78lX2QnZ_vFW-PHutczy3VoGgg.EoSDFqQ_7XbudIOZI11A6_G3UrpoaW8oT9v9eLyOVTUg.JPEG%2F20240727_200815.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              'https://i.namu.wiki/i/clJQ0OBQr88HLrgFfAX16QEt4I5ytWsY8yHugrmZFBMPgPKC8t36cvv6m5zati3zulvbGA9A4EFXeiymIXDO9w.webp',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '달나라 초능력자',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 17,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '1246',
+                                          style: TextStyle(
+                                            fontFamily: 'NotoSansKR',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
+                                    Text(
+                                      ' 롯데월드 어드벤처 부산',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5,),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MzFfMjk5%2FMDAxNzIyNDMwMDI2MTUz.gk0QqKwLsQoZIncKcRUH4de6o1XutMU6p7_4N7yPzvUg.5XQjGDfEPpPFP01V3ZKzsKiXvwvBd2f2apSx-VJlklUg.JPEG%2FAA000A0D-5566-4B0E-88FE-30963C65C18A.jpeg%3Ftype%3Dw1500_60_sharpen',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              'https://i.pinimg.com/564x/30/3a/d4/303ad402853e32eadb26df8de77612de.jpg',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '떡잎마을 신짱구',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 17,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '998',
+                                          style: TextStyle(
+                                            fontFamily: 'NotoSansKR',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
+                                    Text(
+                                      ' 스카이라인 루지',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5,),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjVfNTUg%2FMDAxNzIxODkwNTkwMzU5.YEYe-tSqM0YZ4LcjruvVppEJF93Qhw2h_f3Slli_aEUg.lgD2YFS88Wy9BeCzykPo-dG70Q3j0AefL3RIDfQl5Zwg.JPEG%2F1721650628775-27.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              'https://i.pinimg.com/564x/62/00/71/620071d0751e8cd562580a83ec834f7e.jpg',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '주먹밥 쿵야',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 17,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '1576',
+                                          style: TextStyle(
+                                            fontFamily: 'NotoSansKR',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
+                                    Text(
+                                      ' 해운대 해수욕장',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5,),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjdfMjU3%2FMDAxNzIyMDg4MTA4NDc5.CFowxdIGwlqyEfClez78lX2QnZ_vFW-PHutczy3VoGgg.EoSDFqQ_7XbudIOZI11A6_G3UrpoaW8oT9v9eLyOVTUg.JPEG%2F20240727_200815.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              'https://i.namu.wiki/i/clJQ0OBQr88HLrgFfAX16QEt4I5ytWsY8yHugrmZFBMPgPKC8t36cvv6m5zati3zulvbGA9A4EFXeiymIXDO9w.webp',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '달나라 초능력자',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 17,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '1246',
+                                          style: TextStyle(
+                                            fontFamily: 'NotoSansKR',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
+                                    Text(
+                                      ' 롯데월드 어드벤처 부산',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5,),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MzFfMjk5%2FMDAxNzIyNDMwMDI2MTUz.gk0QqKwLsQoZIncKcRUH4de6o1XutMU6p7_4N7yPzvUg.5XQjGDfEPpPFP01V3ZKzsKiXvwvBd2f2apSx-VJlklUg.JPEG%2FAA000A0D-5566-4B0E-88FE-30963C65C18A.jpeg%3Ftype%3Dw1500_60_sharpen',
+                          width: double.infinity,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              'https://i.pinimg.com/564x/30/3a/d4/303ad402853e32eadb26df8de77612de.jpg',
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '떡잎마을 신짱구',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 17,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            Icons.remove_red_eye,
+                                            size: 15,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        Text(
+                                          '998',
+                                          style: TextStyle(
+                                            fontFamily: 'NotoSansKR',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
+                                    Text(
+                                      ' 스카이라인 루지',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        height: 1.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5,),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
                     ],
                   )
                 ],
