@@ -52,6 +52,28 @@ class ProfileScreen extends StatelessWidget {
             ),
             Divider(color: Colors.grey),
             ListTile(
+              leading: Icon(Icons.person, color: Colors.deepPurple),
+              title: Text('프로필 변경', style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontSize: 16,
+                color: Colors.black,
+              )),
+              onTap: () {
+                Navigator.pushNamed(context, '/profile_alter');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.payment, color: Colors.deepPurple),
+              title: Text('결제', style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontSize: 16,
+                color: Colors.black,
+              )),
+              onTap: () {
+                Navigator.pushNamed(context, '/pay');
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.receipt, color: Colors.deepPurple),
               title: Text('결제내역', style: TextStyle(
                 fontFamily: 'NotoSansKR',
@@ -130,6 +152,13 @@ class ProfileScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/chatbot');
+        },
+        child: Icon(Icons.chat, color: Colors.white),
+        backgroundColor: Colors.deepPurple,
       ),
     );
   }
