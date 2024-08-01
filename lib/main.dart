@@ -1,6 +1,11 @@
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:busan_trip/screen/chatbot.dart';
+import 'package:busan_trip/screen/receipt.dart';
+import 'package:busan_trip/screen/pay.dart';
+import 'package:busan_trip/screen/profile_alter.dart';
+import 'package:busan_trip/screen/profile.dart';
 
 // 새로운 작업 123
 void main() {
@@ -44,6 +49,14 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: HomeScreen(),
+      //영욱 추가
+      routes: {
+        '/chatbot': (context) => ChatbotScreen(),
+        '/receipt': (context) => ReceiptScreen(),
+        '/pay': (context) => PayScreen(),
+        '/profile_alter': (context) => ProfileAlterScreen(),
+        '/profile': (context) => ProfileScreen(),
+      },
     );
   }
 }

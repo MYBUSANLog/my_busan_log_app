@@ -171,6 +171,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+//프로필 아이콘 영욱 추가
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        child: IconButton(
+          icon: Icon(Icons.person_outline, size: 35, color: Colors.deepPurple),
+          onPressed: () {
+            Navigator.pushNamed(context, '/profile');
+          },
+        ),
+      ),
     );
   }
 
