@@ -522,6 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fit: BoxFit.cover,
                         ),
                       ),
+                      SizedBox(height: 10,),
                       Row(
                         children: [
                           ClipRRect(
@@ -550,22 +551,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 1.0,
                                       ),
                                     ),
+
                                     Row(
                                       children: [
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.remove_red_eye,
-                                            size: 15,
-                                            color: Colors.grey,
-                                          ),
+                                        Icon(
+                                          Icons.remove_red_eye,
+                                          size: 20,
+                                          color: Colors.grey,
                                         ),
                                         Text(
-                                          '1576',
+                                          ' 1576',
                                           style: TextStyle(
                                             fontFamily: 'NotoSansKR',
                                             fontWeight: FontWeight.w500,
-                                            fontSize: 13,
+                                            fontSize: 15,
                                             color: Colors.grey,
                                           ),
                                         ),
@@ -573,6 +572,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ],
                                 ),
+
+                                SizedBox(height: 5,),
                                 Row(
                                   children: [
                                     Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
