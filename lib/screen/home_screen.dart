@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity,
               height: double.infinity,
               color: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   SizedBox(height: 80),
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                     height: 1.0,
-                                  ),
+                                  ), overflow: TextOverflow.ellipsis
                                 ),
                                 IconButton(
                                   onPressed: () {},
@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                     height: 1.0,
-                                  ),
+                                  ), overflow: TextOverflow.ellipsis
                                 ),
                                 IconButton(
                                   onPressed: () {},
@@ -315,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                     height: 1.0,
-                                  ),
+                                  ), overflow: TextOverflow.ellipsis
                                 ),
                                 IconButton(
                                   onPressed: () {},
@@ -388,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                     height: 1.0,
-                                  ),
+                                  ), overflow: TextOverflow.ellipsis
                                 ),
                                 IconButton(
                                   onPressed: () {},
@@ -461,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                     height: 1.0,
-                                  ),
+                                  ), overflow: TextOverflow.ellipsis
                                 ),
                                 IconButton(
                                   onPressed: () {},
