@@ -1,4 +1,5 @@
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Color(0xff0e4194),
+      systemNavigationBarColor: Colors.white,
     ));
 
     return MaterialApp(
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: RestaurantMap(),
       //영욱 추가
       routes: {
         '/chatbot': (context) => ChatbotScreen(),
