@@ -151,7 +151,6 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             },
           ),
         ),
-<<<<<<< HEAD
         body: Container(
           color: Colors.blue[50], // 배경색 변경
           padding: EdgeInsets.all(10), // 전체 패딩 추가
@@ -185,35 +184,6 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                             fontSize: 16,
                             height: 1.5,
                           ),
-=======
-        backgroundColor: Colors.blue[800], // 부산을 상징하는 파란색으로 변경
-        elevation: 0,
-      ),
-      body: Container(
-        color: Colors.white, // 배경색 변경 -> white로 통일
-        padding: EdgeInsets.all(10), // 전체 패딩 추가
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  final message = messages[index];
-                  return Align(
-                    alignment: message.isUser
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 5.0),
-                      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        color: message.isUser ? Colors.blue[600] : Colors.blue[200],
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.0),
-                          topRight: Radius.circular(15.0),
-                          bottomLeft: Radius.circular(message.isUser ? 15.0 : 0),
-                          bottomRight: Radius.circular(message.isUser ? 0 : 15.0),
->>>>>>> b9b8ee5eb9be6277643a2a636508a1fb43ca61a1
                         ),
                       ),
                     );

@@ -10,32 +10,12 @@ class RestaurantMap extends StatefulWidget {
 
 class _RestaurantMapState extends State<RestaurantMap> {
 
-  // home_screen copy(나현)
-  int _current = 0;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    // 페이지 이동 처리 영욱 수정
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/restaurant_map'); // 맛집 페이지로 이동
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/ai_recommend'); // AI추천 페이지로 이동
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/home'); // 홈 페이지로 이동
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/notifications'); // 알림 페이지로 이동
-        break;
-      case 4:
-        Navigator.pushNamed(context, '/profile'); // 프로필 페이지로 이동
-        break;
-    }
   }
 
   @override

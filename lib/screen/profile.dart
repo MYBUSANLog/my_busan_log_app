@@ -282,7 +282,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-<<<<<<< HEAD
         child: ClipRRect(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
@@ -315,31 +314,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
                 label: '프로필',
-=======
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/chatbot');
-        },
-        child: Icon(Icons.chat, color: Colors.white),
-        backgroundColor: Colors.blueAccent,
-      ),
-      // 추가된 부분
-      // bottomNavigationBar 디자인 변경
-      bottomNavigationBar: Container(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5), // Shadow color with opacity
-                offset: Offset(0, -2), // Offset the shadow upwards (top shadow effect)
-                blurRadius: 4.0, // Blur radius for the shadow
-                spreadRadius: 0, // Spread radius of the shadow
->>>>>>> b9b8ee5eb9be6277643a2a636508a1fb43ca61a1
               ),
             ],
             currentIndex: _selectedIndex,
