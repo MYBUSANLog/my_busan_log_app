@@ -1033,42 +1033,58 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Color(0xff0e4194),
-            selectedItemColor: Colors.amberAccent,
-            unselectedItemColor: Colors.white,
-            selectedLabelStyle: TextStyle(fontSize: 10),
-            unselectedLabelStyle: TextStyle(fontSize: 10),
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.location_on),
-                label: '맛집',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: 'AI추천',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: '홈',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: '알림',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: '프로필',
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5), // Shadow color with opacity
+                offset: Offset(0, -2), // Offset the shadow upwards (top shadow effect)
+                blurRadius: 4.0, // Blur radius for the shadow
+                spreadRadius: 0, // Spread radius of the shadow
               ),
             ],
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              selectedItemColor: Color(0xff0e4194),
+              unselectedItemColor: Colors.grey,
+              selectedLabelStyle: TextStyle(fontSize: 10),
+              unselectedLabelStyle: TextStyle(fontSize: 10),
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.location_on),
+                  label: '맛집',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.map),
+                  label: 'AI추천',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: '홈',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: '알림',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: '프로필',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+            ),
           ),
         ),
       ),
