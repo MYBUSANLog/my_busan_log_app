@@ -16,7 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/restaurant');
+        Navigator.pushNamed(context, '/restaurant_map');
         break;
       case 1:
         Navigator.pushNamed(context, '/ai_recommend');
