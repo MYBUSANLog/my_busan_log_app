@@ -7,10 +7,14 @@ import 'package:busan_trip/screen/receipt.dart';
 import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
-// 새로운 작업 123
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(
+    clientId: 'qzi0n4lbj9',
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -62,6 +66,7 @@ class MyApp extends StatelessWidget {
         '/receipt': (context) => ReceiptScreen(),
         '/pay': (context) => PayScreen(),
         '/profile_alter': (context) => ProfileAlterScreen(),
+        '/restaurant_map' : (context) => RestaurantMap(),
       },
     );
   }

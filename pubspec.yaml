@@ -41,7 +41,8 @@ dependencies:
   fluttertoast: ^8.2.6
   carousel_slider: ^4.2.1
   image_picker: ^0.8.4+8  # image_picker 패키지 영욱 추가
-  bootpay_api: 3.1.33 #결제 영욱 추가
+#  bootpay_api: 3.1.33 #결제 영욱 추가
+  flutter_naver_map: ^1.0.0
 
 dev_dependencies:
   flutter_test:

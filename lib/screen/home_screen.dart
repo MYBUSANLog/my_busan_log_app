@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // 페이지 이동 처리 영욱 수정
     switch (index) {
       case 0:
-        Navigator.pushNamed(context, '/restaurant'); // 맛집 페이지로 이동
+        Navigator.pushNamed(context, '/restaurant_map'); // 맛집 페이지로 이동
         break;
       case 1:
         Navigator.pushNamed(context, '/ai_recommend'); // AI추천 페이지로 이동

@@ -7,7 +7,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 4; // 기본 프로필 선택
-  Offset _fabOffset = Offset(1600, 130); // 초기 위치 설정
+  Offset _fabOffset = Offset(10, 10); // 초기 위치 설정
 
   void _onItemTapped(int index) {
     setState(() {
