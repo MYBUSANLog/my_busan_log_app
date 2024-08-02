@@ -49,7 +49,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: RestaurantMap(),
+      // home: RestaurantMap(), 위에 주석하고 아래 추가 영욱
+      initialRoute: '/home',
       //영욱 추가
       routes: {
         /* '/restaurant': (context) => RestaurantScreen(),
