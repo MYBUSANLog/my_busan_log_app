@@ -49,228 +49,232 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView( // SingleChildScrollView 설정(나현)
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height, // 최소 높이 설정(나현)
-          ),
-          child: IntrinsicHeight(
-            child: Container(
-              color: Colors.white,
-              width: double.infinity,
-              height: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                      'https://example.com/your_profile_image.jpg',
-                    ),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          color: Colors.black,
+      body: Stack(
+        children: [
+          SingleChildScrollView( // SingleChildScrollView 설정(나현)
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height, // 최소 높이 설정(나현)
+              ),
+              child: IntrinsicHeight(
+                child: Container(
+                  color: Colors.white,
+                  width: double.infinity,
+                  height: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                          'https://example.com/your_profile_image.jpg',
                         ),
-                        onPressed: () {
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/profile_alter');
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '설정',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 13), // 아래로 패딩 추가
+                      // Divider(color: Colors.grey), 설정 라인 회색 줄
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0), // 여기서 패딩을 설정합니다.
+                        leading: Icon(Icons.person, color: Colors.blueAccent),
+                        title: Text(
+                          '프로필 변경',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
                           Navigator.pushNamed(context, '/profile_alter');
                         },
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '설정',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 13), // 아래로 패딩 추가
-                  // Divider(color: Colors.grey), 설정 라인 회색 줄
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0), // 여기서 패딩을 설정합니다.
-                    leading: Icon(Icons.person, color: Colors.blueAccent),
-                    title: Text(
-                      '프로필 변경',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/profile_alter');
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7), // 여기서 시작 위치를 설정합니다.
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.payment, color: Colors.blueAccent),
-                    title: Text(
-                      '결제',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/pay');
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.receipt, color: Colors.blueAccent),
-                    title: Text(
-                      '결제내역',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/receipt');
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.favorite, color: Colors.blueAccent),
-                    title: Text(
-                      '찜목록',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // 찜목록 화면으로 이동
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.rate_review, color: Colors.blueAccent),
-                    title: Text(
-                      '내가 쓴 리뷰',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // 내가 쓴 리뷰 화면으로 이동
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.bookmark, color: Colors.blueAccent),
-                    title: Text(
-                      '북마크 목록',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // 북마크 목록 화면으로 이동
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.announcement, color: Colors.blueAccent),
-                    title: Text(
-                      '공지사항',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // 공지사항 화면으로 이동
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.support_agent, color: Colors.blueAccent),
-                    title: Text(
-                      '고객센터',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // 고객센터 화면으로 이동
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                    leading: Icon(Icons.settings, color: Colors.blueAccent),
-                    title: Text(
-                      '환경 설정',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    onTap: () {
-                      // 환경 설정 화면으로 이동
-                    },
-                  ),
-                  Divider(color: Colors.black, thickness: 0.5, indent: 7),
-                  Positioned(
-                    left: _fabOffset.dx,
-                    top: _fabOffset.dy,
-                    child: Draggable(
-                      feedback: FloatingActionButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/chatbot');
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7), // 여기서 시작 위치를 설정합니다.
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.payment, color: Colors.blueAccent),
+                        title: Text(
+                          '결제',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/pay');
                         },
-                        child: Icon(Icons.chat, color: Colors.white),
-                        backgroundColor: Colors.blueAccent,
                       ),
-                      childWhenDragging: Container(),
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/chatbot');
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.receipt, color: Colors.blueAccent),
+                        title: Text(
+                          '결제내역',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context, '/receipt');
                         },
-                        child: Icon(Icons.chat, color: Colors.white),
-                        backgroundColor: Colors.blueAccent,
                       ),
-                      onDragEnd: (details) {
-                        setState(() {
-                          _fabOffset = details.offset;
-                        });
-                      },
-                    ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.favorite, color: Colors.blueAccent),
+                        title: Text(
+                          '찜목록',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          // 찜목록 화면으로 이동
+                        },
+                      ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.rate_review, color: Colors.blueAccent),
+                        title: Text(
+                          '내가 쓴 리뷰',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          // 내가 쓴 리뷰 화면으로 이동
+                        },
+                      ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.bookmark, color: Colors.blueAccent),
+                        title: Text(
+                          '북마크 목록',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          // 북마크 목록 화면으로 이동
+                        },
+                      ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.announcement, color: Colors.blueAccent),
+                        title: Text(
+                          '공지사항',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          // 공지사항 화면으로 이동
+                        },
+                      ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.support_agent, color: Colors.blueAccent),
+                        title: Text(
+                          '고객센터',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          // 고객센터 화면으로 이동
+                        },
+                      ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.settings, color: Colors.blueAccent),
+                        title: Text(
+                          '환경 설정',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          // 환경 설정 화면으로 이동
+                        },
+                      ),
+                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          Positioned(
+            left: _fabOffset.dx,
+            top: _fabOffset.dy,
+            child: Draggable(
+              feedback: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/chatbot');
+                },
+                child: Icon(Icons.chat, color: Colors.white),
+                backgroundColor: Colors.blueAccent,
+              ),
+              childWhenDragging: Container(),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/chatbot');
+                },
+                child: Icon(Icons.chat, color: Colors.white),
+                backgroundColor: Colors.blueAccent,
+              ),
+              onDragEnd: (details) {
+                setState(() {
+                  _fabOffset = details.offset;
+                });
+              },
+            ),
+          ),
+        ],
       ),
 
       // 추가된 부분
