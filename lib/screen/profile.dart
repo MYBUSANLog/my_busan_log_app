@@ -72,115 +72,164 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              '설정',
-              style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontWeight: FontWeight.w500,
-                fontSize: 23,
-                color: Colors.black,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '설정',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
               ),
             ),
-            Divider(color: Colors.grey),
+            SizedBox(height: 13), // 아래로 패딩 추가
+            // Divider(color: Colors.grey), 설정 라인 회색 줄
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0), // 여기서 패딩을 설정합니다.
               leading: Icon(Icons.person, color: Colors.blueAccent),
-              title: Text('프로필 변경', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '프로필 변경',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/profile_alter');
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7), // 여기서 시작 위치를 설정합니다.
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.payment, color: Colors.blueAccent),
-              title: Text('결제', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '결제',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/pay');
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.receipt, color: Colors.blueAccent),
-              title: Text('결제내역', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '결제내역',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/receipt');
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.favorite, color: Colors.blueAccent),
-              title: Text('찜목록', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '찜목록',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 찜목록 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.rate_review, color: Colors.blueAccent),
-              title: Text('내가 쓴 리뷰', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '내가 쓴 리뷰',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 내가 쓴 리뷰 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.bookmark, color: Colors.blueAccent),
-              title: Text('북마크 목록', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '북마크 목록',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 북마크 목록 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.announcement, color: Colors.blueAccent),
-              title: Text('공지사항', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '공지사항',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 공지사항 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.support_agent, color: Colors.blueAccent),
-              title: Text('고객센터', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '고객센터',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 고객센터 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.settings, color: Colors.blueAccent),
-              title: Text('환경 설정', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '환경 설정',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 환경 설정 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
           ],
         ),
       ),
@@ -193,42 +242,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       // 추가된 부분
       bottomNavigationBar: Container(
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Color(0xff0e4194),
-            selectedItemColor: Colors.amberAccent,
-            unselectedItemColor: Colors.white,
-            selectedLabelStyle: TextStyle(fontSize: 10),
-            unselectedLabelStyle: TextStyle(fontSize: 10),
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.location_on),
-                label: '맛집',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: 'AI추천',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: '홈',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: '알림',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: '프로필',
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5), // Shadow color with opacity
+                offset: Offset(0, -2), // Offset the shadow upwards (top shadow effect)
+                blurRadius: 4.0, // Blur radius for the shadow
+                spreadRadius: 0, // Spread radius of the shadow
               ),
             ],
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              selectedItemColor: Color(0xff0e4194),
+              unselectedItemColor: Colors.grey,
+              selectedLabelStyle: TextStyle(fontSize: 10),
+              unselectedLabelStyle: TextStyle(fontSize: 10),
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.location_on),
+                  label: '맛집',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.map),
+                  label: 'AI추천',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: '홈',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: '알림',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: '프로필',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+            ),
           ),
         ),
       ),
