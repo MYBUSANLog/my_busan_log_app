@@ -72,115 +72,164 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              '설정',
-              style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontWeight: FontWeight.w500,
-                fontSize: 23,
-                color: Colors.black,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '설정',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
               ),
             ),
-            Divider(color: Colors.grey),
+            SizedBox(height: 13), // 아래로 패딩 추가
+            // Divider(color: Colors.grey), 설정 라인 회색 줄
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0), // 여기서 패딩을 설정합니다.
               leading: Icon(Icons.person, color: Colors.blueAccent),
-              title: Text('프로필 변경', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '프로필 변경',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/profile_alter');
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7), // 여기서 시작 위치를 설정합니다.
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.payment, color: Colors.blueAccent),
-              title: Text('결제', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '결제',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/pay');
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.receipt, color: Colors.blueAccent),
-              title: Text('결제내역', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '결제내역',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/receipt');
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.favorite, color: Colors.blueAccent),
-              title: Text('찜목록', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '찜목록',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 찜목록 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.rate_review, color: Colors.blueAccent),
-              title: Text('내가 쓴 리뷰', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '내가 쓴 리뷰',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 내가 쓴 리뷰 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.bookmark, color: Colors.blueAccent),
-              title: Text('북마크 목록', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '북마크 목록',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 북마크 목록 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.announcement, color: Colors.blueAccent),
-              title: Text('공지사항', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '공지사항',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 공지사항 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.support_agent, color: Colors.blueAccent),
-              title: Text('고객센터', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '고객센터',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 고객센터 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
             ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
               leading: Icon(Icons.settings, color: Colors.blueAccent),
-              title: Text('환경 설정', style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontSize: 16,
-                color: Colors.black,
-              )),
+              title: Text(
+                '환경 설정',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
               onTap: () {
                 // 환경 설정 화면으로 이동
               },
             ),
+            Divider(color: Colors.black, thickness: 0.5, indent: 7),
           ],
         ),
       ),
