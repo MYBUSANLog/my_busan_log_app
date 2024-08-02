@@ -104,86 +104,118 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     });
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('챗봇 종료'),
+        content: Text('챗봇을 종료하시겠습니까?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true), // "예" 버튼이 첫 번째로 나옴
+            child: Text('예'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false), // "아니요" 버튼이 두 번째로 나옴
+            child: Text('아니요'),
+          ),
+        ],
+      ),
+    )) ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '챗봇',
-          style: TextStyle(
-            fontFamily: 'NotoSansKR',
-            fontWeight: FontWeight.w500,
-            fontSize: 23,
-            color: Colors.white,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            '챗봇',
+            style: TextStyle(
+              fontFamily: 'NotoSansKR',
+              fontWeight: FontWeight.w500,
+              fontSize: 23,
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: Colors.blue[800], // 부산을 상징하는 파란색으로 변경
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () async {
+              bool exit = await _onWillPop();
+              if (exit) {
+                Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+              }
+            },
           ),
         ),
-        backgroundColor: Colors.blue[800], // 부산을 상징하는 파란색으로 변경
-        elevation: 0,
-      ),
-      body: Container(
-        color: Colors.white, // 배경색 변경 -> white로 통일
-        padding: EdgeInsets.all(10), // 전체 패딩 추가
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  final message = messages[index];
-                  return Align(
-                    alignment: message.isUser
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 5.0),
-                      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                      decoration: BoxDecoration(
-                        color: message.isUser ? Colors.blue[600] : Colors.blue[200],
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15.0),
-                          topRight: Radius.circular(15.0),
-                          bottomLeft: Radius.circular(message.isUser ? 15.0 : 0),
-                          bottomRight: Radius.circular(message.isUser ? 0 : 15.0),
+        body: Container(
+          color: Colors.blue[50], // 배경색 변경
+          padding: EdgeInsets.all(10), // 전체 패딩 추가
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+                    return Align(
+                      alignment: message.isUser
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 5.0),
+                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                        decoration: BoxDecoration(
+                          color: message.isUser ? Colors.blue[600] : Colors.blue[200],
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.0),
+                            topRight: Radius.circular(15.0),
+                            bottomLeft: Radius.circular(message.isUser ? 15.0 : 0),
+                            bottomRight: Radius.circular(message.isUser ? 0 : 15.0),
+                          ),
+                        ),
+                        child: Text(
+                          message.message,
+                          style: TextStyle(
+                            color: message.isUser ? Colors.white : Colors.black,
+                            fontSize: 16,
+                            height: 1.5,
+                          ),
                         ),
                       ),
-                      child: Text(
-                        message.message,
-                        style: TextStyle(
-                          color: message.isUser ? Colors.white : Colors.black,
-                          fontSize: 16,
-                          height: 1.5,
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: messageController,
+                        decoration: InputDecoration(
+                          hintText: '메시지를 입력하세요...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: messageController,
-                      decoration: InputDecoration(
-                        hintText: '메시지를 입력하세요...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
+                    IconButton(
+                      icon: Icon(Icons.send, color: Colors.blue[800]),
+                      onPressed: () {
+                        sendMessage(messageController.text);
+                      },
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.send, color: Colors.blue[800]),
-                    onPressed: () {
-                      sendMessage(messageController.text);
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -9,7 +9,8 @@ class ProfileAlterScreen extends StatefulWidget {
 
 class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   final ProfileAlterModel profile = ProfileAlterModel(
-    profileImage: 'https://example.com/your_profile_image.jpg',
+   /* profileImage: 'https://example.com/your_profile_image.jpg',*/
+    profileImage: 'assets/images/abc.png',  // 여기에서 로컬 이미지 경로를 사용합니다.
     age: 25,
     name: 'John Doe',
     nickname: 'Johnny',
