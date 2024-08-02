@@ -121,7 +121,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         elevation: 0,
       ),
       body: Container(
-        color: Colors.blue[50], // 배경색 변경
+        color: Colors.white, // 배경색 변경 -> white로 통일
         padding: EdgeInsets.all(10), // 전체 패딩 추가
         child: Column(
           children: [
