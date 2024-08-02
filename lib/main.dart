@@ -8,6 +8,10 @@ import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile.dart';
 
+import 'deprecated/api_provider.dart';
+import 'package:intl/intl.dart';
+
+
 // 새로운 작업 123
 void main() {
   runApp(const MyApp());
