@@ -37,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
         title: Text(
           '프로필',
           style: TextStyle(
@@ -48,19 +49,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0, // 스크롤 시 AppBar 색상 변경 방지
       ),
       body: Stack(
         children: [
           SingleChildScrollView( // SingleChildScrollView 설정(나현)
             child: ConstrainedBox(
-              constraints: BoxConstraints(
+              constraints: BoxConstraints( // SingleChildScrollView 설정(나현)
                 minHeight: MediaQuery.of(context).size.height, // 최소 높이 설정(나현)
               ),
               child: IntrinsicHeight(
                 child: Container(
                   color: Colors.white,
                   width: double.infinity,
-                  height: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 30),
                   child: Column(
                     children: [
@@ -97,7 +98,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(height: 13), // 아래로 패딩 추가
-                      // Divider(color: Colors.grey), 설정 라인 회색 줄
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0), // 여기서 패딩을 설정합니다.
                         leading: Icon(Icons.person, color: Colors.blueAccent),
@@ -113,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pushNamed(context, '/profile_alter');
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7), // 여기서 시작 위치를 설정합니다.
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7), // 여기서 시작 위치를 설정합니다.
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.payment, color: Colors.blueAccent),
@@ -129,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pushNamed(context, '/pay');
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.receipt, color: Colors.blueAccent),
@@ -145,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pushNamed(context, '/receipt');
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.favorite, color: Colors.blueAccent),
@@ -161,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 찜목록 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.rate_review, color: Colors.blueAccent),
@@ -177,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 내가 쓴 리뷰 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.bookmark, color: Colors.blueAccent),
@@ -193,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 북마크 목록 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.announcement, color: Colors.blueAccent),
@@ -209,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 공지사항 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.support_agent, color: Colors.blueAccent),
@@ -225,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 고객센터 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.settings, color: Colors.blueAccent),
@@ -241,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 환경 설정 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.black, thickness: 0.5, indent: 7),
+                      Divider(color: Colors.black, thickness: 1.0, indent: 7),
                     ],
                   ),
                 ),
