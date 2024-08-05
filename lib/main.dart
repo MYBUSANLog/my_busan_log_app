@@ -1,5 +1,6 @@
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
+import 'package:busan_trip/screen/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
@@ -53,8 +54,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: RestaurantMap(), 위에 주석하고 아래 추가 영욱
-      initialRoute: '/home',
+      home: RootScreen(), //위에 주석하고 아래 추가 영욱
+      // initialRoute: '/home',
       //영욱 추가
       routes: {
         /* '/restaurant': (context) => RestaurantScreen(),
