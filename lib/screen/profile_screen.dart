@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -8,6 +9,17 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   Offset _fabOffset = Offset(340, 650); // 초기 위치 설정
+
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pushNamed(context, '/pay');
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.receipt, color: Colors.blueAccent),
@@ -121,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pushNamed(context, '/receipt');
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.favorite, color: Colors.blueAccent),
@@ -137,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 찜목록 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.rate_review, color: Colors.blueAccent),
@@ -153,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 내가 쓴 리뷰 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.bookmark, color: Colors.blueAccent),
@@ -169,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 북마크 목록 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.announcement, color: Colors.blueAccent),
@@ -185,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 공지사항 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.support_agent, color: Colors.blueAccent),
@@ -201,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 고객센터 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.settings, color: Colors.blueAccent),
@@ -217,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // 환경 설정 화면으로 이동
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0, indent: 7),
+                      Divider(color: Colors.grey, thickness: 1.0),
                     ],
                   ),
                 ),

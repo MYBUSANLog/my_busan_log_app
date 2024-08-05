@@ -3,6 +3,7 @@ import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,17 @@ class _HomeScreenState extends State<HomeScreen> {
     "https://images.unsplash.com/photo-1561555804-4b9e0848fdbe?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1683041133704-1de1c55d050c?q=80&w=1075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -529,14 +541,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10,),
                 Divider(color: Colors.grey, thickness: 1.0,),
                 SizedBox(height: 30,),
-                Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/banner.png'),
-                      fit: BoxFit.cover,
+                Column(
+                  children: [
+                    Container(
+                      height: 70,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/banner.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 5,),
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.centerLeft,
+                      child: Text('ⓘ광고 ',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          height: 1.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 35,),
                 Column(

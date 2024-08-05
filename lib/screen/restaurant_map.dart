@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 
@@ -33,6 +34,13 @@ class _RestaurantMapState extends State<RestaurantMap> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+    ));
+
     _scrollController = ScrollController()
       ..addListener(() {
         // 체크하여 드래그 모션에 따라 최대, 최소 크기로 스크롤 위치를 조정
@@ -80,6 +88,11 @@ class _RestaurantMapState extends State<RestaurantMap> {
                 child: NaverMap(
                   options: const NaverMapViewOptions(
                       initialCameraPosition: initialPosition,
+                      locale: Locale('ko'),
+                      extent: NLatLngBounds(
+                        southWest: NLatLng(31.43, 122.37),
+                        northEast: NLatLng(44.35, 132.0),
+                      ),
                   ),
                   onMapReady: _onMapCreated,
                 ),
