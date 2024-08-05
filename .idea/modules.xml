@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bootpay.iml" filepath="$PROJECT_DIR$/bootpay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/bootpay_flutter_android.iml" filepath="$PROJECT_DIR$/android/bootpay_flutter_android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/example/android/bootpay_flutter_example_android.iml" filepath="$PROJECT_DIR$/example/android/bootpay_flutter_example_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/busan_trip.iml" filepath="$PROJECT_DIR$/.idea/busan_trip.iml" />
     </modules>
   </component>
 </project>
