@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/profile.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     RestaurantMap(),
     HomeScreen(),
     ProfileScreen(),
+    AiRecommendScreen(),
   ];
 
   @override

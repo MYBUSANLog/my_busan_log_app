@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:flutter/material.dart';
@@ -54,12 +55,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: RestaurantMap(), 위에 주석하고 아래 추가 영욱
-      initialRoute: '/home',
+      initialRoute: '/ai_recommend',
       //영욱 추가
       routes: {
-        /* '/restaurant': (context) => RestaurantScreen(),
-        '/ai_recommend': (context) => AIRecommendScreen(),
-        '/notifications': (context) => NotificationsScreen(),*/
+       // '/restaurant': (context) => RestaurantScreen(),
+        '/ai_recommend': (context) => AiRecommendScreen(),
+       // '/notifications': (context) => NotificationsScreen(),
         '/home': (context) => HomeScreen(),
         '/profile': (context) => ProfileScreen(),
         '/chatbot': (context) => ChatbotScreen(),
