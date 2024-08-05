@@ -7,7 +7,7 @@ import 'package:busan_trip/screen/chatbot.dart';
 import 'package:busan_trip/screen/receipt.dart';
 import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
-import 'package:busan_trip/screen/profile.dart';
+import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 void main() async {

@@ -1,5 +1,3 @@
-import 'package:busan_trip/screen/profile.dart';
-import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -9,28 +7,10 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => HomeBox();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-
-class HomeBox extends State<HomeScreen> {
-  int _nowIndex = 1; // 홈을 기본 선택으로 설정  영욱 수정
-
-  List<Widget> screens = [
-    RestaurantMap(),
-    ProfileScreen(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[1],
-
-    );
-  }
-}
-
-class HomeBodyBox extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
 
   int _current = 0;
   final CarouselController _controller = CarouselController();
@@ -1093,3 +1073,4 @@ class HomeBodyBox extends State<HomeScreen> {
     );
   }
 }
+
