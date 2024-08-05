@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -14,7 +13,6 @@ class RestaurantMap extends StatefulWidget {
 
 class _RestaurantMapState extends State<RestaurantMap> {
 
-  int _selectedIndex = 0;
   double _minChildSize = 0.35;
   double _maxChildSize = 0.83;
   late ScrollController _scrollController; // 기본 프로필 선택
@@ -29,30 +27,6 @@ class _RestaurantMapState extends State<RestaurantMap> {
   void _onMapCreated(NaverMapController controller) {
     if (!_controller.isCompleted) {
       _controller.complete(controller);
-    }
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/restaurant_map');
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/ai_recommend');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/home');
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/notifications');
-        break;
-      case 4:
-        Navigator.pushNamed(context, '/profile');
-        break;
     }
   }
 
@@ -110,44 +84,6 @@ class _RestaurantMapState extends State<RestaurantMap> {
                   onMapReady: _onMapCreated,
                 ),
               ),
-              // Container(
-              //   child: NaverMap(
-              //     options: const NaverMapViewOptions(
-              //       initialCameraPosition: NCameraPosition(
-              //           target: NLatLng(35.15243682224479, 129.0596301491128),
-              //           zoom: 10,
-              //           bearing: 0,
-              //           tilt: 0
-              //       ),
-              //       mapType: NMapType.basic,
-              //       activeLayerGroups: [
-              //         NLayerGroup.building,
-              //         NLayerGroup.transit
-              //       ],
-              //       pickTolerance: 8,
-              //       rotationGesturesEnable: false,
-              //       scrollGesturesEnable: false,
-              //       tiltGesturesEnable: false,
-              //       zoomGesturesEnable: false,
-              //       stopGesturesEnable: false,
-              //       scrollGesturesFriction: 0.0,
-              //       zoomGesturesFriction: 0.0,
-              //       rotationGesturesFriction: 0.0,
-              //       minZoom: 10,
-              //       maxZoom: 16,
-              //       maxTilt: 30,
-              //       extent: NLatLngBounds(
-              //         southWest: NLatLng(31.43, 122.37),
-              //         northEast: NLatLng(44.35, 132.0),
-              //       ),
-              //       locale: Locale('ko'),
-              //     ),
-              //     onMapReady: (controller) {
-              //       print('네이버 지도');
-              //     },
-              //   ),
-              //
-              // )
             ],
           ),
           DraggableScrollableSheet(
@@ -234,6 +170,8 @@ class _RestaurantMapState extends State<RestaurantMap> {
           ),
         ],
       ),
+<<<<<<< HEAD
+=======
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -256,6 +194,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
           ),
         ),
       ),
+>>>>>>> df4549c42c97e23f6cdf1d2b329649807c4bc5b6
     );
   }
 
