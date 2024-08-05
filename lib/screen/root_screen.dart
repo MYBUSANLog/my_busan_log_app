@@ -1,5 +1,8 @@
+import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +15,14 @@ class RootScreen extends StatefulWidget {
 
 class _RootScreenState extends State<RootScreen> {
 
-  int _nowIndex = 1;
+  int _nowIndex = 2;
 
 
   List<Widget> screens = [
     RestaurantMap(),
+    AiRecommendScreen(),
     HomeScreen(),
+    RealtimeListScreen(),
     ProfileScreen(),
   ];
 
@@ -61,18 +66,18 @@ class _RootScreenState extends State<RootScreen> {
                   icon: Icon(Icons.location_on),
                   label: '맛집',
                 ),
-                // BottomNavigationBarItem(
-                //   icon: Icon(Icons.map),
-                //   label: 'AI추천',
-                // ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.map),
+                  label: 'AI추천',
+                ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home),
                   label: '홈',
                 ),
-                // BottomNavigationBarItem(
-                //   icon: Icon(Icons.notifications),
-                //   label: '알림',
-                // ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                  label: '알림',
+                ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person),
                   label: '프로필',

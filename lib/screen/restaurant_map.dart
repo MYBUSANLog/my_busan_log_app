@@ -170,31 +170,6 @@ class _RestaurantMapState extends State<RestaurantMap> {
           ),
         ],
       ),
-<<<<<<< HEAD
-=======
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              offset: Offset(0, -2),
-              blurRadius: 4.0,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-      ),
->>>>>>> df4549c42c97e23f6cdf1d2b329649807c4bc5b6
     );
   }
 

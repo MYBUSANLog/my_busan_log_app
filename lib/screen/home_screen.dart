@@ -126,17 +126,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 23
                       ),
                     ),
-                    Text('더보기 >',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w300,
-                        fontSize: 13,
-                        color: Colors.grey,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/realtime_list_screen');
+                      },
+                      child: Column(
+                        children: [
+                          Text('더보기 >',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w300,
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          )
+                        ],
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Divider(color: Colors.grey, thickness: 1.0,),
+                SizedBox(height: 10,),
                 Row(
                   children: [
                     Text(
@@ -147,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 15,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 13,),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
@@ -174,15 +184,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 1.0,
                                   ), overflow: TextOverflow.ellipsis
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite_outline_outlined,
-                                  size: 20,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.favorite_outline, size: 20),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                          SizedBox(height: 7,),
                           Text(
                             '부산 해운대구 · 전시회 · 후기 99+',
                             style: TextStyle(
@@ -210,6 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 15,),
                 Row(
                   children: [
                     Text(
@@ -220,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 15,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 13,),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
@@ -247,15 +260,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 1.0,
                                   ), overflow: TextOverflow.ellipsis
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite_outline_outlined,
-                                  size: 20,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.favorite_outline, size: 20),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                          SizedBox(height: 7,),
                           Text(
                             '부산 기장군 · 엑티비티 · 후기 99+',
                             style: TextStyle(
@@ -283,6 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 15,),
                 Row(
                   children: [
                     Text(
@@ -293,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 15,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 13,),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
@@ -320,15 +336,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 1.0,
                                   ), overflow: TextOverflow.ellipsis
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite_outline_outlined,
-                                  size: 20,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.favorite_outline, size: 20),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                          SizedBox(height: 7,),
                           Text(
                             '부산 기장군 · 테마파크 · 후기 99+',
                             style: TextStyle(
@@ -356,6 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 15,),
                 Row(
                   children: [
                     Text(
@@ -366,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 15,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 13,),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
@@ -393,15 +412,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 1.0,
                                   ), overflow: TextOverflow.ellipsis
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite_outline_outlined,
-                                  size: 20,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.favorite_outline, size: 20),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                          SizedBox(height: 7,),
                           Text(
                             '부산 해운대구 · 복합쇼핑몰 · 후기 99+',
                             style: TextStyle(
@@ -429,6 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 15,),
                 Row(
                   children: [
                     Text(
@@ -439,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontSize: 15,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 13,),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
@@ -466,15 +488,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 1.0,
                                   ), overflow: TextOverflow.ellipsis
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite_outline_outlined,
-                                  size: 20,
+                              GestureDetector(
+                                onTap: () {},
+                                child: Column(
+                                  children: [
+                                    Icon(Icons.favorite_outline, size: 20),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
+                          SizedBox(height: 7,),
                           Text(
                             '부산 해운대구 · 휴양지 · 후기 99+',
                             style: TextStyle(
@@ -502,6 +526,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 10,),
                 Divider(color: Colors.grey, thickness: 1.0,),
                 SizedBox(height: 30,),
                 Container(
@@ -516,510 +541,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 35,),
                 Column(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjVfNTUg%2FMDAxNzIxODkwNTkwMzU5.YEYe-tSqM0YZ4LcjruvVppEJF93Qhw2h_f3Slli_aEUg.lgD2YFS88Wy9BeCzykPo-dG70Q3j0AefL3RIDfQl5Zwg.JPEG%2F1721650628775-27.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(height: 10,),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.pinimg.com/564x/62/00/71/620071d0751e8cd562580a83ec834f7e.jpg',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    '주먹밥 쿵야',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      height: 1.0,
-                                    ),
-                                  ),
-
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.remove_red_eye,
-                                        size: 20,
-                                        color: Colors.grey,
-                                      ),
-                                      Text(
-                                        ' 1576',
-                                        style: TextStyle(
-                                          fontFamily: 'NotoSansKR',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-
-                              SizedBox(height: 5,),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 15,
-                                    color: Colors.grey,),
-                                  Text(
-                                    ' 해운대 해수욕장',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjdfMjU3%2FMDAxNzIyMDg4MTA4NDc5.CFowxdIGwlqyEfClez78lX2QnZ_vFW-PHutczy3VoGgg.EoSDFqQ_7XbudIOZI11A6_G3UrpoaW8oT9v9eLyOVTUg.JPEG%2F20240727_200815.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.namu.wiki/i/clJQ0OBQr88HLrgFfAX16QEt4I5ytWsY8yHugrmZFBMPgPKC8t36cvv6m5zati3zulvbGA9A4EFXeiymIXDO9w.webp',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    '달나라 초능력자',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye,
-                                          size: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '1246',
-                                        style: TextStyle(
-                                          fontFamily: 'NotoSansKR',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 15,
-                                    color: Colors.grey,),
-                                  Text(
-                                    ' 롯데월드 어드벤처 부산',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MzFfMjk5%2FMDAxNzIyNDMwMDI2MTUz.gk0QqKwLsQoZIncKcRUH4de6o1XutMU6p7_4N7yPzvUg.5XQjGDfEPpPFP01V3ZKzsKiXvwvBd2f2apSx-VJlklUg.JPEG%2FAA000A0D-5566-4B0E-88FE-30963C65C18A.jpeg%3Ftype%3Dw1500_60_sharpen',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.pinimg.com/564x/30/3a/d4/303ad402853e32eadb26df8de77612de.jpg',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    '떡잎마을 신짱구',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye,
-                                          size: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '998',
-                                        style: TextStyle(
-                                          fontFamily: 'NotoSansKR',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 15,
-                                    color: Colors.grey,),
-                                  Text(
-                                    ' 스카이라인 루지',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjVfNTUg%2FMDAxNzIxODkwNTkwMzU5.YEYe-tSqM0YZ4LcjruvVppEJF93Qhw2h_f3Slli_aEUg.lgD2YFS88Wy9BeCzykPo-dG70Q3j0AefL3RIDfQl5Zwg.JPEG%2F1721650628775-27.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.pinimg.com/564x/62/00/71/620071d0751e8cd562580a83ec834f7e.jpg',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    '주먹밥 쿵야',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye,
-                                          size: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '1576',
-                                        style: TextStyle(
-                                          fontFamily: 'NotoSansKR',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 15,
-                                    color: Colors.grey,),
-                                  Text(
-                                    ' 해운대 해수욕장',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjdfMjU3%2FMDAxNzIyMDg4MTA4NDc5.CFowxdIGwlqyEfClez78lX2QnZ_vFW-PHutczy3VoGgg.EoSDFqQ_7XbudIOZI11A6_G3UrpoaW8oT9v9eLyOVTUg.JPEG%2F20240727_200815.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.namu.wiki/i/clJQ0OBQr88HLrgFfAX16QEt4I5ytWsY8yHugrmZFBMPgPKC8t36cvv6m5zati3zulvbGA9A4EFXeiymIXDO9w.webp',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    '달나라 초능력자',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye,
-                                          size: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '1246',
-                                        style: TextStyle(
-                                          fontFamily: 'NotoSansKR',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 15,
-                                    color: Colors.grey,),
-                                  Text(
-                                    ' 롯데월드 어드벤처 부산',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MzFfMjk5%2FMDAxNzIyNDMwMDI2MTUz.gk0QqKwLsQoZIncKcRUH4de6o1XutMU6p7_4N7yPzvUg.5XQjGDfEPpPFP01V3ZKzsKiXvwvBd2f2apSx-VJlklUg.JPEG%2FAA000A0D-5566-4B0E-88FE-30963C65C18A.jpeg%3Ftype%3Dw1500_60_sharpen',
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.pinimg.com/564x/30/3a/d4/303ad402853e32eadb26df8de77612de.jpg',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 10,),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    '떡잎마을 신짱구',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 17,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.remove_red_eye,
-                                          size: 15,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '998',
-                                        style: TextStyle(
-                                          fontFamily: 'NotoSansKR',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 15,
-                                    color: Colors.grey,),
-                                  Text(
-                                    ' 스카이라인 루지',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                      height: 1.0,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
+                    FeedCard(),
                     SizedBox(height: 20,),
                   ],
                 )
@@ -1072,4 +603,100 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class FeedCard extends StatelessWidget {
+  const FeedCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 22),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjVfNTUg%2FMDAxNzIxODkwNTkwMzU5.YEYe-tSqM0YZ4LcjruvVppEJF93Qhw2h_f3Slli_aEUg.lgD2YFS88Wy9BeCzykPo-dG70Q3j0AefL3RIDfQl5Zwg.JPEG%2F1721650628775-27.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
+              width: double.infinity,
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(height: 10,),
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.network(
+                  'https://i.pinimg.com/564x/62/00/71/620071d0751e8cd562580a83ec834f7e.jpg',
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: 10,),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '주먹밥 쿵야',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                            height: 1.0,
+                          ),
+                        ),
+
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.remove_red_eye,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
+                            Text(
+                              ' 1576',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 5,),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
+                        Text(
+                          ' 해운대 해수욕장',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.grey,
+                            height: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5,),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 

@@ -19,7 +19,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       isUser: false,
     ));
     messages.add(ChatbotModel(
-      message: "부산 여행에 대해 관심이 많으시군요! 무엇을 도와드릴까요?\n"
+      message: "부산 여행에 대해 관심이 많으시군요!\n무엇을 도와드릴까요?\n\n"
           "1. 부산 인기 명소\n"
           "2. 부산에 가는 방법\n"
           "3. 부산에서 열리는 특별한 연중 이벤트\n"
@@ -46,57 +46,57 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
     switch (message) {
       case '1':
-        response = '부산 인기 명소 리스트:\n'
+        response = '[부산 인기 명소 리스트]\n\n'
             '- 씨라이프 부산아쿠아리움\n'
             '- 해운대 해수욕장\n'
             '- 감천 문화 마을';
         break;
       case '2':
-        response = '부산에 가는 방법:\n'
-            '- KTX 이용: 서울역에서 부산역까지 약 2시간 30분 소요\n'
-            '- 고속버스 이용: 전국 주요 도시에서 부산행 버스 운행';
+        response = '[부산에 가는 방법]\n\n'
+            '<KTX 이용>\n서울역에서 부산역까지 약 2시간 30분 소요\n\n'
+            '<고속버스 이용>\n전국 주요 도시에서 부산행 버스 운행';
         break;
       case '3':
-        response = '부산에서 열리는 특별한 연중 이벤트:\n'
+        response = '[부산에서 열리는 특별한 연중 이벤트]\n\n'
             '- 부산 국제 영화제 (10월)\n'
             '- 부산 불꽃축제 (11월)\n'
             '- 해운대 빛 축제 (12월)';
         break;
       case '4':
-        response = '부산의 주요 랜드마크:\n'
+        response = '[부산의 주요 랜드마크]\n\n'
             '- 광안대교\n'
             '- 부산 타워\n'
             '- 용두산 공원';
         break;
       case '5':
-        response = '부산의 맛집 추천:\n'
+        response = '[부산의 맛집 추천]\n\n'
             '- 돼지국밥\n'
             '- 밀면\n'
             '- 씨앗호떡';
         break;
       case '6':
-        response = '부산의 숙박 정보:\n'
+        response = '[부산의 숙박 정보]\n\n'
             '- 해운대 호텔\n'
             '- 광안리 게스트하우스\n'
             '- 서면 에어비앤비';
         break;
       case '7':
-        response = '부산의 교통 정보:\n'
+        response = '[부산의 교통 정보]\n\n'
             '- 지하철: 1호선, 2호선, 3호선, 4호선\n'
             '- 버스: 다양한 노선 운행\n'
             '- 택시: 기본요금 3,300원';
         break;
       case '8':
-        response = '부산의 쇼핑 정보:\n'
+        response = '[부산의 쇼핑 정보]\n\n'
             '- 신세계 센텀시티\n'
             '- 롯데백화점 광복점\n'
             '- 남포동 국제시장';
         break;
       case '9':
-        response = '기타 문의사항이 있으시면 질문해주세요!';
+        response = '기타 문의사항이 있으시면 질문해주세요!'; // 상담원 연결로 변경 고민
         break;
       default:
-        response = '죄송합니다, 이해하지 못했습니다. 번호를 다시 선택해주세요.';
+        response = '죄송합니다, 이해하지 못했습니다.\n번호를 다시 선택해주세요.';
     }
 
     setState(() {
@@ -139,7 +139,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               color: Colors.white,
             ),
           ),
-          backgroundColor: Colors.blue[800], // 부산을 상징하는 파란색으로 변경
+          backgroundColor: Color(0xff0e4194), // 부산을 상징하는 파란색으로 변경
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -152,7 +152,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           ),
         ),
         body: Container(
-          color: Colors.blue[50], // 배경색 변경
+          color: Colors.white, // 배경색 변경
           padding: EdgeInsets.all(10), // 전체 패딩 추가
           child: Column(
             children: [
