@@ -1,13 +1,15 @@
-import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
+import 'package:busan_trip/screen/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
 import 'package:busan_trip/screen/receipt.dart';
 import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
-import 'package:busan_trip/screen/profile.dart';
+import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 void main() async {
@@ -54,20 +56,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: RestaurantMap(), 위에 주석하고 아래 추가 영욱
-      initialRoute: '/ai_recommend',
-      //영욱 추가
+      home: RootScreen(), //위에 주석하고 아래 추가 영욱
+      // initialRoute: '/home',
+      //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
       routes: {
-       // '/restaurant': (context) => RestaurantScreen(),
-        '/ai_recommend': (context) => AiRecommendScreen(),
-       // '/notifications': (context) => NotificationsScreen(),
+        /* '/ai_recommend': (context) => AIRecommendScreen(),
+        '/notifications': (context) => NotificationsScreen(),*/
         '/home': (context) => HomeScreen(),
-        '/profile': (context) => ProfileScreen(),
+        // '/profile': (context) => ProfileScreen(),
         '/chatbot': (context) => ChatbotScreen(),
         '/receipt': (context) => ReceiptScreen(),
         '/pay': (context) => PayScreen(),
         '/profile_alter': (context) => ProfileAlterScreen(),
-        '/restaurant_map' : (context) => RestaurantMap(),
+        '/realtime_list_screen': (context) => RealtimeListScreen(),
+        // '/restaurant_map' : (context) => RestaurantMap(),
       },
     );
   }
