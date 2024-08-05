@@ -254,38 +254,6 @@ class _RestaurantMapState extends State<RestaurantMap> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
-            selectedItemColor: Color(0xff0e4194),
-            unselectedItemColor: Colors.grey,
-            selectedLabelStyle: TextStyle(fontSize: 10),
-            unselectedLabelStyle: TextStyle(fontSize: 10),
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.location_on),
-                label: '맛집',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map),
-                label: 'AI추천',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: '홈',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications),
-                label: '알림',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: '프로필',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
-          ),
         ),
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:busan_trip/screen/home_screen.dart';
-import 'package:busan_trip/screen/profile.dart';
+import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +14,7 @@ class _RootScreenState extends State<RootScreen> {
 
   int _nowIndex = 1;
 
+
   List<Widget> screens = [
     RestaurantMap(),
     HomeScreen(),
@@ -23,7 +24,10 @@ class _RootScreenState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[_nowIndex],
+      body: IndexedStack(
+        index: _nowIndex,
+        children: screens,
+      ),
       bottomNavigationBar: Container(
         child: Container(
           decoration: BoxDecoration(
