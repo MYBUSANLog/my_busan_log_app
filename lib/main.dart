@@ -1,11 +1,20 @@
-import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:busan_trip/screen/chatbot.dart';
+import 'package:busan_trip/screen/receipt.dart';
+import 'package:busan_trip/screen/pay.dart';
+import 'package:busan_trip/screen/profile_alter.dart';
+import 'package:busan_trip/screen/profile.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 
-// 새로운 작업 123
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(
+    clientId: 'qzi0n4lbj9',
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +27,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.white,
     ));
 
     return MaterialApp(
@@ -44,7 +53,21 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AiRecommendScreen(),
+      // home: RestaurantMap(), 위에 주석하고 아래 추가 영욱
+      initialRoute: '/home',
+      //영욱 추가
+      routes: {
+        /* '/restaurant': (context) => RestaurantScreen(),
+        '/ai_recommend': (context) => AIRecommendScreen(),
+        '/notifications': (context) => NotificationsScreen(),*/
+        '/home': (context) => HomeScreen(),
+        '/profile': (context) => ProfileScreen(),
+        '/chatbot': (context) => ChatbotScreen(),
+        '/receipt': (context) => ReceiptScreen(),
+        '/pay': (context) => PayScreen(),
+        '/profile_alter': (context) => ProfileAlterScreen(),
+        '/restaurant_map' : (context) => RestaurantMap(),
+      },
     );
   }
 }
