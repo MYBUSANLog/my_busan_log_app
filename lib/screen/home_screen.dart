@@ -1,7 +1,8 @@
+import 'package:busan_trip/screen/profile_screen.dart';
+import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,10 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  int _current = 0;
   final CarouselController _controller = CarouselController();
-
   List imgList = [
     "https://plus.unsplash.com/premium_photo-1661962660197-6c2430fb49a6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "https://images.unsplash.com/photo-1551279076-6887dee32c7e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -1065,7 +1063,7 @@ class _HomeScreenState extends State<HomeScreen> {
           autoPlayInterval: const Duration(seconds: 4),
           onPageChanged: (index, reason) {
             setState(() {
-              _current = index;
+
             });
           },
         ),
@@ -1073,4 +1071,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 
