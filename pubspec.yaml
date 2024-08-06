@@ -35,13 +35,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-#  google_fonts: ^6.2.1
-#  http: ^1.2.2  버전낮춤 (영욱)
-#  fluttertoast: ^8.2.6 버전 낮춤
   google_fonts: ^4.0.4
   http: ^0.13.5
   fluttertoast: ^8.2.4
   provider: ^6.1.2
+#  fluttertoast: ^8.2.6
   carousel_slider: ^4.2.1
   image_picker: ^0.8.4+8  # image_picker 패키지 영욱 추가
 #  bootpay_api: 3.1.33 #결제 영욱 추가
@@ -50,7 +48,7 @@ dependencies:
   bootpay: 4.8.8 # 결제 관런 ~get까지 추가
   bootpay_bio: 4.8.5
   get: ^4.6.6
-
+  flutter_native_splash: ^2.4.1 #스플래쉬 화면 수진 추가
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,4 +1,6 @@
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/intro_screen.dart';
+import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
@@ -11,8 +13,6 @@ import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:busan_trip/screen/login.dart';
-
 
 //새로운 작업 from 정민
 // new repository
@@ -58,8 +58,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
         useMaterial3: true,
       ),
-      home: RootScreen(), //위에 주석하고 아래 추가 영욱
-      initialRoute: '/login', //영욱 수정
+      //인트로스크린 수진 추가
+      home:FutureBuilder(
+        future: Future.delayed(const Duration(seconds: 3), () => "Intro Completed."),
+        builder: (context, snapshot) {
+          return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 1000),
+              child: _splashLoadingWidget(snapshot)
+          );
+        },
+      ),
+      //RootScreen(), //위에 주석하고 아래 추가 영욱
+      // initialRoute: '/home',
       //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
       routes: {
         /* '/ai_recommend': (context) => AIRecommendScreen(),
@@ -71,10 +81,21 @@ class MyApp extends StatelessWidget {
         '/pay': (context) => PayScreen(),
         '/profile_alter': (context) => ProfileAlterScreen(),
         '/realtime_list_screen': (context) => RealtimeListScreen(),
-        '/login': (context) => LoginScreen(),
+        '/root_screen':(context) => RootScreen(),
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
+
     );
+  }
+}
+//intro screen 수진추가
+Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
+  if(snapshot.hasError) {
+    return const Text("Error!!");
+  } else if(snapshot.hasData) {
+    return LoginScreen();
+  } else {
+    return const IntroScreen();
   }
 }
 

@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
           content: Text('로그인에 성공했습니다!'),
         ),
       );
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/root_screen');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
