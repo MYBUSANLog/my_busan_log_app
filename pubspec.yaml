@@ -43,6 +43,7 @@ dependencies:
   image_picker: ^0.8.4+8  # image_picker 패키지 영욱 추가
 #  bootpay_api: 3.1.33 #결제 영욱 추가
   flutter_naver_map: ^1.0.0
+  shimmer: ^3.0.0 #skeleton loader 추가(나현)
   intl: ^0.17.0 #추가
 dev_dependencies:
   flutter_test:
