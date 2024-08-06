@@ -146,7 +146,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             onPressed: () async {
               bool exit = await _onWillPop();
               if (exit) {
-                Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+                Navigator.of(context).pop(); // 뒤로가기 수정
               }
             },
           ),

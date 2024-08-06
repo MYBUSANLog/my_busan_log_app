@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
         useMaterial3: true,
       ),
       home: RootScreen(), //위에 주석하고 아래 추가 영욱

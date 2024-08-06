@@ -17,7 +17,7 @@ class ReceiptScreen extends StatelessWidget {
       travelLocation: '서울 -> 부산',
     ),
     ReceiptModel(
-      imageUrl: 'assets/images/busan_trip2.jpg', // 이미지 경로
+      imageUrl: 'assets/images/trip1.webp', // 이미지 경로
       title: '광안리 여행 패키지',
       amount: 250000.0,
       date: DateTime.now(),
@@ -28,7 +28,7 @@ class ReceiptScreen extends StatelessWidget {
       travelLocation: '서울 -> 부산',
     ),
     ReceiptModel(
-      imageUrl: 'assets/images/busan_trip3.jpg', // 이미지 경로
+      imageUrl: 'assets/images/trip1.webp', // 이미지 경로
       title: '감천문화마을 투어',
       amount: 150000.0,
       date: DateTime.now(),
@@ -39,7 +39,7 @@ class ReceiptScreen extends StatelessWidget {
       travelLocation: '서울 -> 부산',
     ),
     ReceiptModel(
-      imageUrl: 'assets/images/busan_trip4.jpg', // 이미지 경로
+      imageUrl: 'assets/images/trip1.webp', // 이미지 경로
       title: '태종대 관광 패키지',
       amount: 180000.0,
       date: DateTime.now(),
@@ -50,7 +50,7 @@ class ReceiptScreen extends StatelessWidget {
       travelLocation: '서울 -> 부산',
     ),
     ReceiptModel(
-      imageUrl: 'assets/images/busan_trip5.jpg', // 이미지 경로
+      imageUrl: 'assets/images/trip1.webp', // 이미지 경로
       title: '부산타워 투어',
       amount: 220000.0,
       date: DateTime.now(),
@@ -66,11 +66,11 @@ class ReceiptScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.white, // 상태바 색상 설정
+        statusBarColor: Colors.transparent, // 상태바 색상 설정
       ),
       child: Scaffold(
         appBar: AppBar(
-          primary: false, // 스크롤 시 AppBar 색상 변경 방지
+          // automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
           title: Text(
             '결제내역',
             style: TextStyle(
@@ -82,16 +82,26 @@ class ReceiptScreen extends StatelessWidget {
           ),
           backgroundColor: Colors.white,
           elevation: 0,
-          scrolledUnderElevation: 0,
-          iconTheme: IconThemeData(color: Colors.black),
+          scrolledUnderElevation: 0, // 스크롤 시 AppBar 색상 변경 방지
         ),
-        body: Container(
-          color: Colors.white,
-          child: ListView.builder(
-            itemCount: receipts.length,
-            itemBuilder: (context, index) {
-              return ReceiptCard(receipt: receipts[index]);
-            },
+        body: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: IntrinsicHeight(
+              child: Container(
+                color: Colors.white,
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    SizedBox(height: 7), // 앱바와 첫 번째 ReceiptCard 사이의 간격
+                    for (var receipt in receipts) ReceiptCard(receipt: receipt),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -107,19 +117,19 @@ class ReceiptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 0), // 좌우 마진 제거
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15), // 카드의 모서리를 둥글게 설정
+        borderRadius: BorderRadius.circular(15),
       ),
-      elevation: 5, // 그림자 효과 추가
-      color: Colors.white, // 카드 배경을 흰색으로 설정
+      elevation: 5,
+      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '결제완료',
+              receipt.paymentStatus,
               style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontWeight: FontWeight.bold,
@@ -137,14 +147,14 @@ class ReceiptCard extends StatelessWidget {
             ),
             SizedBox(height: 8),
             ClipRRect(
-              borderRadius: BorderRadius.circular(10), // 이미지 모서리를 둥글게 설정
+              borderRadius: BorderRadius.circular(10),
               child: Container(
                 width: double.infinity,
                 height: 150,
-                color: Colors.white, // 이미지가 없는 경우 흰색 배경
+                color: Colors.white,
                 child: Image.asset(
                   receipt.imageUrl,
-                  fit: BoxFit.cover, // 이미지가 박스를 꽉 채우도록 설정
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
