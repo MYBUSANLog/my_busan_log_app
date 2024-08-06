@@ -83,11 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w500,
                           fontSize: 35),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.search_outlined,
-                        size: 35,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/notification_screen');
+                      },
+                      child: Column(
+                        children: [
+                          Icon(Icons.search_outlined, size: 35),
+                        ],
                       ),
                     ),
                   ],

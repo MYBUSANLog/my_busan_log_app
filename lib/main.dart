@@ -2,6 +2,7 @@ import 'package:busan_trip/screen/detail_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
+import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
         '/realtime_list_screen': (context) => RealtimeListScreen(),
         '/root_screen':(context) => RootScreen(),
         '/detail_screen':(context) => DetailScreen(),
+        '/notification_screen': (context) => NotificationScreen(),
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
 
