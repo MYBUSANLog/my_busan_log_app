@@ -1,6 +1,29 @@
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _login(BuildContext context) {
+    String id = _idController.text;
+    String password = _passwordController.text;
+
+    if (id == 'test' && password == '1234') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('로그인에 성공했습니다!'),
+        ),
+      );
+      Navigator.pushReplacementNamed(context, '/');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('ID 또는 비밀번호가 잘못되었습니다.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +70,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 30),
                   TextField(
+                    controller: _idController,
                     decoration: InputDecoration(
                       labelText: 'Id',
                       labelStyle: TextStyle(color: Color(0xff0e4194)),
@@ -59,6 +83,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextField(
+                    controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -98,7 +123,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/pay');
+                        _login(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
