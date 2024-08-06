@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<void> _loadingFuture = _simulateLoading();
 
   static Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 15));
   }
 
   @override
