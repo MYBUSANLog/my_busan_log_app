@@ -11,6 +11,8 @@ import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:busan_trip/screen/login.dart';
+
 
 //새로운 작업 from 정민
 // new repository
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
         '/pay': (context) => PayScreen(),
         '/profile_alter': (context) => ProfileAlterScreen(),
         '/realtime_list_screen': (context) => RealtimeListScreen(),
+        '/login': (context) => LoginScreen(),
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
     );
