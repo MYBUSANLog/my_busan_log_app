@@ -1,5 +1,6 @@
 import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
@@ -22,7 +23,7 @@ class _RootScreenState extends State<RootScreen> {
     RestaurantMap(),
     AiRecommendScreen(),
     HomeScreen(),
-    RealtimeListScreen(),
+    NotificationScreen(),
     ProfileScreen(),
   ];
 
