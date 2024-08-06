@@ -14,7 +14,7 @@ class _IntroScreenState extends State<IntroScreen> {
       backgroundColor: Color(0xff0e4194),
       body: Center(
         child: Text(
-          "Untitled",
+          "Busan Trip",
           style: TextStyle(fontSize: 30, color: Colors.white),
         ),
       ),

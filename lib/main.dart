@@ -1,5 +1,6 @@
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
+import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
         '/pay': (context) => PayScreen(),
         '/profile_alter': (context) => ProfileAlterScreen(),
         '/realtime_list_screen': (context) => RealtimeListScreen(),
+        '/root_screen':(context) => RootScreen(),
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
 
@@ -91,7 +93,7 @@ Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
   if(snapshot.hasError) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
-    return const RootScreen();
+    return LoginScreen();
   } else {
     return const IntroScreen();
   }
