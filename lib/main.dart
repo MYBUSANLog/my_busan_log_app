@@ -1,4 +1,5 @@
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
@@ -56,7 +57,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
         useMaterial3: true,
       ),
-      home: RootScreen(), //위에 주석하고 아래 추가 영욱
+      //인트로스크린 수진 추가
+      home:FutureBuilder(
+        future: Future.delayed(const Duration(seconds: 3), () => "Intro Completed."),
+        builder: (context, snapshot) {
+          return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 1000),
+              child: _splashLoadingWidget(snapshot)
+          );
+        },
+      ),
+      //RootScreen(), //위에 주석하고 아래 추가 영욱
       // initialRoute: '/home',
       //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
       routes: {
@@ -71,7 +82,18 @@ class MyApp extends StatelessWidget {
         '/realtime_list_screen': (context) => RealtimeListScreen(),
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
+
     );
+  }
+}
+//intro screen 수진추가
+Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
+  if(snapshot.hasError) {
+    return const Text("Error!!");
+  } else if(snapshot.hasData) {
+    return const RootScreen();
+  } else {
+    return const IntroScreen();
   }
 }
 

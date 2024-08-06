@@ -62,7 +62,6 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
   Widget build(BuildContext context) {
     final halfScreenWidth = MediaQuery.of(context).size.width / 2 - 30;
 
-    //상단 이미지
 
     return Scaffold(
       body: CustomScrollView(
