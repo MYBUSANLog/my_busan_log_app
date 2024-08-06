@@ -49,6 +49,7 @@ dependencies:
   bootpay_bio: 4.8.5
   get: ^4.6.6
   flutter_native_splash: ^2.4.1 #스플래쉬 화면 수진 추가
+  shimmer: ^3.0.0 #skeleton loader 추가(나현)
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/detail_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
@@ -34,6 +35,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+    ));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -82,6 +89,7 @@ class MyApp extends StatelessWidget {
         '/profile_alter': (context) => ProfileAlterScreen(),
         '/realtime_list_screen': (context) => RealtimeListScreen(),
         '/root_screen':(context) => RootScreen(),
+        '/detail_screen':(context) => DetailScreen(),
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
 
