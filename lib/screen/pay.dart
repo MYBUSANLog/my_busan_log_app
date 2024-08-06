@@ -93,13 +93,13 @@ class PayScreen extends StatelessWidget {
     item1.name = "미키 '마우스";
     item1.qty = 1;
     item1.id = "ITEM_CODE_MOUSE";
-    item1.price = 500;
+    item1.price = 150000;
 
     Item item2 = Item();
     item2.name = "키보드";
     item2.qty = 1;
     item2.id = "ITEM_CODE_KEYBOARD";
-    item2.price = 500;
+    item2.price = 150000;
     List<Item> itemList = [item1, item2];
 
     payload.webApplicationId = webApplicationId;
@@ -107,8 +107,8 @@ class PayScreen extends StatelessWidget {
     payload.iosApplicationId = iosApplicationId;
 
     payload.pg = '나이스페이';
-    payload.orderName = "테스트 상품";
-    payload.price = 1000.0;
+    payload.orderName = "해운대 패키지 여행";
+    payload.price = 300000.0;
     payload.orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
     payload.metadata = {
