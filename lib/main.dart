@@ -15,6 +15,8 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 //새로운 작업 from 정민
 // new repository
 
+// 새로운 수정사항(Text)
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
