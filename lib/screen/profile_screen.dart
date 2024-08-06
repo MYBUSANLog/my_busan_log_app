@@ -8,7 +8,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  Offset _fabOffset = Offset(340, 650); // 초기 위치 설정
+  Offset _fabOffset = Offset(300, 580); // 초기 위치 설정
 
   @override
   void initState() {

@@ -36,8 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<void> _loadingFuture = _simulateLoading();
 
   static Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 15));
+    await Future.delayed(const Duration(seconds: 5));
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 35),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/search_screen');
-                      },
+                      onTap: () {},
                       child: Column(
                         children: [
                           Icon(Icons.search_outlined, size: 35),
@@ -206,6 +206,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDetailContent() {
+    final SearchController controller = SearchController();
+
+    String? _currentQuery;
+
+    // The most recent suggestions received from the API.
+    late Iterable<Widget> _lastOptions = <Widget>[];
+
+    late final _Debounceable<Iterable<String>?, String> _debouncedSearch;
+
+    // Calls the "remote" API to search with the given query. Returns null when
+    // the call has been made obsolete.
+    Future<Iterable<String>?> _search(String query) async {
+      _currentQuery = query;
+
+      // In a real application, there should be some error handling here.
+      final Iterable<String> options = await _FakeAPI.search(_currentQuery!);
+
+      // If another search happened after this one, throw away these options.
+      if (_currentQuery != query) {
+        return null;
+      }
+      _currentQuery = null;
+
+      return options;
+    }
+
+    @override
+    void initState() {
+      super.initState();
+      _debouncedSearch = _debounce<Iterable<String>?, String>(_search);
+    }
+
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -233,13 +265,36 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w500,
                           fontSize: 35),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.search_outlined,
-                        size: 35,
-                      ),
+                    SearchAnchor(
+                      builder: (BuildContext context, SearchController controller) {
+                        return IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            controller.openView();
+                          },
+                        );
+                      },
+                      suggestionsBuilder:
+                          (BuildContext context, SearchController controller) async {
+                        final List<String>? options =
+                        (await _debouncedSearch(controller.text))?.toList();
+                        if (options == null) {
+                          return _lastOptions;
+                        }
+                        _lastOptions = List<ListTile>.generate(options.length, (int index) {
+                          final String item = options[index];
+                          return ListTile(
+                            title: Text(item),
+                            onTap: () {
+                              debugPrint('You just selected $item');
+                            },
+                          );
+                        });
+
+                        return _lastOptions;
+                      },
                     ),
+
                   ],
                 ),
                 SizedBox(height: 20,),
@@ -392,6 +447,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+
 
   Widget sliderWidget() {
 
