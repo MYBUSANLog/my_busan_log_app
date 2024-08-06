@@ -104,19 +104,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Divider(color: Colors.black, thickness: 1.0, indent: 7), // 여기서 시작 위치를 설정합니다.
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.login, color: Colors.blueAccent),
+                        leading: Icon(Icons.logout, color: Colors.blueAccent),
                         title: Text(
-                          '로그인',
+                          '로그아웃',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
                             fontSize: 16,
                             color: Colors.black,
                           ),
                         ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/login');
-                        },
                       ),
+                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.payment, color: Colors.blueAccent),

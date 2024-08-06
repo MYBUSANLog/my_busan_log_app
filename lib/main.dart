@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: RootScreen(), //위에 주석하고 아래 추가 영욱
-      // initialRoute: '/home',
+      initialRoute: '/login', //영욱 수정
       //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
       routes: {
         /* '/ai_recommend': (context) => AIRecommendScreen(),
