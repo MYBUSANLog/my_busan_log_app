@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _idController = TextEditingController();
@@ -10,47 +11,32 @@ class LoginScreen extends StatelessWidget {
     String id = _idController.text;
     String password = _passwordController.text;
 
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: id,
-        password: password,
-      );
+    if (id == 'test' && password == '1234') {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('로그인에 성공했습니다!'),
         ),
       );
       Navigator.pushReplacementNamed(context, '/root_screen');
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('ID 또는 비밀번호가 잘못되었습니다.'),
-        ),
-      );
-    }
-  }
-
-  Future<void> _signUp(BuildContext context) async {
-    String id = _idController.text;
-    String password = _passwordController.text;
-
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: id,
-        password: password,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('회원가입에 성공했습니다!'),
-        ),
-      );
-      Navigator.pushReplacementNamed(context, '/root_screen');
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('회원가입에 실패했습니다.'),
-        ),
-      );
+    } else {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: id,
+          password: password,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('로그인에 성공했습니다!'),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, '/root_screen');
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('ID 또는 비밀번호가 잘못되었습니다.'),
+          ),
+        );
+      }
     }
   }
 
@@ -200,7 +186,10 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
-                      _signUp(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      );
                     },
                     child: Text(
                       "Don't have an account? Sign up",

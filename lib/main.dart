@@ -7,6 +7,7 @@ import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/root_screen.dart';
+import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
@@ -94,6 +95,8 @@ class MyApp extends StatelessWidget {
         '/root_screen':(context) => RootScreen(),
         '/detail_screen':(context) => DetailScreen(),
         '/notification_screen': (context) => NotificationScreen(),
+        '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
+
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
 
