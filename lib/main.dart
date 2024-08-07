@@ -1,4 +1,7 @@
+import 'package:busan_trip/screen/announcement_list.dart';
+import 'package:busan_trip/screen/bookmark_list.dart';
 import 'package:busan_trip/screen/detail_screen.dart';
+import 'package:busan_trip/screen/heart_list.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
@@ -6,6 +9,7 @@ import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
+import 'package:busan_trip/screen/review_list.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -92,6 +96,12 @@ class MyApp extends StatelessWidget {
         '/root_screen':(context) => RootScreen(),
         '/detail_screen':(context) => DetailScreen(),
         '/notification_screen': (context) => NotificationScreen(),
+        // 리뷰 북마크 찜목록 공지사항 추가 안율현
+        '/bookmark_list': (context) => BookmarkList(),
+        '/heart_list': (context) => HeartList(),
+        '/review_list': (context) => ReviewList(),
+        '/announcement_list': (context) => AnnouncementList(),
+
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
 
