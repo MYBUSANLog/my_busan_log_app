@@ -43,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // statusBarColor: Colors.transparent,
+      // statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.white,
+    ));
+
     return Scaffold(
       body: FutureBuilder<void>(
         future: _loadingFuture,
@@ -78,12 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Untitled',
-                      style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 35),
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/006.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {},
@@ -207,36 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDetailContent() {
     final SearchController controller = SearchController();
-
-    String? _currentQuery;
-
-    // The most recent suggestions received from the API.
-    late Iterable<Widget> _lastOptions = <Widget>[];
-
-    late final _Debounceable<Iterable<String>?, String> _debouncedSearch;
-
-    // Calls the "remote" API to search with the given query. Returns null when
-    // the call has been made obsolete.
-    Future<Iterable<String>?> _search(String query) async {
-      _currentQuery = query;
-
-      // In a real application, there should be some error handling here.
-      final Iterable<String> options = await _FakeAPI.search(_currentQuery!);
-
-      // If another search happened after this one, throw away these options.
-      if (_currentQuery != query) {
-        return null;
-      }
-      _currentQuery = null;
-
-      return options;
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      _debouncedSearch = _debounce<Iterable<String>?, String>(_search);
-    }
+    final Color? viewBackgroundColor;
 
     return SingleChildScrollView(
       child: ConstrainedBox(
@@ -258,43 +239,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Untitled',
-                      style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 35),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        'assets/images/006.png',
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     SearchAnchor(
+                      viewBackgroundColor: Colors.white,
+                      searchController: controller,
                       builder: (BuildContext context, SearchController controller) {
-                        return IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {
+                        return GestureDetector(
+                          onTap: () {
                             controller.openView();
                           },
+                          child: Column(
+                            children: [
+                              Icon(Icons.search_outlined, size: 35),
+                            ],
+                          ),
                         );
                       },
                       suggestionsBuilder:
-                          (BuildContext context, SearchController controller) async {
-                        final List<String>? options =
-                        (await _debouncedSearch(controller.text))?.toList();
-                        if (options == null) {
-                          return _lastOptions;
-                        }
-                        _lastOptions = List<ListTile>.generate(options.length, (int index) {
-                          final String item = options[index];
+                          (BuildContext context, SearchController controller) {
+                        return List<ListTile>.generate(5, (int index) {
+                          final String item = 'item $index';
                           return ListTile(
                             title: Text(item),
                             onTap: () {
-                              debugPrint('You just selected $item');
+                              setState(() {
+                                controller.closeView(item);
+                              });
                             },
                           );
                         });
-
-                        return _lastOptions;
                       },
                     ),
-
                   ],
                 ),
                 SizedBox(height: 20,),

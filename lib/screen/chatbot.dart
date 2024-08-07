@@ -150,6 +150,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               }
             },
           ),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
         ),
         body: Container(
           color: Colors.white, // 배경색 변경

@@ -8,7 +8,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  Offset _fabOffset = Offset(300, 580); // 초기 위치 설정
+  Offset _fabOffset = Offset(330, 650); // 초기 위치 설정
 
   @override
   void initState() {
@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Divider(color: Colors.black, thickness: 1.0, indent: 7), // 여기서 시작 위치를 설정합니다.
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Colors.blueAccent),
+                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
                         title: Text(
                           '로그아웃',
                           style: TextStyle(
@@ -117,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.payment, color: Colors.blueAccent),
+                        leading: Icon(Icons.payment, color: Color(0xff0e4194)),
                         title: Text(
                           '결제',
                           style: TextStyle(
@@ -133,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.receipt, color: Colors.blueAccent),
+                        leading: Icon(Icons.receipt, color: Color(0xff0e4194)),
                         title: Text(
                           '결제내역',
                           style: TextStyle(
@@ -149,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.favorite, color: Colors.blueAccent),
+                        leading: Icon(Icons.favorite, color: Color(0xff0e4194)),
                         title: Text(
                           '찜목록',
                           style: TextStyle(
@@ -165,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.rate_review, color: Colors.blueAccent),
+                        leading: Icon(Icons.rate_review, color: Color(0xff0e4194)),
                         title: Text(
                           '내가 쓴 리뷰',
                           style: TextStyle(
@@ -181,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.bookmark, color: Colors.blueAccent),
+                        leading: Icon(Icons.bookmark, color: Color(0xff0e4194)),
                         title: Text(
                           '북마크 목록',
                           style: TextStyle(
@@ -197,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.announcement, color: Colors.blueAccent),
+                        leading: Icon(Icons.announcement, color: Color(0xff0e4194)),
                         title: Text(
                           '공지사항',
                           style: TextStyle(
@@ -213,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.support_agent, color: Colors.blueAccent),
+                        leading: Icon(Icons.support_agent, color: Color(0xff0e4194)),
                         title: Text(
                           '고객센터',
                           style: TextStyle(
@@ -229,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.settings, color: Colors.blueAccent),
+                        leading: Icon(Icons.settings, color: Color(0xff0e4194)),
                         title: Text(
                           '환경 설정',
                           style: TextStyle(

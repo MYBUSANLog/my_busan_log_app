@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _idController = TextEditingController();
@@ -26,13 +27,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // statusBarColor: Colors.transparent,
+      // statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.white,
+    ));
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              height: 250,
+              height: 300,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xff0e4194), Colors.blueAccent],
@@ -45,12 +55,12 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: Text(
-                  'BUSAN TRIP',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    'assets/images/Untitled1.png',
+                    width: 200,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

@@ -38,9 +38,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+      // statusBarColor: Colors.transparent,
+      // statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.white,
     ));
 
@@ -64,7 +66,7 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black), //화이트로 수정 영욱
         useMaterial3: true,
       ),
       //인트로스크린 수진 추가

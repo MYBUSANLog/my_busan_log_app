@@ -64,9 +64,13 @@ class ReceiptScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.transparent, // 상태바 색상 설정
+        systemNavigationBarColor: Colors.white,
       ),
       child: Scaffold(
         appBar: AppBar(
