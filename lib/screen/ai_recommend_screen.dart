@@ -17,7 +17,6 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
   int _current = 0;
   int _nowIndex = 1; // 홈을 기본 선택으로 설정  영욱 수정
 
-  bool isFavorited = false;
 
   final TextStyle notoSansStyle = TextStyle(fontFamily: 'NotoSansKR',);
   final PageController _pageController = PageController();
@@ -674,7 +673,6 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: 10),
                       ],
                     ),
@@ -713,948 +711,28 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
             ),
           ),
 
+          //상품리스트
           SliverToBoxAdapter(
               child: Container(
                   color: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  width: MediaQuery.of(context).size.width,
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            // 모서리 둥글게
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 4.0,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ), // 위쪽 모서리만 둥글게
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
-                                    width: 180,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    right: 5, // 오른쪽 여백
-                                    top: 5, // 위쪽 여백
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          isFavorited = !isFavorited; // 상태 반전
-                                        });
-                                      },
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border_outlined,
-                                        size: 23,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.white, // 색상 변경
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: halfScreenWidth,
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0), // 왼쪽에 8.0의 여백을 추가합니다.
-                                child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start, // 텍스트 왼쪽 정렬
-                                  children: [
-                                    Text(
-                                      '아르떼 뮤지엄',
-                                      style: notoSansStyle.copyWith(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '19,900원~',
-                                      style: notoSansStyle,
-                                    ),
-                                    Container(
-                                        child: Row(children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                            size: 15,
-                                          ),
-                                          Text(
-                                            '4.9/5.0',
-                                            style: notoSansStyle.copyWith(
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                  ]))),
+                  width: halfScreenWidth,
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                    FavoriteItemCard(),
+                  ],
+                ),
+              )),
         ],
       ),
     );
@@ -1686,3 +764,112 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return true;
   }
 }
+
+class FavoriteItemCard extends StatefulWidget {
+  const FavoriteItemCard({super.key});
+
+  @override
+  State<FavoriteItemCard> createState() => _FavoriteItemCardState();
+}
+
+class _FavoriteItemCardState extends State<FavoriteItemCard> {
+  bool isFavorited = false;
+  final TextStyle notoSansStyle = TextStyle(fontFamily: 'NotoSansKR',);
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorited = !isFavorited;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final halfScreenWidth = MediaQuery.of(context).size.width / 2 - 21;
+
+
+    return Container(
+      width: halfScreenWidth,
+      margin: EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 4.0,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+            child: Stack(
+              children: [
+                Image.network(
+                  'https://lh5.googleusercontent.com/proxy/NMMOm85Vx_vW_o834ShdXDy_JibTGd2OIwgOAEuH_wzhGzJXOT7mLbYnYfULqTNsN4R9oqmt_2BNKDBKdzGIlcr6rFSpX6olLZkp3qJpmyTopfsS5KlzoQ',
+                  width: halfScreenWidth,
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: IconButton(
+                    onPressed: toggleFavorite,
+                    icon: Icon(
+                      isFavorited ? Icons.favorite : Icons.favorite_border_outlined,
+                      size: 23,
+                      color: isFavorited ? Colors.red : Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '아르떼뮤지엄',
+                  style: notoSansStyle.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '19,000~',
+                  style: notoSansStyle,
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 15,
+                    ),
+                    Text(
+                      '4.9/5.0',
+                      style: notoSansStyle.copyWith(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
