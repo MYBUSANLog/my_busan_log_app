@@ -2,8 +2,11 @@ import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,19 +33,179 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
+  final Future<void> _loadingFuture = _simulateLoading();
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-    ));
+  static Future<void> _simulateLoading() async {
+    await Future.delayed(const Duration(seconds: 15));
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<void>(
+        future: _loadingFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildSkeletonLoader();
+          } else {
+            return _buildDetailContent();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildSkeletonLoader() {
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery
+              .of(context)
+              .size
+              .height, // 최소 높이를 화면 높이로 설정
+        ),
+        child: IntrinsicHeight(
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                SizedBox(height: 80),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Untitled',
+                      style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 35),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/notification_screen');
+                      },
+                      child: Column(
+                        children: [
+                          Icon(Icons.search_outlined, size: 35),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20,),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 200,
+                    width: double.infinity,
+                  ),
+                ),
+                SizedBox(height: 30,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 30,
+                        width: 200,
+                      ),
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 20,
+                        width: 30,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(color: Colors.grey, thickness: 1.0,),
+                SizedBox(height: 10,),
+                RealTimeListSkeleton(),
+                SizedBox(height: 15,),
+                RealTimeListSkeleton(),
+                SizedBox(height: 15,),
+                RealTimeListSkeleton(),
+                SizedBox(height: 15,),
+                RealTimeListSkeleton(),
+                SizedBox(height: 15,),
+                RealTimeListSkeleton(),
+                SizedBox(height: 10,),
+                Divider(color: Colors.grey, thickness: 1.0,),
+                SizedBox(height: 30,),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailContent() {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -194,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       width: double.infinity,
                       alignment: Alignment.centerLeft,
-                      child: Text('ⓘ광고 ',
+                      child: Text('ⓘ 광고 ',
                         style: TextStyle(
                           fontFamily: 'NotoSansKR',
                           fontWeight: FontWeight.w400,
@@ -229,6 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   Widget sliderWidget() {
 
     return ClipRRect(
@@ -269,106 +433,99 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class FavoriteCard extends StatefulWidget {
-  const FavoriteCard({super.key});
+class RealTimeListSkeleton extends StatefulWidget {
+  const RealTimeListSkeleton({super.key});
 
   @override
-  State<FavoriteCard> createState() => _FavoriteCardState();
+  State<RealTimeListSkeleton> createState() => _RealTimeListSkeletonState();
 }
 
-class _FavoriteCardState extends State<FavoriteCard> {
-  bool isFavorited = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
+class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Text(
-                '1',
-                style: TextStyle(
-                  fontFamily: 'NotoSansKR',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                ),
-              ),
-              SizedBox(width: 13,),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  'https://naverbooking-phinf.pstatic.net/20231115_165/1700025251077cwP9b_JPEG/%C0%FC%BD%C3_%BF%AC%C0%E5_%C6%F7%BD%BA%C5%CD_1%B4%EB1_%B0%ED%C8%AD%C1%FA.jpg?type=w1500',
-                  width: 75,
-                  height: 75,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(width: 10,),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                            '상실의 징후들',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                              height: 1.0,
-                            ), overflow: TextOverflow.ellipsis
-                        ),
-                        GestureDetector(
-                          onTap: toggleFavorite,
-                          child: Column(
-                            children: [
-                              Icon(
-                                isFavorited ? Icons.favorite : Icons.favorite_outline,
-                                size: 25,
-                                color: Colors.red,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 7,),
-                    Text(
-                      '부산 해운대구 · 전시회 · 후기 99+',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: Colors.grey,
-                        height: 1.0,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '16,000원~',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Text(
+          //       '1',
+          //       style: TextStyle(
+          //         fontFamily: 'NotoSansKR',
+          //         fontWeight: FontWeight.w500,
+          //         fontSize: 15,
+          //       ),
+          //     ),
+          //     SizedBox(width: 13,),
+          //     ClipRRect(
+          //       borderRadius: BorderRadius.circular(10),
+          //       child: Image.network(
+          //         'https://naverbooking-phinf.pstatic.net/20231115_165/1700025251077cwP9b_JPEG/%C0%FC%BD%C3_%BF%AC%C0%E5_%C6%F7%BD%BA%C5%CD_1%B4%EB1_%B0%ED%C8%AD%C1%FA.jpg?type=w1500',
+          //         width: 75,
+          //         height: 75,
+          //         fit: BoxFit.cover,
+          //       ),
+          //     ),
+          //     SizedBox(width: 10,),
+          //     Expanded(
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text(
+          //                   '상실의 징후들',
+          //                   style: TextStyle(
+          //                     fontFamily: 'NotoSansKR',
+          //                     fontWeight: FontWeight.w500,
+          //                     fontSize: 17,
+          //                     height: 1.0,
+          //                   ), overflow: TextOverflow.ellipsis
+          //               ),
+          //               GestureDetector(
+          //                 onTap: toggleFavorite,
+          //                 child: Column(
+          //                   children: [
+          //                     Icon(
+          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
+          //                       size: 25,
+          //                       color: Colors.red,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //           SizedBox(height: 7,),
+          //           Text(
+          //             '부산 해운대구 · 전시회 · 후기 99+',
+          //             style: TextStyle(
+          //               fontFamily: 'NotoSansKR',
+          //               fontWeight: FontWeight.w400,
+          //               fontSize: 12,
+          //               color: Colors.grey,
+          //               height: 1.0,
+          //             ),
+          //           ),
+          //           SizedBox(height: 15),
+          //           Align(
+          //             alignment: Alignment.centerRight,
+          //             child: Text(
+          //               '16,000원~',
+          //               style: TextStyle(
+          //                 fontFamily: 'NotoSansKR',
+          //                 fontWeight: FontWeight.w500,
+          //                 fontSize: 17,
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
           // SizedBox(height: 15,),
           // Row(
           //   children: [
@@ -450,10 +607,119 @@ class _FavoriteCardState extends State<FavoriteCard> {
           //   ],
           // ),
           // SizedBox(height: 15,),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/detail_screen');
+            },
+            child: Row(
+              children: [
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 10,
+                    width: 10,
+                  ),
+                ),
+                SizedBox(width: 13,),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 75,
+                    width: 75,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              color: Colors.grey[300],
+                              height: 25,
+                              width: 200,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.favorite_outline,
+                                  size: 25,
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7,),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 15,
+                          width: 250,
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 17,
+                          width: 100,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FavoriteCard extends StatefulWidget {
+  const FavoriteCard({super.key});
+
+  @override
+  State<FavoriteCard> createState() => _FavoriteCardState();
+}
+
+class _FavoriteCardState extends State<FavoriteCard> {
+  bool isFavorited = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorited = !isFavorited;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
           // Row(
           //   children: [
           //     Text(
-          //       '3',
+          //       '1',
           //       style: TextStyle(
           //         fontFamily: 'NotoSansKR',
           //         fontWeight: FontWeight.w500,
@@ -464,7 +730,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
           //     ClipRRect(
           //       borderRadius: BorderRadius.circular(10),
           //       child: Image.network(
-          //         'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
+          //         'https://naverbooking-phinf.pstatic.net/20231115_165/1700025251077cwP9b_JPEG/%C0%FC%BD%C3_%BF%AC%C0%E5_%C6%F7%BD%BA%C5%CD_1%B4%EB1_%B0%ED%C8%AD%C1%FA.jpg?type=w1500',
           //         width: 75,
           //         height: 75,
           //         fit: BoxFit.cover,
@@ -479,7 +745,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
           //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
           //             children: [
           //               Text(
-          //                   '롯데월드 어드벤처 부산',
+          //                   '상실의 징후들',
           //                   style: TextStyle(
           //                     fontFamily: 'NotoSansKR',
           //                     fontWeight: FontWeight.w500,
@@ -503,7 +769,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
           //           ),
           //           SizedBox(height: 7,),
           //           Text(
-          //             '부산 기장군 · 테마파크 · 후기 99+',
+          //             '부산 해운대구 · 전시회 · 후기 99+',
           //             style: TextStyle(
           //               fontFamily: 'NotoSansKR',
           //               fontWeight: FontWeight.w400,
@@ -516,7 +782,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
           //           Align(
           //             alignment: Alignment.centerRight,
           //             child: Text(
-          //               '29,000원~',
+          //               '16,000원~',
           //               style: TextStyle(
           //                 fontFamily: 'NotoSansKR',
           //                 fontWeight: FontWeight.w500,
@@ -529,6 +795,171 @@ class _FavoriteCardState extends State<FavoriteCard> {
           //     ),
           //   ],
           // ),
+          // SizedBox(height: 15,),
+          // Row(
+          //   children: [
+          //     Text(
+          //       '2',
+          //       style: TextStyle(
+          //         fontFamily: 'NotoSansKR',
+          //         fontWeight: FontWeight.w500,
+          //         fontSize: 15,
+          //       ),
+          //     ),
+          //     SizedBox(width: 13,),
+          //     ClipRRect(
+          //       borderRadius: BorderRadius.circular(10),
+          //       child: Image.network(
+          //         'https://naverbooking-phinf.pstatic.net/20230125_49/1674627945913HU8OQ_JPEG/%B8%DE%C0%CE%B9%E8%B3%CA.jpg',
+          //         width: 75,
+          //         height: 75,
+          //         fit: BoxFit.cover,
+          //       ),
+          //     ),
+          //     SizedBox(width: 10,),
+          //     Expanded(
+          //       child: Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Row(
+          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //             children: [
+          //               Text(
+          //                   '스카이라인루지 부산',
+          //                   style: TextStyle(
+          //                     fontFamily: 'NotoSansKR',
+          //                     fontWeight: FontWeight.w500,
+          //                     fontSize: 17,
+          //                     height: 1.0,
+          //                   ), overflow: TextOverflow.ellipsis
+          //               ),
+          //               GestureDetector(
+          //                 onTap: toggleFavorite,
+          //                 child: Column(
+          //                   children: [
+          //                     Icon(
+          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
+          //                       size: 25,
+          //                       color: Colors.red,
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //           SizedBox(height: 7,),
+          //           Text(
+          //             '부산 기장군 · 엑티비티 · 후기 99+',
+          //             style: TextStyle(
+          //               fontFamily: 'NotoSansKR',
+          //               fontWeight: FontWeight.w400,
+          //               fontSize: 12,
+          //               color: Colors.grey,
+          //               height: 1.0,
+          //             ),
+          //           ),
+          //           SizedBox(height: 15),
+          //           Align(
+          //             alignment: Alignment.centerRight,
+          //             child: Text(
+          //               '12,000원~',
+          //               style: TextStyle(
+          //                 fontFamily: 'NotoSansKR',
+          //                 fontWeight: FontWeight.w500,
+          //                 fontSize: 17,
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(height: 15,),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/detail_screen');
+            },
+            child: Row(
+              children: [
+                Text(
+                  '3',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
+                SizedBox(width: 13,),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
+                    width: 75,
+                    height: 75,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                              '롯데월드 어드벤처 부산',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                height: 1.0,
+                              ), overflow: TextOverflow.ellipsis
+                          ),
+                          GestureDetector(
+                            onTap: toggleFavorite,
+                            child: Column(
+                              children: [
+                                Icon(
+                                  isFavorited ? Icons.favorite : Icons.favorite_outline,
+                                  size: 25,
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7,),
+                      Text(
+                        '부산 기장군 · 테마파크 · 후기 99+',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Colors.grey,
+                          height: 1.0,
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          '29,000원~',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           // SizedBox(height: 15,),
           // Row(
           //   children: [
