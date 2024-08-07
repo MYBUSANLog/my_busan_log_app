@@ -15,6 +15,7 @@ import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:firebase_core/firebase_core.dart'; //구글로그인
 
 //새로운 작업 from 정민
 // new repository
@@ -24,6 +25,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); //구글로그인 영욱
   await NaverMapSdk.instance.initialize(
     clientId: 'qzi0n4lbj9',
   );

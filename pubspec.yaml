@@ -50,6 +50,9 @@ dependencies:
   get: ^4.6.6
   flutter_native_splash: ^2.4.1 #스플래쉬 화면 수진 추가
   shimmer: ^3.0.0 #skeleton loader 추가(나현)
+  firebase_auth: ^5.1.4 #구글 로그인
+  firebase_core: ^3.3.0
+  google_sign_in:  ^6.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
