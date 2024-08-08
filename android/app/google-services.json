@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:559390467783:android:f834de50e1c12808be40e2",
+        "mobilesdk_app_id": "1:559390467783:android:cfb6b8fdd0863afbbe40e2",
         "android_client_info": {
-          "package_name": "com.ds.MYBUSANLog"
+          "package_name": "com.ds.busan_trip"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "559390467783-pnl36mbmimogjv80vsm801tbnm8ikf62.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ds.busan_trip",
+            "certificate_hash": "44a767a2f71d8e0ad715c36320371045f7bfebc7"
+          }
+        },
         {
           "client_id": "559390467783-lin6v7010cdmdlf6npi7u6rj9p095o3r.apps.googleusercontent.com",
           "client_type": 3

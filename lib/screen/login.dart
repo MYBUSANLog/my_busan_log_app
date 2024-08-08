@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
+import 'package:busan_trip/screen/sign_up.dart'; // 회원가입 추가
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _idController = TextEditingController();
@@ -33,36 +33,58 @@ class LoginScreen extends StatelessWidget {
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('ID 또는 비밀번호가 잘못되었습니다.'),
+            content: Text('ID 또는 비밀번호가 잘못되었습니다: ${e.message}'),
           ),
         );
+        print('ID 또는 비밀번호가 잘못되었습니다: ${e.message}');
       }
     }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      try {
-        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Google 로그인에 성공했습니다!'),
-          ),
-        );
-        Navigator.pushReplacementNamed(context, '/root_screen');
-      } on FirebaseAuthException catch (e) {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    GoogleSignInAccount? googleUser;
+
+    try {
+      googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Google 로그인에 실패했습니다.'),
           ),
         );
+        print('Google 로그인에 실패했습니다.');
+        return;
       }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인에 성공했습니다!'),
+        ),
+      );
+      Navigator.pushReplacementNamed(context, '/root_screen');
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인에 실패했습니다: ${e.message}'),
+        ),
+      );
+      print('Google 로그인에 실패했습니다: ${e.message}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인 중 오류가 발생했습니다.'),
+        ),
+      );
+      print('Google 로그인 중 오류가 발생했습니다: $e');
     }
   }
 
