@@ -1,4 +1,7 @@
+import 'package:busan_trip/screen/accouncement_list_screen.dart';
+import 'package:busan_trip/screen/bookmark_list_screen.dart';
 import 'package:busan_trip/screen/detail_screen.dart';
+import 'package:busan_trip/screen/heart_list_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
@@ -6,6 +9,7 @@ import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
+import 'package:busan_trip/screen/review_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:flutter/material.dart';
@@ -96,6 +100,11 @@ class MyApp extends StatelessWidget {
         '/detail_screen':(context) => DetailScreen(),
         '/notification_screen': (context) => NotificationScreen(),
         '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
+        // 리뷰 북마크 찜목록 공지사항 추가 안율현
+        '/bookmark_list': (context) => BookmarkListScreen(),
+        '/heart_list': (context) => HeartListScreen(),
+        '/review_list': (context) => ReviewListScreen(),
+        '/announcement_list': (context) => AccouncementListScreen(),
 
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
