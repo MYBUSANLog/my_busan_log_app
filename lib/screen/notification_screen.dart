@@ -1,37 +1,16 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Notification Settings App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: NotificationScreen(),
-    );
-  }
-}
-
 class NotificationScreen extends StatefulWidget {
+  const NotificationScreen({super.key});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _ProfileScreenState extends State<NotificationScreen> {
-
-  Offset _fabOffset = Offset(340, 650); // 초기 위치 설정
-
-
+class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       body: Container(
 
 
@@ -54,6 +33,7 @@ class _ProfileScreenState extends State<NotificationScreen> {
     );
   }
 }
+
 
 class FeedCard extends StatelessWidget {
   const FeedCard({super.key});

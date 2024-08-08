@@ -36,11 +36,22 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<void> _loadingFuture = _simulateLoading();
 
   static Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 15));
+    await Future.delayed(const Duration(seconds: 5));
   }
+
+
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // statusBarColor: Colors.transparent,
+      // statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.white,
+    ));
+
     return Scaffold(
       body: FutureBuilder<void>(
         future: _loadingFuture,
@@ -76,17 +87,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Untitled',
-                      style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 35),
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/006.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/notification_screen');
-                      },
+                      onTap: () {},
                       child: Column(
                         children: [
                           Icon(Icons.search_outlined, size: 35),
@@ -206,6 +216,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDetailContent() {
+    final SearchController controller = SearchController();
+    final Color? viewBackgroundColor;
+
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -226,19 +239,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Untitled',
-                      style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 35),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.search_outlined,
-                        size: 35,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        'assets/images/006.png',
+                        width: 120,
+                        fit: BoxFit.cover,
                       ),
+                    ),
+                    SearchAnchor(
+                      viewBackgroundColor: Colors.white,
+                      searchController: controller,
+                      builder: (BuildContext context, SearchController controller) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.openView();
+                          },
+                          child: Column(
+                            children: [
+                              Icon(Icons.search_outlined, size: 35),
+                            ],
+                          ),
+                        );
+                      },
+                      suggestionsBuilder:
+                          (BuildContext context, SearchController controller) {
+                        return List<ListTile>.generate(5, (int index) {
+                          final String item = 'item $index';
+                          return ListTile(
+                            title: Text(item),
+                            onTap: () {
+                              setState(() {
+                                controller.closeView(item);
+                              });
+                            },
+                          );
+                        });
+                      },
                     ),
                   ],
                 ),
@@ -392,6 +429,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+
 
   Widget sliderWidget() {
 

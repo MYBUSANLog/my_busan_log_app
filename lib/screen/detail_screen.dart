@@ -154,6 +154,9 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
 
           ),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
