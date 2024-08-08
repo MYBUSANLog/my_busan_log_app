@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:busan_trip/screen/sign_up.dart'; // 회원가입 추가
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login(BuildContext context) {
+  Future<void> _login(BuildContext context) async {
     String id = _idController.text;
     String password = _passwordController.text;
 
@@ -17,32 +19,84 @@ class LoginScreen extends StatelessWidget {
       );
       Navigator.pushReplacementNamed(context, '/root_screen');
     } else {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: id,
+          password: password,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('로그인에 성공했습니다!'),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, '/root_screen');
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('ID 또는 비밀번호가 잘못되었습니다: ${e.message}'),
+          ),
+        );
+        print('ID 또는 비밀번호가 잘못되었습니다: ${e.message}');
+      }
+    }
+  }
+
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    GoogleSignInAccount? googleUser;
+
+    try {
+      googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google 로그인에 실패했습니다.'),
+          ),
+        );
+        print('Google 로그인에 실패했습니다.');
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('ID 또는 비밀번호가 잘못되었습니다.'),
+          content: Text('Google 로그인에 성공했습니다!'),
         ),
       );
+      Navigator.pushReplacementNamed(context, '/root_screen');
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인에 실패했습니다: ${e.message}'),
+        ),
+      );
+      print('Google 로그인에 실패했습니다: ${e.message}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인 중 오류가 발생했습니다.'),
+        ),
+      );
+      print('Google 로그인 중 오류가 발생했습니다: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // statusBarColor: Colors.transparent,
-      // statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.white,
-    ));
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              height: 300,
+              height: 250,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xff0e4194), Colors.blueAccent],
@@ -55,12 +109,12 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/images/Untitled1.png',
-                    width: 200,
-                    fit: BoxFit.cover,
+                child: Text(
+                  'BUSAN TRIP',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -154,11 +208,46 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   TextButton(
                     onPressed: () {
-                      // Add sign up functionality
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      );
                     },
                     child: Text(
                       "Don't have an account? Sign up",
                       style: TextStyle(color: Color(0xff0e4194)),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      gradient: LinearGradient(
+                        colors: [Color(0xff0e4194), Colors.blueAccent],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _signInWithGoogle(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: Text(
+                        'Sign in with Google',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],

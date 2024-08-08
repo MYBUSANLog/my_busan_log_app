@@ -7,7 +7,7 @@ import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/root_screen.dart';
-import 'package:busan_trip/screen/search_screen.dart';
+import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
@@ -16,6 +16,7 @@ import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:firebase_core/firebase_core.dart'; //구글로그인
 
 //새로운 작업 from 정민
 // new repository
@@ -25,6 +26,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); //구글로그인 영욱
   await NaverMapSdk.instance.initialize(
     clientId: 'qzi0n4lbj9',
   );
@@ -38,11 +40,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // statusBarColor: Colors.transparent,
-      // statusBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.white,
     ));
 
@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black), //화이트로 수정 영욱
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
         useMaterial3: true,
       ),
       //인트로스크린 수진 추가
@@ -95,7 +95,8 @@ class MyApp extends StatelessWidget {
         '/root_screen':(context) => RootScreen(),
         '/detail_screen':(context) => DetailScreen(),
         '/notification_screen': (context) => NotificationScreen(),
-        '/search_screen': (context) => SearchScreen(),
+        '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
+
         // '/restaurant_map' : (context) => RestaurantMap(),
       },
 
