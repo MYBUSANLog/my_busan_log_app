@@ -5,7 +5,7 @@
     <application
         android:label="마이부산로그"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/appicon">
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

@@ -115,6 +115,7 @@ class MyApp extends StatelessWidget {
         '/heart_list': (context) => HeartListScreen(),
         '/review_list': (context) => ReviewListScreen(),
         '/announcement_list': (context) => AccouncementListScreen(),
+        '/login': (context) => LoginScreen(),
 
         // '/restaurant_map' : (context) => RestaurantMap(),
       },

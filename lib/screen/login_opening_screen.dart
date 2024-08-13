@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -11,10 +13,33 @@ class LoginOpeningScreen extends StatefulWidget {
 
 class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
+  late Timer _timer;
+  int _currentImageIndex = 0;
+
+  final List<String> _backgroundImages = [
+    'assets/images/haeundae_beach.png',
+    'assets/images/haeundae1.png',
+    'assets/images/haeundae2.png',
+    'assets/images/haeundae3.png',
+    'assets/images/haeundae4.png',
+  ];
+
   @override
   void initState() {
     super.initState();
-    KakaoSdk.init(nativeAppKey: 'YOUR_NATIVE_APP_KEY'); // 네이티브 앱 키 설정
+    KakaoSdk.init(nativeAppKey: '48839f306cca47459b904556fb94d0eb'); // 네이티브 앱 키 설정
+
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      setState(() {
+        _currentImageIndex = (_currentImageIndex + 1) % _backgroundImages.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void signInWithKakao() async{
@@ -57,39 +82,87 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
     ));
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
+          AnimatedSwitcher(
+            duration: Duration(seconds: 1), // 애니메이션 지속 시간
             child: Container(
+              key: ValueKey<int>(_currentImageIndex), // 현재 이미지 인덱스를 Key로 사용
               width: double.infinity,
               height: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 150,),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/006.png',
-                      width: 200,
-                      fit: BoxFit.cover,
-                    ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(_backgroundImages[_currentImageIndex]),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black.withOpacity(0.7), Colors.transparent, Colors.black.withOpacity(0.7)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0, 0.7, 1.0],
                   ),
-                  SizedBox(height: 50,),
-                  getKakaoLoginBtn(),
-                  getNaverLoginBtn(),
-                  getGoogleLoginBtn(),
-                  getEmailLoginBtn(),
-                ],
+                ),
               ),
             ),
-          )
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 50,),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/Untitled1.png',
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(height: 170,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            Text(
+                              '나의 부산을\n여행하다.',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 40,
+                                color: Color(0xffffffff),
+                              ),
+                            ),
+                            SizedBox(height: 170,),
+                            getKakaoLoginBtn(),
+                            SizedBox(height: 10,),
+                            getNaverLoginBtn(),
+                            SizedBox(height: 10,),
+                            getGoogleLoginBtn(),
+                            SizedBox(height: 10,),
+                            getEmailLoginBtn(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       )
     );
@@ -100,8 +173,9 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       onTap: () {
         signInWithKakao();
       },
+      splashColor: Colors.white.withOpacity(0.2),
+      highlightColor: Colors.white.withOpacity(0.1),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         elevation: 2,
         child: Container(
@@ -110,6 +184,14 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
           decoration: BoxDecoration(
             color: Color(0xffFEE500),
             borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -119,7 +201,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Expanded(
                   child: Center(
                     child: Text(
-                      "카카오톡으로 로그인",
+                      "카카오로 시작하기",
                       style: TextStyle(
                           fontFamily: 'NotoSansKR',
                           fontWeight: FontWeight.w500,
@@ -140,8 +222,9 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       onTap: () {
         // signInWithNaver();
       },
+      splashColor: Colors.white.withOpacity(0.2),
+      highlightColor: Colors.white.withOpacity(0.1),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         elevation: 2,
         child: Container(
@@ -150,6 +233,14 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
           decoration: BoxDecoration(
             color: Color(0xff03c75a),
             borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -159,7 +250,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Expanded(
                   child: Center(
                     child: Text(
-                      "네이버로 로그인",
+                      "네이버로 시작하기",
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
                         fontWeight: FontWeight.w500,
@@ -180,8 +271,9 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       onTap: () {
         // signInWithGoogle();
       },
+      splashColor: Colors.white.withOpacity(0.2),
+      highlightColor: Colors.white.withOpacity(0.1),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         elevation: 2,
         child: Container(
@@ -190,6 +282,14 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
           decoration: BoxDecoration(
             color: Color(0xffffffff),
             borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -199,7 +299,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Expanded(
                   child: Center(
                     child: Text(
-                      "Google로 로그인",
+                      "Google로 시작하기",
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
                         fontWeight: FontWeight.w500,
@@ -218,10 +318,11 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   Widget getEmailLoginBtn() {
     return InkWell(
       onTap: () {
-        // signInWithGoogle();
+        Navigator.pushNamed(context, '/login');
       },
+      splashColor: Colors.white.withOpacity(0.2),
+      highlightColor: Colors.white.withOpacity(0.1),
       child: Card(
-        margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         elevation: 2,
         child: Container(
@@ -230,6 +331,14 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
           decoration: BoxDecoration(
             color: Color(0xffffffff),
             borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -239,7 +348,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Expanded(
                   child: Center(
                     child: Text(
-                      "이메일로 로그인",
+                      "이메일로 시작하기",
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
                         fontWeight: FontWeight.w500,
