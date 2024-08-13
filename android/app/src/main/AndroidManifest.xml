@@ -1,12 +1,27 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="busan_trip"
+        android:label="마이부산로그"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="qzi0n4lbj9" />
+
+        <activity
+            android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
+            android:exported="true">
+            <intent-filter android:label="flutter_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="kakao48839f306cca47459b904556fb94d0eb" android:host="oauth"/>
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".MainActivity"

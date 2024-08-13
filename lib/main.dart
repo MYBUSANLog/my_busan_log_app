@@ -5,6 +5,7 @@ import 'package:busan_trip/screen/heart_list_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
+import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen1.dart';
@@ -19,6 +20,7 @@ import 'package:busan_trip/screen/receipt.dart';
 import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_core/firebase_core.dart'; //구글로그인
 
@@ -34,6 +36,14 @@ void main() async {
   await NaverMapSdk.instance.initialize(
     clientId: 'qzi0n4lbj9',
   );
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  KakaoSdk.init(
+    nativeAppKey: '48839f306cca47459b904556fb94d0eb',
+    javaScriptAppKey: 'd52b7c001d5af1c9f58d5e542775dad1',
+  );
+
   runApp(MyApp());
 }
 
@@ -117,7 +127,7 @@ Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
   if(snapshot.hasError) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
-    return LoginScreen();
+    return LoginOpeningScreen();
   } else {
     return const IntroScreen();
   }
