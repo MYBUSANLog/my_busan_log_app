@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,6 +20,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.white,
     ));
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('로그아웃'),
+          content: Text('로그아웃 하시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 다이얼로그 닫기
+              },
+              child: Text('취소'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // 다이얼로그 닫기
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginOpeningScreen()), // 화면 이동
+                );
+              },
+              child: Text('예'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -56,9 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(height: 20),
                       CircleAvatar(
                         radius: 50,
-                        backgroundImage: NetworkImage(
-                          'https://example.com/your_profile_image.jpg',
-                        ),
+                        backgroundImage: AssetImage('assets/images/default_profile.jpg'), // AssetImage 사용
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: IconButton(
@@ -67,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.black,
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/profile_alter');
+                              Navigator.pushNamed(context, '/profile_alter'); // 경로가 설정된 라우트로 이동
                             },
                           ),
                         ),
@@ -86,22 +115,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(height: 13), // 아래로 패딩 추가
-                      // ListTile(
-                      //   contentPadding: EdgeInsets.symmetric(horizontal: 0), // 여기서 패딩을 설정합니다.
-                      //   leading: Icon(Icons.person, color: Colors.blueAccent),
-                      //   title: Text(
-                      //     '프로필 변경',
-                      //     style: TextStyle(
-                      //       fontFamily: 'NotoSansKR',
-                      //       fontSize: 16,
-                      //       color: Colors.black,
-                      //     ),
-                      //   ),
-                      //   onTap: () {
-                      //     Navigator.pushNamed(context, '/profile_alter');
-                      //   },
-                      // ),
-                      // Divider(color: Colors.black, thickness: 1.0, indent: 7), // 여기서 시작 위치를 설정합니다.
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.logout, color: Color(0xff0e4194)),
@@ -113,6 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.black,
                           ),
                         ),
+                        onTap: () => _showLogoutDialog(context),
                       ),
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(

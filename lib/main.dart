@@ -13,6 +13,7 @@ import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/review_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
+import 'package:busan_trip/screen/sign_up2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
@@ -54,11 +55,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    //   statusBarIconBrightness: Brightness.dark,
+    //   systemNavigationBarColor: Colors.white,
+    // ));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -116,6 +117,7 @@ class MyApp extends StatelessWidget {
         '/review_list': (context) => ReviewListScreen(),
         '/announcement_list': (context) => AccouncementListScreen(),
         '/login': (context) => LoginScreen(),
+        '/sign_up2': (context) => SignUp2(),
 
         // '/restaurant_map' : (context) => RestaurantMap(),
       },

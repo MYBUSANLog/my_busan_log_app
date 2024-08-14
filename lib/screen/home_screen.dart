@@ -44,11 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    // SystemChrome.setEnabledSSystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //       statusBarColor: Colors.transparent,
-    //       statusBarIconBrightness: Brightness.light,
-    //       systemNavigationBarColor: Colors.white,
-    //     ));ystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+    ));
 
 
 
@@ -81,35 +81,30 @@ class _HomeScreenState extends State<HomeScreen> {
             height: double.infinity,
             color: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                SizedBox(height: 80),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/006.png'),
-                          fit: BoxFit.cover,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 80),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image.asset(
+                        'assets/images/006.png',
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Column(
+                          children: [
+                            Icon(Icons.search_outlined, size: 35),
+                          ],
                         ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Column(
-                        children: [
-                          Icon(Icons.search_outlined, size: 35),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20,),
-                OverflowBox(
-                  maxWidth: double.infinity,
-                  minWidth: double.infinity,
-                  child: Shimmer.fromColors(
+                    ],
+                  ),
+                  SizedBox(height: 20,),
+                  Shimmer.fromColors(
                     baseColor: Colors.grey[300]!,
                     highlightColor: Colors.grey[100]!,
                     child: Container(
@@ -118,89 +113,65 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                     ),
                   ),
-                ),
-                SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
+                  SizedBox(height: 30,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            color: Colors.grey[300],
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            color: Colors.grey[300],
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            color: Colors.grey[300],
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            color: Colors.grey[300],
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            color: Colors.grey[300],
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30,),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 30,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    OverflowBox(
-                      maxWidth: double.infinity,
-                      minWidth: double.infinity,
-                      child: Shimmer.fromColors(
+                      Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                         child: Container(
@@ -209,11 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 200,
                         ),
                       ),
-                    ),
-                    OverflowBox(
-                      maxWidth: double.infinity,
-                      minWidth: double.infinity,
-                      child: Shimmer.fromColors(
+                      Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                         child: Container(
@@ -222,24 +189,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 30,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.grey, thickness: 1.0,),
-                SizedBox(height: 10,),
-                RealTimeListSkeleton(),
-                SizedBox(height: 15,),
-                RealTimeListSkeleton(),
-                SizedBox(height: 15,),
-                RealTimeListSkeleton(),
-                SizedBox(height: 15,),
-                RealTimeListSkeleton(),
-                SizedBox(height: 15,),
-                RealTimeListSkeleton(),
-                SizedBox(height: 10,),
-                Divider(color: Colors.grey, thickness: 1.0,),
-                SizedBox(height: 30,),
-              ],
+                    ],
+                  ),
+                  Divider(color: Colors.grey, thickness: 1.0,),
+                  SizedBox(height: 10,),
+                  RealTimeListSkeleton(),
+                  SizedBox(height: 15,),
+                  RealTimeListSkeleton(),
+                  SizedBox(height: 15,),
+                  RealTimeListSkeleton(),
+                  SizedBox(height: 15,),
+                  RealTimeListSkeleton(),
+                  SizedBox(height: 15,),
+                  RealTimeListSkeleton(),
+                  SizedBox(height: 10,),
+                  Divider(color: Colors.grey, thickness: 1.0,),
+                  SizedBox(height: 30,),
+                ],
+              ),
             ),
           ),
         ),
@@ -684,31 +651,23 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
             },
             child: Row(
               children: [
-                OverflowBox(
-                  maxWidth: double.infinity,
-                  minWidth: double.infinity,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 10,
-                      width: 10,
-                    ),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 10,
+                    width: 10,
                   ),
                 ),
                 SizedBox(width: 13,),
-                OverflowBox(
-                  maxWidth: double.infinity,
-                  minWidth: double.infinity,
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 75,
-                      width: 75,
-                    ),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 75,
+                    width: 75,
                   ),
                 ),
                 SizedBox(width: 10,),
@@ -719,17 +678,13 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          OverflowBox(
-                            maxWidth: double.infinity,
-                            minWidth: double.infinity,
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                color: Colors.grey[300],
-                                height: 25,
-                                width: 200,
-                              ),
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              color: Colors.grey[300],
+                              height: 25,
+                              width: 200,
                             ),
                           ),
                           GestureDetector(
@@ -747,31 +702,23 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
                         ],
                       ),
                       SizedBox(height: 7,),
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 15,
-                            width: 250,
-                          ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 15,
+                          width: 250,
                         ),
                       ),
                       SizedBox(height: 15),
-                      OverflowBox(
-                        maxWidth: double.infinity,
-                        minWidth: double.infinity,
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 17,
-                            width: 100,
-                          ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 17,
+                          width: 100,
                         ),
                       ),
                     ],

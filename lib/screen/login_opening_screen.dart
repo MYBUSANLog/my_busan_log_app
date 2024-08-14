@@ -81,15 +81,15 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   }
 
   void signInWithNaver() async{
-    NaverLoginResult res = await FlutterNaverLogin.logIn();
-
-    print('accessToken = ${res.accessToken}');
-    print('id = ${res.account.id}');
-    print('email = ${res.account.email}');
-    print('name = ${res.account.name}');
-
-    NaverAccessToken accessToken = await FlutterNaverLogin.currentAccessToken;
-    print(accessToken.accessToken);
+    try{
+      final NaverLoginResult res = await FlutterNaverLogin.logIn();
+      print('accessToken = ${res.accessToken}');
+      print('id = ${res.account.id}');
+      print('email = ${res.account.email}');
+      print('name = ${res.account.name}');
+    } catch(error){
+      print(error);
+    }
   }
 
   void signInWithGoogle() async {
@@ -194,11 +194,12 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(height: 170,),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+
+                      Expanded(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            SizedBox(height: 40,),
                             Text(
                               '나의 부산을\n여행하다.',
                               style: TextStyle(
@@ -208,14 +209,22 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
                                 color: Color(0xffffffff),
                               ),
                             ),
-                            SizedBox(height: 170,),
-                            getKakaoLoginBtn(),
-                            SizedBox(height: 10,),
-                            getNaverLoginBtn(),
-                            SizedBox(height: 10,),
-                            getGoogleLoginBtn(),
-                            SizedBox(height: 10,),
-                            getEmailLoginBtn(),
+
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                children: [
+                                  getKakaoLoginBtn(),
+                                  SizedBox(height: 10,),
+                                  getNaverLoginBtn(),
+                                  SizedBox(height: 10,),
+                                  getGoogleLoginBtn(),
+                                  SizedBox(height: 10,),
+                                  getEmailLoginBtn(),
+                                  SizedBox(height: 30,),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -226,7 +235,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
             ],
           ),
         ],
-      )
+      ),
     );
   }
 
@@ -265,10 +274,10 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
                     child: Text(
                       "카카오로 시작하기",
                       style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                          color: Color(0xff000000),
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                        color: Color(0xff000000),
                       ),
                     ),
                   )
