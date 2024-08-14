@@ -81,15 +81,15 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   }
 
   void signInWithNaver() async{
-    try{
-      final NaverLoginResult res = await FlutterNaverLogin.logIn();
-      print('accessToken = ${res.accessToken}');
-      print('id = ${res.account.id}');
-      print('email = ${res.account.email}');
-      print('name = ${res.account.name}');
-    } catch(error){
-      print(error);
-    }
+    NaverLoginResult res = await FlutterNaverLogin.logIn();
+
+    print('accessToken = ${res.accessToken}');
+    print('id = ${res.account.id}');
+    print('email = ${res.account.email}');
+    print('name = ${res.account.name}');
+
+    NaverAccessToken accessToken = await FlutterNaverLogin.currentAccessToken;
+    print(accessToken.accessToken);
   }
 
   void signInWithGoogle() async {
