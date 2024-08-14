@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 class LoginOpeningScreen extends StatefulWidget {
@@ -74,6 +77,65 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
       }
+    }
+  }
+
+  void signInWithNaver() async{
+    try{
+      final NaverLoginResult res = await FlutterNaverLogin.logIn();
+      print('accessToken = ${res.accessToken}');
+      print('id = ${res.account.id}');
+      print('email = ${res.account.email}');
+      print('name = ${res.account.name}');
+    } catch(error){
+      print(error);
+    }
+  }
+
+  void signInWithGoogle() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    GoogleSignInAccount? googleUser;
+
+    try {
+      googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google 로그인에 실패했습니다.'),
+          ),
+        );
+        print('Google 로그인에 실패했습니다.');
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인에 성공했습니다!'),
+        ),
+      );
+      Navigator.pushReplacementNamed(context, '/root_screen');
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인에 실패했습니다: ${e.message}'),
+        ),
+      );
+      print('Google 로그인에 실패했습니다: ${e.message}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google 로그인 중 오류가 발생했습니다.'),
+        ),
+      );
+      print('Google 로그인 중 오류가 발생했습니다: $e');
     }
   }
 
@@ -220,7 +282,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   Widget getNaverLoginBtn() {
     return InkWell(
       onTap: () {
-        // signInWithNaver();
+        signInWithNaver();
       },
       splashColor: Colors.white.withOpacity(0.2),
       highlightColor: Colors.white.withOpacity(0.1),
@@ -269,7 +331,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   Widget getGoogleLoginBtn() {
     return InkWell(
       onTap: () {
-        // signInWithGoogle();
+        signInWithGoogle();
       },
       splashColor: Colors.white.withOpacity(0.2),
       highlightColor: Colors.white.withOpacity(0.1),

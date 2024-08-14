@@ -34,58 +34,11 @@ class LoginScreen extends StatelessWidget {
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('ID 또는 비밀번호가 잘못되었습니다: ${e.message}'),
+            content: Text('ID 또는 비밀번호가 잘못되었습니다'),
           ),
         );
         print('ID 또는 비밀번호가 잘못되었습니다: ${e.message}');
       }
-    }
-  }
-
-  Future<void> _signInWithGoogle(BuildContext context) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    GoogleSignInAccount? googleUser;
-
-    try {
-      googleUser = await googleSignIn.signIn();
-
-      if (googleUser == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Google 로그인에 실패했습니다.'),
-          ),
-        );
-        print('Google 로그인에 실패했습니다.');
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Google 로그인에 성공했습니다!'),
-        ),
-      );
-      Navigator.pushReplacementNamed(context, '/root_screen');
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Google 로그인에 실패했습니다: ${e.message}'),
-        ),
-      );
-      print('Google 로그인에 실패했습니다: ${e.message}');
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Google 로그인 중 오류가 발생했습니다.'),
-        ),
-      );
-      print('Google 로그인 중 오류가 발생했습니다: $e');
     }
   }
 
@@ -133,7 +86,7 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'LOGIN',
+                    '로그인',
                     style: TextStyle(
                       color: Color(0xff0e4194),
                       fontSize: 28,
@@ -144,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                   TextField(
                     controller: _idController,
                     decoration: InputDecoration(
-                      labelText: 'Id',
+                      labelText: 'ID',
                       labelStyle: TextStyle(color: Color(0xff0e4194)),
                       border: UnderlineInputBorder(),
                       focusedBorder: UnderlineInputBorder(
@@ -158,7 +111,7 @@ class LoginScreen extends StatelessWidget {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: 'PASSWORD',
                       labelStyle: TextStyle(color: Color(0xff0e4194)),
                       border: UnderlineInputBorder(),
                       focusedBorder: UnderlineInputBorder(
@@ -176,7 +129,7 @@ class LoginScreen extends StatelessWidget {
                         // Add forgot password functionality
                       },
                       child: Text(
-                        'Forgot your password?',
+                        '비밀번호 찾기',
                         style: TextStyle(color: Color(0xff0e4194)),
                       ),
                     ),
@@ -205,7 +158,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'LOGIN',
+                        '로그인',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white,
@@ -222,40 +175,8 @@ class LoginScreen extends StatelessWidget {
                       );
                     },
                     child: Text(
-                      "Don't have an account? Sign up",
+                      "이메일로 회원가입",
                       style: TextStyle(color: Color(0xff0e4194)),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        colors: [Color(0xff0e4194), Colors.blueAccent],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _signInWithGoogle(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: Text(
-                        'Sign in with Google',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
                   ),
                 ],
