@@ -53,6 +53,12 @@ dependencies:
   firebase_auth: ^5.1.4 #구글 로그인
   firebase_core: ^3.3.0
   google_sign_in:  ^6.2.1
+  kakao_flutter_sdk: ^1.9.5 # 전체 추가
+  kakao_flutter_sdk_user: ^1.9.5 # 카카오 로그인 API 패키지
+  kakao_flutter_sdk_share: ^1.9.5 # 카카오톡 공유 API 패키지
+  flutter_naver_login: ^1.8.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -63,6 +69,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/Masked.png"
+  remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,6 +86,7 @@ flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
+
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
