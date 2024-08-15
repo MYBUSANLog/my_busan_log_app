@@ -83,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundImage: _profileImage == null
-                        ? AssetImage('assets/images/abc.png')
+                        ? AssetImage('assets/images/default_profile.jpg')
                         : FileImage(_profileImage!) as ImageProvider,
                   ),
                   Positioned(
