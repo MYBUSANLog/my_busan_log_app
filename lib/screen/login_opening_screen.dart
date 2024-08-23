@@ -1,11 +1,16 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:busan_trip/screen/root_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../vo/user.dart' as u;
+import '../model/user_model.dart';
 
 class LoginOpeningScreen extends StatefulWidget {
   const LoginOpeningScreen({super.key});
@@ -15,9 +20,11 @@ class LoginOpeningScreen extends StatefulWidget {
 }
 
 class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
-
   late Timer _timer;
   int _currentImageIndex = 0;
+  bool _isLoadingKakao = false;
+  bool _isLoadingNaver = false;
+  bool _isLoadingGoogle = false;
 
   final List<String> _backgroundImages = [
     'assets/images/haeundae_beach.png',
@@ -30,14 +37,26 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   @override
   void initState() {
     super.initState();
-    KakaoSdk.init(nativeAppKey: '48839f306cca47459b904556fb94d0eb'); // 네이티브 앱 키 설정
+
+    KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534'); // 네이티브 앱 키 설정
 
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       setState(() {
         _currentImageIndex = (_currentImageIndex + 1) % _backgroundImages.length;
       });
     });
+
+    // _checkLoginStatus(); // 앱 시작 시 로그인 상태 확인
   }
+
+  // void _checkLoginStatus() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  //
+  //   if (isLoggedIn) {
+  //     navigateToMainPage(); // 로그인되어 있으면 메인 페이지로 이동
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -45,56 +64,271 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
     super.dispose();
   }
 
-  void signInWithKakao() async{
-    // 카카오 로그인 구현 예제
+  void navigateToMainPage() {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => RootScreen(),
+    ));
+  }
 
-    // 카카오톡 실행 가능 여부 확인
-    // 카카오톡 실행이 가능하면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
-    if(await isKakaoTalkInstalled()) {
-      try {
-        await UserApi.instance.loginWithKakaoTalk();
-        print('카카오톡으로 로그인 성공');
-      } catch (error) {
-        print('카카오톡으로 로그인 실패 $error');
 
-        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
-        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-        if (error is PlatformException && error.code == 'CANCELED') {
-          return;
-        }
-        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
+
+  // void signInWithKakao() async {
+  //   setState(() {
+  //     _isLoadingKakao = true; // 로딩 시작
+  //   });
+  //
+  //   try {
+  //     kko.User? kakaoUser = await kko.UserApi.instance.me();
+  //     String? email = kakaoUser.kakaoAccount?.email ?? '';
+  //     String? birthday = kakaoUser.kakaoAccount?.birthday;
+  //     String formattedBirthday = birthday != null && birthday.length == 4
+  //         ? "${birthday.substring(0, 2)}-${birthday.substring(2, 4)}"
+  //         : '';
+  //
+  //     String? phoneNumber = kakaoUser.kakaoAccount?.phoneNumber;
+  //     String formattedNumber = phoneNumber != null && phoneNumber.length >= 4
+  //         ? '0' + phoneNumber.substring(0, 4)
+  //         : '';
+  //
+  //     // 유저 정보를 바탕으로 User 객체를 생성
+  //     u.User user = u.User(
+  //       u_email: email,
+  //       u_name: kakaoUser.kakaoAccount?.name ?? '',
+  //       u_img_url: kakaoUser.kakaoAccount?.profile?.profileImageUrl ?? '',
+  //       u_nick: kakaoUser.kakaoAccount?.profile?.nickname ?? '',
+  //       u_birth: "${kakaoUser.kakaoAccount?.birthyear ?? ''}-${formattedBirthday}",
+  //       u_p_number: formattedNumber,
+  //       u_address: '',
+  //       trip_preference: 3,
+  //       business_license: '',
+  //       login_provider: 'kakao',
+  //       // 다른 필드들도 필요한 대로 초기화
+  //     );
+  //
+  //     // UserModel 프로바이더를 사용하여 데이터베이스에 유저가 존재하는지 확인
+  //     UserModel userModel = Provider.of<UserModel>(context, listen: false);
+  //     bool userExists = await userModel.checkUserExists(email: email);
+  //
+  //     if (userExists) {
+  //       // 유저가 이미 존재하면 로그인 함수 호출
+  //       await userModel.kakaoLoginUser(user: user);
+  //     } else {
+  //       // 유저가 존재하지 않으면 등록 함수 호출
+  //       await userModel.kakaoRegisterUser();
+  //     }
+  //
+  //     if (await isKakaoTalkInstalled()) {
+  //       try {
+  //         await kko.UserApi.instance.loginWithKakaoTalk().then((value) async {
+  //           final prefs = await SharedPreferences.getInstance();
+  //           await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+  //           await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
+  //
+  //           print('카카오톡으로 로그인 성공');
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(
+  //               content: Text('카카오톡 로그인에 성공했습니다.'),
+  //             ),
+  //           );
+  //           navigateToMainPage(); // 로그인 성공 시 메인 페이지로 이동
+  //         });
+  //       } catch (error) {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(
+  //             content: Text('카카오톡 로그인에 실패했습니다.'),
+  //           ),
+  //         );
+  //         print('카카오톡으로 로그인 실패 $error');
+  //         if (error is PlatformException && error.code == 'CANCELED') {
+  //           return;
+  //         }
+  //         try {
+  //           await kko.UserApi.instance.loginWithKakaoAccount().then((value) {
+  //             print('카카오톡으로 로그인 성공');
+  //             ScaffoldMessenger.of(context).showSnackBar(
+  //               SnackBar(
+  //                 content: Text('카카오톡 로그인에 성공했습니다.'),
+  //               ),
+  //             );
+  //             navigateToMainPage(); // 로그인 성공 시 메인 페이지로 이동
+  //           });
+  //         } catch (error) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(
+  //               content: Text('카카오계정으로 로그인에 실패했습니다.'),
+  //             ),
+  //           );
+  //           print('카카오계정으로 로그인 실패 $error');
+  //         }
+  //       }
+  //     } else {
+  //       try {
+  //         await kko.UserApi.instance.loginWithKakaoAccount().then((value) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(
+  //               content: Text('카카오계정 로그인에 성공했습니다.'),
+  //             ),
+  //           );
+  //           print('카카오계정으로 로그인 성공');
+  //           navigateToMainPage(); // 로그인 성공 시 메인 페이지로 이동
+  //         });
+  //       } catch (error) {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(
+  //             content: Text('카카오계정 로그인에 실패했습니다.'),
+  //           ),
+  //         );
+  //         print('카카오계정으로 로그인 실패 $error');
+  //       }
+  //     }
+  //   } finally {
+  //     setState(() {
+  //       _isLoadingKakao = false; // 로딩 종료
+  //     });
+  //   }
+  // }
+
+  Future<void> signInWithKakao() async {
+    setState(() {
+      _isLoadingKakao = true; // 로딩 시작
+    });
+
+    try {
+      // 카카오톡이 설치되어 있는지 확인 후, 카카오톡으로 로그인 시도
+      if (await kko.isKakaoTalkInstalled()) {
         try {
-          await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공');
+          await kko.UserApi.instance.loginWithKakaoTalk();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+          await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
+          print('카카오톡으로 로그인 성공');
         } catch (error) {
-          print('카카오계정으로 로그인 실패 $error');
+          print('카카오톡으로 로그인 실패 $error');
+          // 카카오톡 로그인 실패 시, 카카오 계정으로 로그인 시도
+          await kko.UserApi.instance.loginWithKakaoAccount();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+          await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
+          print('카카오 계정으로 로그인 성공');
         }
+      } else {
+        // 카카오톡이 설치되어 있지 않은 경우, 카카오 계정으로 로그인 시도
+        await kko.UserApi.instance.loginWithKakaoAccount();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+        await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
+        print('카카오 계정으로 로그인 성공');
       }
-    } else {
-      try {
-        await UserApi.instance.loginWithKakaoAccount();
-        print('카카오계정으로 로그인 성공');
-      } catch (error) {
-        print('카카오계정으로 로그인 실패 $error');
+
+      // 로그인 후 사용자 정보 가져오기
+      kko.User? kakaoUser = await kko.UserApi.instance.me();
+      String? email = kakaoUser.kakaoAccount?.email ?? '';
+      String? birthday = kakaoUser.kakaoAccount?.birthday;
+      String formattedBirthday = birthday != null && birthday.length == 4
+          ? "${birthday.substring(0, 2)}-${birthday.substring(2, 4)}"
+          : '';
+
+      String? phoneNumber = kakaoUser.kakaoAccount?.phoneNumber;
+      String formattedNumber = phoneNumber != null && phoneNumber.length >= 4
+          ? '0' + phoneNumber.substring(4, 16)
+          : '';
+
+      print(kakaoUser.kakaoAccount);
+
+      // 유저 정보를 바탕으로 User 객체를 생성
+      u.User user = u.User(
+        u_email: email,
+        u_name: kakaoUser.kakaoAccount?.name ?? '',
+        u_img_url: kakaoUser.kakaoAccount?.profile?.profileImageUrl ?? '',
+        u_nick: kakaoUser.kakaoAccount?.profile?.nickname ?? '',
+        u_birth: "${kakaoUser.kakaoAccount?.birthyear ?? ''}-${formattedBirthday}",
+        u_p_number: formattedNumber,
+        u_address: '',
+        trip_preference: 3,
+        business_license: '',
+        login_provider: 'kakao',
+        // 기타 필드들 초기화
+      );
+
+
+      // UserModel 프로바이더를 사용하여 데이터베이스에 유저가 존재하는지 확인
+      UserModel userModel = Provider.of<UserModel>(context, listen: false);
+      bool userExists = await userModel.checkUserExists(email: email);
+
+      if (userExists) {
+        // 유저가 이미 존재하면 로그인 함수 호출
+        await userModel.kakaoLoginUser(user: user);
+      } else {
+        // 유저가 존재하지 않으면 등록 함수 호출
+        await userModel.kakaoRegisterUser(user);
       }
+
+      // 로그인 성공 시, 팝업 닫기 및 메인 페이지로 이동
+      // Navigator.of(context).pop();  // 팝업 닫기
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => RootScreen()),
+      );
+
+    } catch (error) {
+      print('카카오 로그인 실패 $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('카카오 로그인에 실패했습니다.'),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoadingKakao = false; // 로딩 종료
+      });
     }
   }
 
-  void signInWithNaver() async{
-    try{
+
+
+  void signInWithNaver() async {
+    setState(() {
+      _isLoadingNaver = true; // 로딩 시작
+    });
+
+    try {
       final NaverLoginResult res = await FlutterNaverLogin.logIn();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+      await prefs.setString('loginMethod', 'naver'); // 로그인 방법 저장
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('네이버 로그인에 성공했습니다.'),
+        ),
+      );
+      navigateToMainPage();
       print('accessToken = ${res.accessToken}');
       print('id = ${res.account.id}');
       print('email = ${res.account.email}');
       print('name = ${res.account.name}');
-    } catch(error){
+      print('nickname = ${res.account.nickname}');
+      print('birth = ${res.account.birthyear}-${res.account.birthday}');
+      print('p_number = ${res.account.mobile}');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('네이버 로그인에 실패했습니다.'),
+        ),
+      );
       print(error);
+    } finally {
+      setState(() {
+        _isLoadingNaver = false; // 로딩 종료
+      });
     }
   }
 
   void signInWithGoogle() async {
     final GoogleSignIn googleSignIn = GoogleSignIn();
     GoogleSignInAccount? googleUser;
+
+    setState(() {
+      _isLoadingGoogle = true; // 로딩 시작
+    });
 
     try {
       googleUser = await googleSignIn.signIn();
@@ -110,19 +344,19 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final fb.AuthCredential credential = fb.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final fb.UserCredential userCredential = await fb.FirebaseAuth.instance.signInWithCredential(credential);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Google 로그인에 성공했습니다!'),
         ),
       );
-      Navigator.pushReplacementNamed(context, '/root_screen');
-    } on FirebaseAuthException catch (e) {
+      navigateToMainPage();
+    } on fb.FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Google 로그인에 실패했습니다: ${e.message}'),
@@ -136,12 +370,15 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         ),
       );
       print('Google 로그인 중 오류가 발생했습니다: $e');
+    } finally {
+      setState(() {
+        _isLoadingGoogle = false; // 로딩 종료
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
@@ -251,7 +488,6 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         elevation: 2,
         child: Container(
           height: 50,
-
           decoration: BoxDecoration(
             color: Color(0xffFEE500),
             borderRadius: BorderRadius.circular(50),
@@ -271,7 +507,15 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Image.asset('assets/images/kakaotalk_symbol.png', width: 25,),
               Expanded(
                   child: Center(
-                    child: Text(
+                    child: _isLoadingKakao
+                        ? SizedBox(
+                      width: 17,
+                      height: 17,
+                      child: CircularProgressIndicator(
+                        color: Color(0xff000000), strokeWidth: 2,
+                      ),
+                    )
+                        : Text(
                       "카카오로 시작하기",
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
@@ -288,6 +532,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       ),
     );
   }
+
   Widget getNaverLoginBtn() {
     return InkWell(
       onTap: () {
@@ -300,7 +545,6 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         elevation: 2,
         child: Container(
           height: 50,
-
           decoration: BoxDecoration(
             color: Color(0xff03c75a),
             borderRadius: BorderRadius.circular(50),
@@ -320,7 +564,15 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Image.asset('assets/images/naver_symbol.png', width: 17,),
               Expanded(
                   child: Center(
-                    child: Text(
+                    child: _isLoadingNaver
+                        ? SizedBox(
+                      width: 17,
+                      height: 17,
+                      child: CircularProgressIndicator(
+                        color: Color(0xff000000), strokeWidth: 2,
+                      ),
+                    )
+                        : Text(
                       "네이버로 시작하기",
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
@@ -337,6 +589,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       ),
     );
   }
+
   Widget getGoogleLoginBtn() {
     return InkWell(
       onTap: () {
@@ -349,7 +602,6 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         elevation: 2,
         child: Container(
           height: 50,
-
           decoration: BoxDecoration(
             color: Color(0xffffffff),
             borderRadius: BorderRadius.circular(50),
@@ -369,7 +621,15 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
               Image.asset('assets/images/google_symbol.png', width: 20,),
               Expanded(
                   child: Center(
-                    child: Text(
+                    child: _isLoadingGoogle
+                        ? SizedBox(
+                      width: 17,
+                      height: 17,
+                      child: CircularProgressIndicator(
+                        color: Color(0xff000000), strokeWidth: 2,
+                      ),
+                    )
+                        : Text(
                       "Google로 시작하기",
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
@@ -386,6 +646,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       ),
     );
   }
+
   Widget getEmailLoginBtn() {
     return InkWell(
       onTap: () {
@@ -398,7 +659,6 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         elevation: 2,
         child: Container(
           height: 50,
-
           decoration: BoxDecoration(
             color: Color(0xffffffff),
             borderRadius: BorderRadius.circular(50),

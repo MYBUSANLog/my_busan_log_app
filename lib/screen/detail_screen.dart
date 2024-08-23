@@ -148,11 +148,10 @@ class _DetailScreenState extends State<DetailScreen> {
           pinned: true,
           expandedHeight: 180.0, // AppBar의 최대 높이 설정
           flexibleSpace: FlexibleSpaceBar(
-            background: Image.network(
-              'https://s3-alpha-sig.figma.com/img/9ebf/4cf3/8476c113e0efa48c8be3c1b6c5f15345?Expires=1723420800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=jj7ZExk6QTQDJeex1~E4k240s0f1vgjsHEZOrRoraziJRakcnMQRNwjV2WxudNYFkr7gDOrNi-gVWo3tBMIAWs9uFrCxelz1xBK4hm1Lq8VWR~ENC3E8P9g4O~DTo7infIxez52vIKBf5sdWViDNAH3NRQthTWx4WsqhMKxW08gEJHHFhAKUpwAUDRummQhBXz0w-v2v-HgksqZcqGfR~xLvb9Wy8a4yEzOFwEit9y1EPX3NBOAUWsM8uzF250MR-xJfdiNj-ZwVI6cfE56knTgH302P59w7uYOr82V8IsREGFP1APVeeriVqGa5xM1gfVhL~fEEZ36fSbye-hTOfw__',
-              fit: BoxFit.cover, // 이미지를 AppBar에 맞추기
-            ),
-
+            background: Image.asset(
+              'assets/images/lotteworld.jfif',
+              fit: BoxFit.cover,
+            ), // 이미지를 AppBar에 맞추기
           ),
           iconTheme: IconThemeData(
             color: Colors.white,
@@ -284,10 +283,10 @@ class DetailContent extends StatelessWidget {
           ),
 
           SizedBox(height: 20,),
-          Container(
-            child: Text('이용 안내', style: ts3),
-          ),
+          Text('이용 안내', style: ts3),
+          SizedBox(height: 10),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,32 +294,29 @@ class DetailContent extends StatelessWidget {
                   Text('주소', style: ts4),
                   Text('홈페이지', style: ts4),
                   Text('운영요일 및 시간', style: ts4),
-                  Text('', style: ts4),
-                  Text('', style: ts4),
                   Text('전화번호', style: ts4),
                   Text('휴무일', style: ts4),
                   Text('교통정보', style: ts4),
-                  Text('', style: ts4),
                 ],
               ),
-              SizedBox(width: 10,),
-              Container(
-                width: 240,
+              SizedBox(width: 10),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('부산광역시 기장군 기장읍 동부산관광로 42', style: ts4),
-                    Text('https://adventurebusan.lotteworld.com/kor/main/index.do', style: ts4),
-                    Text('10:00 ~ 20:00 (월~금)\n10:00 ~ 21:00 (토~일)\n*자세한 운영시간은 홈페이지 참조', style: ts4),
+                    Text('부산광역시 기장군 기장읍 동부산관광로 42',
+                        style: ts4),
+                    Text(
+                        'https://adventurebusan.lotteworld.com/kor/main/index.do',
+                        style: ts4),
+                    Text(
+                        '10:00 ~ 20:00 (월~금)\n10:00 ~ 21:00 (토~일)\n*자세한 운영시간은 홈페이지 참조',
+                        style: ts4),
                     Text('1661-2000 ', style: ts4),
                     Text('연중휴무', style: ts4),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('동해선 오시리아역 1번 출구 도보 10분버스 139, 183, 185, 1001 오시리아역 정류장하차도보10분주차 롯데월드어드벤처부산주차장 ', style: ts4,
-                        ),
-                      ],
-                    ),
+                    Text(
+                        '동해선 오시리아역 1번 출구 도보 10분\n버스 139, 183, 185, 1001 오시리아역 정류장 하차 도보 10분\n주차 롯데월드어드벤처부산주차장',
+                        style: ts4),
                   ],
                 ),
               ),
