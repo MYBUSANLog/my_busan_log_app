@@ -63,43 +63,47 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(70),
-          child: SafeArea(
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(top: 16.0),
-              child: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                title: Container(
-                  width: double.infinity,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: '여행지를 검색해주세요',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(top: 8.0),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
-                      suffixIcon: _controller.text.isNotEmpty
-                          ? IconButton(
-                        icon: Icon(Icons.cancel, color: Colors.grey[400], size: 20,),
-                        onPressed: () {
-                          _controller.clear();
-                          setState(() {});
-                        },
-                      )
-                          : null,
-                    ),
-                    cursorColor: Color(0xff0e4194),
-                    onSubmitted: _handleSubmitted, // 텍스트 입력 후 Enter 처리
-                    textInputAction: TextInputAction.search,
-                  ),
+          child: AppBar(
+            leadingWidth: 40, // 원하는 너비로 설정
+            leading: Padding(
+              padding: EdgeInsets.only(left: 8.0), // 왼쪽에 16.0의 간격 추가
+              child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: Container(
+              width: double.infinity,
+              height: 45,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  hintText: '여행지를 검색해주세요',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 8.0),
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  suffixIcon: _controller.text.isNotEmpty
+                      ? IconButton(
+                    icon: Icon(Icons.cancel, color: Colors.grey[400], size: 20,),
+                    onPressed: () {
+                      _controller.clear();
+                      setState(() {});
+                    },
+                  )
+                      : null,
                 ),
+                cursorColor: Color(0xff0e4194),
+                onSubmitted: _handleSubmitted, // 텍스트 입력 후 Enter 처리
+                textInputAction: TextInputAction.search,
               ),
             ),
           ),

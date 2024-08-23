@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/hotel_list_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/search_result_list.dart';
@@ -276,7 +277,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HotelListScreen()),
+                          );
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.hotel, size: 35),
