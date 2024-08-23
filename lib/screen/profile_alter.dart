@@ -10,7 +10,7 @@ class ProfileAlterScreen extends StatefulWidget {
 class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   final ProfileAlterModel profile = ProfileAlterModel(
    /* profileImage: 'https://example.com/your_profile_image.jpg',*/
-    profileImage: 'assets/images/abc.png',  // 여기에서 로컬 이미지 경로를 사용합니다.
+    profileImage: 'assets/images/default_profile.jpg',  // 여기에서 로컬 이미지 경로를 사용합니다.
     age: 25,
     name: 'John Doe',
     nickname: 'Johnny',
@@ -18,9 +18,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     address: '123 Main St, Seoul, Korea',
     email: 'john.doe@example.com',
     birthdate: '1995-05-15',
-    gender: '남자',
-    occupation: 'Software Developer',
-    bio: 'Hello, I am John Doe.',
   );
 
   late TextEditingController nameController;
@@ -30,10 +27,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   late TextEditingController addressController;
   late TextEditingController emailController;
   late TextEditingController birthdateController;
-  late TextEditingController occupationController;
-  late TextEditingController bioController;
-
-  String selectedGender = '남자';
 
   @override
   void initState() {
@@ -45,8 +38,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     addressController = TextEditingController(text: profile.address);
     emailController = TextEditingController(text: profile.email);
     birthdateController = TextEditingController(text: profile.birthdate);
-    occupationController = TextEditingController(text: profile.occupation);
-    bioController = TextEditingController(text: profile.bio);
   }
 
   Future<void> _pickImage() async {
@@ -81,7 +72,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkImage(profile.profileImage),
+                    backgroundImage: AssetImage(profile.profileImage),  // 수정된 부분
                   ),
                   Positioned(
                     bottom: 0,
@@ -106,9 +97,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             buildProfileItem('주소', addressController),
             buildProfileItem('이메일', emailController, TextInputType.emailAddress),
             buildProfileItem('생년월일', birthdateController),
-            buildDropdownField('성별', selectedGender, ['남자', '여자']),
-            buildProfileItem('직업', occupationController),
-            buildProfileItem('자기소개', bioController),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -148,40 +136,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
           fontFamily: 'NotoSansKR',
           fontSize: 16,
           color: Colors.black,
-        ),
-      ),
-    );
-  }
-
-  Widget buildDropdownField(String labelText, String value, List<String> items) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: TextStyle(
-            fontFamily: 'NotoSansKR',
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-          border: InputBorder.none,
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: value,
-            isDense: true,
-            onChanged: (newValue) {
-              setState(() {
-                selectedGender = newValue!;
-              });
-            },
-            items: items.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: TextStyle(fontFamily: 'NotoSansKR')),
-              );
-            }).toList(),
-          ),
         ),
       ),
     );

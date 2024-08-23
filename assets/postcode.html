@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Daum Postcode</title>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+<div id="layer" style="display:none;"></div>
+<script>
+    function searchPostcode() {
+      new daum.Postcode({
+        oncomplete: function(data) {
+          // JavaScript Interface를 통해 Flutter로 데이터를 전달
+          var addressData = {
+            zonecode: data.zonecode,
+            address: data.address
+          };
+          window.flutter_inappwebview.callHandler('onComplete', addressData);
+        }
+      }).open();
+    }
+    searchPostcode();
+</script>
+</body>
+</html>

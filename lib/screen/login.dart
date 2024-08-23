@@ -1,8 +1,12 @@
 import 'package:busan_trip/screen/sign_up1.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:busan_trip/screen/sign_up.dart'; // 회원가입 추가
+import 'package:busan_trip/screen/sign_up.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../vo/user.dart';
+
+import '../model/user_model.dart'; // 회원가입 추가
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -10,50 +14,59 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final FocusNode _idFocusNode = FocusNode();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _pwController = TextEditingController();
+  final FocusNode _emailFocusNode = FocusNode();
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    _checkLoginStatus();
     // 화면이 나타날 때 자동으로 아이디 텍스트 필드에 포커스를 줍니다.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_idFocusNode);
+      FocusScope.of(context).requestFocus(_emailFocusNode);
     });
   }
 
-  Future<void> _login(BuildContext context) async {
-    String id = _idController.text;
-    String password = _passwordController.text;
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    if (id == 'test' && password == '1234') {
+    if (isLoggedIn) {
+      Navigator.pushReplacementNamed(context, '/root_screen');
+    }
+  }
+
+  Future<void> _login(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
+    User u = User(
+      u_email: _emailController.text,
+      u_pw: _pwController.text,
+    );
+    var result = await Provider.of<UserModel>(context,listen: false).loginUser(user: u);
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if(result) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('로그인에 성공했습니다!'),
         ),
       );
       Navigator.pushReplacementNamed(context, '/root_screen');
-    } else {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: id,
-          password: password,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('로그인에 성공했습니다!'),
-          ),
-        );
-        Navigator.pushReplacementNamed(context, '/root_screen');
-      } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('ID 또는 비밀번호가 잘못되었습니다'),
-          ),
-        );
-        print('ID 또는 비밀번호가 잘못되었습니다: ${e.message}');
-      }
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('이메일 또는 비밀번호가 잘못되었습니다'),
+        ),
+      );
     }
   }
 
@@ -84,15 +97,14 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
               child: Column(
                 children: [
                   SizedBox(height: 30),
                   TextField(
-                    controller: _idController,
-                    focusNode: _idFocusNode,  // 포커스 노드를 연결합니다.
+                    controller: _emailController,
+                    focusNode: _emailFocusNode,  // 포커스 노드를 연결합니다.
                     decoration: InputDecoration(
                       labelText: '이메일',
                       labelStyle: TextStyle(color: Color(0xff0e4194)),
@@ -102,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 20),
                   TextField(
-                    controller: _passwordController,
+                    controller: _pwController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: '비밀번호',
@@ -135,13 +147,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: Text(
-                        '로그인',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: _isLoading
+                          ? SizedBox(
+                            width: 17,
+                            height: 17,
+                            child: CircularProgressIndicator(
+                                color: Colors.white, strokeWidth: 2,
+                              ),
+                          )
+                          : Text(
+                            '로그인',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -178,6 +198,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
+            // if (_isLoading)
+            //   Center(
+            //     child: CircularProgressIndicator(),
+            //   ),
           ],
         ),
       ),
@@ -186,9 +210,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _idController.dispose();
-    _passwordController.dispose();
-    _idFocusNode.dispose();  // FocusNode를 해제합니다.
+    _emailController.dispose();
+    _pwController.dispose();
+    _emailFocusNode.dispose();  // FocusNode를 해제합니다.
     super.dispose();
   }
 }

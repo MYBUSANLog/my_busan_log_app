@@ -7,9 +7,6 @@ class ProfileAlterModel {
   final String address;
   final String email;
   final String birthdate;
-  final String gender;
-  final String occupation;
-  final String bio;
 
   ProfileAlterModel({
     required this.profileImage,
@@ -20,9 +17,6 @@ class ProfileAlterModel {
     required this.address,
     required this.email,
     required this.birthdate,
-    required this.gender,
-    required this.occupation,
-    required this.bio,
   });
 
   void setProfileImage(String imagePath) {

@@ -1,3 +1,5 @@
+import 'package:busan_trip/model/join_model.dart';
+import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/accouncement_list_screen.dart';
 import 'package:busan_trip/screen/bookmark_list_screen.dart';
 import 'package:busan_trip/screen/detail_screen.dart';
@@ -12,8 +14,11 @@ import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/review_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
+import 'package:busan_trip/screen/searchingpage.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:busan_trip/screen/sign_up2.dart';
+import 'package:busan_trip/screen/sign_up3.dart';
+import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
@@ -23,7 +28,8 @@ import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:firebase_core/firebase_core.dart'; //구글로그인
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart'; //구글로그인
 
 //새로운 작업 from 정민
 // new repository
@@ -41,8 +47,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   KakaoSdk.init(
-    nativeAppKey: '48839f306cca47459b904556fb94d0eb',
-    javaScriptAppKey: 'd52b7c001d5af1c9f58d5e542775dad1',
+    nativeAppKey: '3cbc4103340e6be3c6247d5228d55534',
+    // javaScriptAppKey: 'e09856d7367e723cf282ead8d304029a',
   );
 
   runApp(MyApp());
@@ -61,67 +67,77 @@ class MyApp extends StatelessWidget {
     //   systemNavigationBarColor: Colors.white,
     // ));
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
-        useMaterial3: true,
-      ),
-      //인트로스크린 수진 추가
-      home:FutureBuilder(
-        future: Future.delayed(const Duration(seconds: 3), () => "Intro Completed."),
-        builder: (context, snapshot) {
-          return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 1000),
-              child: _splashLoadingWidget(snapshot)
-          );
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => JoinModel()),
+        ChangeNotifierProvider(create: (context) => UserModel()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a purple toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+      
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white), //화이트로 수정 영욱
+          useMaterial3: true,
+        ),
+        //인트로스크린 수진 추가
+        home:FutureBuilder(
+          future: Future.delayed(const Duration(seconds: 3), () => "Intro Completed."),
+          builder: (context, snapshot) {
+            return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 1000),
+                child: _splashLoadingWidget(snapshot)
+            );
+          },
+        ),
+        //RootScreen(), //위에 주석하고 아래 추가 영욱
+        // initialRoute: '/home',
+        //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
+        routes: {
+          /* '/ai_recommend': (context) => AIRecommendScreen(),
+          '/notifications': (context) => NotificationsScreen(),*/
+          '/home': (context) => HomeScreen(),
+          // '/profile': (context) => ProfileScreen(),
+          '/chatbot': (context) => ChatbotScreen(),
+          '/receipt': (context) => ReceiptScreen(),
+          '/pay': (context) => PayScreen(),
+          '/profile_alter': (context) => ProfileAlterScreen(),
+          '/realtime_list_screen': (context) => RealtimeListScreen(),
+          '/root_screen':(context) => RootScreen(),
+          '/detail_screen':(context) => DetailScreen(),
+          '/notification_screen': (context) => NotificationScreen(),
+          '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
+          // 리뷰 북마크 찜목록 공지사항 추가 안율현
+          '/bookmark_list': (context) => BookmarkListScreen(),
+          '/heart_list': (context) => HeartListScreen(),
+          '/review_list': (context) => ReviewListScreen(),
+          '/announcement_list': (context) => AccouncementListScreen(),
+          '/login': (context) => LoginScreen(),
+          '/sign_up2': (context) => SignUp2(),
+          '/sign_up3': (context) => SignUp3(),
+          '/login_opening_screen': (context) => LoginOpeningScreen(),
+          '/searchingpage': (context) => Searchingpage(),
+          '/daumpostcodesearchexample': (context) => DaumPostcodeSearch(),
+      
+          // '/restaurant_map' : (context) => RestaurantMap(),
         },
+      
       ),
-      //RootScreen(), //위에 주석하고 아래 추가 영욱
-      // initialRoute: '/home',
-      //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
-      routes: {
-        /* '/ai_recommend': (context) => AIRecommendScreen(),
-        '/notifications': (context) => NotificationsScreen(),*/
-        '/home': (context) => HomeScreen(),
-        // '/profile': (context) => ProfileScreen(),
-        '/chatbot': (context) => ChatbotScreen(),
-        '/receipt': (context) => ReceiptScreen(),
-        '/pay': (context) => PayScreen(),
-        '/profile_alter': (context) => ProfileAlterScreen(),
-        '/realtime_list_screen': (context) => RealtimeListScreen(),
-        '/root_screen':(context) => RootScreen(),
-        '/detail_screen':(context) => DetailScreen(),
-        '/notification_screen': (context) => NotificationScreen(),
-        '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
-        // 리뷰 북마크 찜목록 공지사항 추가 안율현
-        '/bookmark_list': (context) => BookmarkListScreen(),
-        '/heart_list': (context) => HeartListScreen(),
-        '/review_list': (context) => ReviewListScreen(),
-        '/announcement_list': (context) => AccouncementListScreen(),
-        '/login': (context) => LoginScreen(),
-        '/sign_up2': (context) => SignUp2(),
-
-        // '/restaurant_map' : (context) => RestaurantMap(),
-      },
-
     );
   }
 }

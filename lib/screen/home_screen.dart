@@ -1,5 +1,7 @@
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
+import 'package:busan_trip/screen/search_result_list.dart';
+import 'package:busan_trip/screen/search_screen.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var searHistory = [];
   final CarouselController _controller = CarouselController();
   List imgList = [
     "https://plus.unsplash.com/premium_photo-1661962660197-6c2430fb49a6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -38,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static Future<void> _simulateLoading() async {
     await Future.delayed(const Duration(seconds: 5));
   }
+
 
 
 
@@ -84,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 80),
+                  SizedBox(height: 60),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -216,7 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDetailContent() {
     final SearchController controller = SearchController();
-    final Color? viewBackgroundColor;
 
     return SingleChildScrollView(
       child: ConstrainedBox(
@@ -234,7 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                SizedBox(height: 80),
+                SizedBox(height: 60),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -246,36 +249,95 @@ class _HomeScreenState extends State<HomeScreen> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    SearchAnchor(
-                      viewBackgroundColor: Colors.white,
-                      searchController: controller,
-                      builder: (BuildContext context, SearchController controller) {
-                        return GestureDetector(
-                          onTap: () {
-                            controller.openView();
-                          },
-                          child: Column(
-                            children: [
-                              Icon(Icons.search_outlined, size: 35),
-                            ],
-                          ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:  (context) => SearchScreen()),
                         );
                       },
-                      suggestionsBuilder:
-                          (BuildContext context, SearchController controller) {
-                        return List<ListTile>.generate(5, (int index) {
-                          final String item = 'item $index';
-                          return ListTile(
-                            title: Text(item),
-                            onTap: () {
-                              setState(() {
-                                controller.closeView(item);
-                              });
-                            },
-                          );
-                        });
-                      },
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.search_outlined,
+                            size: 35,
+                          ),
+                        ],
+                      ),
                     ),
+                    // SearchAnchor(
+                    //   viewBackgroundColor: Colors.white,
+                    //   searchController: controller,
+                    //   viewTrailing: [
+                    //     Container(
+                    //       decoration: BoxDecoration(
+                    //         color: Colors.grey[400], // 회색 배경색 설정
+                    //         shape: BoxShape.circle, // 동그란 모양 설정
+                    //       ), // 아이콘 주변에 여백 추가
+                    //       child: SizedBox(
+                    //         width: 16,
+                    //         height: 16,
+                    //         child: IconButton(
+                    //           icon: Icon(
+                    //             Icons.clear,
+                    //             size: 12,
+                    //             color: Colors.white, // 아이콘 색상을 흰색으로 설정
+                    //           ),
+                    //           padding: EdgeInsets.zero,
+                    //           onPressed: () {
+                    //             controller.clear(); // 아이콘 클릭 시 controller의 clear 메소드 호출
+                    //           },
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     IconButton(
+                    //       onPressed: () {
+                    //         searHistory.add(controller.text);
+                    //         controller.closeView(controller.text);
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) => SearchResultList(searchText: controller.text),
+                    //           ),
+                    //         );
+                    //       },
+                    //       icon: Icon(Icons.search_outlined),
+                    //     ),
+                    //   ],
+                    //   builder: (BuildContext context, SearchController controller) {
+                    //     return GestureDetector(
+                    //       onTap: () {
+                    //         controller.openView();
+                    //       },
+                    //       child: Column(
+                    //         children: [
+                    //           Icon(Icons.search_outlined, size: 35),
+                    //         ],
+                    //       ),
+                    //     );
+                    //   },
+                    //   suggestionsBuilder: (context, controller) {
+                    //     return [
+                    //       Wrap(
+                    //         children: List.generate(searHistory.length, (index) {
+                    //           final item = searHistory[index];
+                    //           return Padding(
+                    //             padding: EdgeInsets.only(left: 4.0, right: 4.0),
+                    //             child: ChoiceChip(
+                    //               label: Text(item),
+                    //               selected: item == controller.text,
+                    //               shape: RoundedRectangleBorder(
+                    //                 borderRadius: BorderRadius.all(Radius.circular(24.0)),
+                    //               ),
+                    //               backgroundColor: Colors.white, // ChoiceChip의 배경 색상
+                    //               selectedColor: Colors.blueAccent, // 선택된 상태의 색상
+                    //             ),
+                    //           );
+                    //         }),
+                    //       ),
+                    //     ];
+                    //   },
+                    // ),
                   ],
                 ),
                 SizedBox(height: 20,),
@@ -485,166 +547,6 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
     return Container(
       child: Column(
         children: [
-          // Row(
-          //   children: [
-          //     Text(
-          //       '1',
-          //       style: TextStyle(
-          //         fontFamily: 'NotoSansKR',
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     SizedBox(width: 13,),
-          //     ClipRRect(
-          //       borderRadius: BorderRadius.circular(10),
-          //       child: Image.network(
-          //         'https://naverbooking-phinf.pstatic.net/20231115_165/1700025251077cwP9b_JPEG/%C0%FC%BD%C3_%BF%AC%C0%E5_%C6%F7%BD%BA%C5%CD_1%B4%EB1_%B0%ED%C8%AD%C1%FA.jpg?type=w1500',
-          //         width: 75,
-          //         height: 75,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                   '상실의 징후들',
-          //                   style: TextStyle(
-          //                     fontFamily: 'NotoSansKR',
-          //                     fontWeight: FontWeight.w500,
-          //                     fontSize: 17,
-          //                     height: 1.0,
-          //                   ), overflow: TextOverflow.ellipsis
-          //               ),
-          //               GestureDetector(
-          //                 onTap: toggleFavorite,
-          //                 child: Column(
-          //                   children: [
-          //                     Icon(
-          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
-          //                       size: 25,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           SizedBox(height: 7,),
-          //           Text(
-          //             '부산 해운대구 · 전시회 · 후기 99+',
-          //             style: TextStyle(
-          //               fontFamily: 'NotoSansKR',
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.0,
-          //             ),
-          //           ),
-          //           SizedBox(height: 15),
-          //           Align(
-          //             alignment: Alignment.centerRight,
-          //             child: Text(
-          //               '16,000원~',
-          //               style: TextStyle(
-          //                 fontFamily: 'NotoSansKR',
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 15,),
-          // Row(
-          //   children: [
-          //     Text(
-          //       '2',
-          //       style: TextStyle(
-          //         fontFamily: 'NotoSansKR',
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     SizedBox(width: 13,),
-          //     ClipRRect(
-          //       borderRadius: BorderRadius.circular(10),
-          //       child: Image.network(
-          //         'https://naverbooking-phinf.pstatic.net/20230125_49/1674627945913HU8OQ_JPEG/%B8%DE%C0%CE%B9%E8%B3%CA.jpg',
-          //         width: 75,
-          //         height: 75,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                   '스카이라인루지 부산',
-          //                   style: TextStyle(
-          //                     fontFamily: 'NotoSansKR',
-          //                     fontWeight: FontWeight.w500,
-          //                     fontSize: 17,
-          //                     height: 1.0,
-          //                   ), overflow: TextOverflow.ellipsis
-          //               ),
-          //               GestureDetector(
-          //                 onTap: toggleFavorite,
-          //                 child: Column(
-          //                   children: [
-          //                     Icon(
-          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
-          //                       size: 25,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           SizedBox(height: 7,),
-          //           Text(
-          //             '부산 기장군 · 엑티비티 · 후기 99+',
-          //             style: TextStyle(
-          //               fontFamily: 'NotoSansKR',
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.0,
-          //             ),
-          //           ),
-          //           SizedBox(height: 15),
-          //           Align(
-          //             alignment: Alignment.centerRight,
-          //             child: Text(
-          //               '12,000원~',
-          //               style: TextStyle(
-          //                 fontFamily: 'NotoSansKR',
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 15,),
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/detail_screen');
@@ -684,7 +586,7 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
                             child: Container(
                               color: Colors.grey[300],
                               height: 25,
-                              width: 200,
+                              width: 150,
                             ),
                           ),
                           GestureDetector(
@@ -754,166 +656,6 @@ class _FavoriteCardState extends State<FavoriteCard> {
     return Container(
       child: Column(
         children: [
-          // Row(
-          //   children: [
-          //     Text(
-          //       '1',
-          //       style: TextStyle(
-          //         fontFamily: 'NotoSansKR',
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     SizedBox(width: 13,),
-          //     ClipRRect(
-          //       borderRadius: BorderRadius.circular(10),
-          //       child: Image.network(
-          //         'https://naverbooking-phinf.pstatic.net/20231115_165/1700025251077cwP9b_JPEG/%C0%FC%BD%C3_%BF%AC%C0%E5_%C6%F7%BD%BA%C5%CD_1%B4%EB1_%B0%ED%C8%AD%C1%FA.jpg?type=w1500',
-          //         width: 75,
-          //         height: 75,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                   '상실의 징후들',
-          //                   style: TextStyle(
-          //                     fontFamily: 'NotoSansKR',
-          //                     fontWeight: FontWeight.w500,
-          //                     fontSize: 17,
-          //                     height: 1.0,
-          //                   ), overflow: TextOverflow.ellipsis
-          //               ),
-          //               GestureDetector(
-          //                 onTap: toggleFavorite,
-          //                 child: Column(
-          //                   children: [
-          //                     Icon(
-          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
-          //                       size: 25,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           SizedBox(height: 7,),
-          //           Text(
-          //             '부산 해운대구 · 전시회 · 후기 99+',
-          //             style: TextStyle(
-          //               fontFamily: 'NotoSansKR',
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.0,
-          //             ),
-          //           ),
-          //           SizedBox(height: 15),
-          //           Align(
-          //             alignment: Alignment.centerRight,
-          //             child: Text(
-          //               '16,000원~',
-          //               style: TextStyle(
-          //                 fontFamily: 'NotoSansKR',
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 15,),
-          // Row(
-          //   children: [
-          //     Text(
-          //       '2',
-          //       style: TextStyle(
-          //         fontFamily: 'NotoSansKR',
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     SizedBox(width: 13,),
-          //     ClipRRect(
-          //       borderRadius: BorderRadius.circular(10),
-          //       child: Image.network(
-          //         'https://naverbooking-phinf.pstatic.net/20230125_49/1674627945913HU8OQ_JPEG/%B8%DE%C0%CE%B9%E8%B3%CA.jpg',
-          //         width: 75,
-          //         height: 75,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                   '스카이라인루지 부산',
-          //                   style: TextStyle(
-          //                     fontFamily: 'NotoSansKR',
-          //                     fontWeight: FontWeight.w500,
-          //                     fontSize: 17,
-          //                     height: 1.0,
-          //                   ), overflow: TextOverflow.ellipsis
-          //               ),
-          //               GestureDetector(
-          //                 onTap: toggleFavorite,
-          //                 child: Column(
-          //                   children: [
-          //                     Icon(
-          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
-          //                       size: 25,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           SizedBox(height: 7,),
-          //           Text(
-          //             '부산 기장군 · 엑티비티 · 후기 99+',
-          //             style: TextStyle(
-          //               fontFamily: 'NotoSansKR',
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.0,
-          //             ),
-          //           ),
-          //           SizedBox(height: 15),
-          //           Align(
-          //             alignment: Alignment.centerRight,
-          //             child: Text(
-          //               '12,000원~',
-          //               style: TextStyle(
-          //                 fontFamily: 'NotoSansKR',
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 15,),
           GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/detail_screen');
@@ -998,166 +740,6 @@ class _FavoriteCardState extends State<FavoriteCard> {
               ],
             ),
           ),
-          // SizedBox(height: 15,),
-          // Row(
-          //   children: [
-          //     Text(
-          //       '4',
-          //       style: TextStyle(
-          //         fontFamily: 'NotoSansKR',
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     SizedBox(width: 13,),
-          //     ClipRRect(
-          //       borderRadius: BorderRadius.circular(10),
-          //       child: Image.network(
-          //         'https://i.namu.wiki/i/epC9umUbZzxIJvrmlaCBo7CO2BwHfxyVbbYq7VnB2XFyj4mpu_uG0ZLg0F0XUFzGS9omLZ66SsZcp-n7x_YinScT8Azdc3bkcHZ67a40JIyr1fsq8HF3TKrNk8ZUMYB_HHosAmd_IZHqfyiBespbUw.webp',
-          //         width: 75,
-          //         height: 75,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                   '신세계백화점 센텀시티점',
-          //                   style: TextStyle(
-          //                     fontFamily: 'NotoSansKR',
-          //                     fontWeight: FontWeight.w500,
-          //                     fontSize: 17,
-          //                     height: 1.0,
-          //                   ), overflow: TextOverflow.ellipsis
-          //               ),
-          //               GestureDetector(
-          //                 onTap: toggleFavorite,
-          //                 child: Column(
-          //                   children: [
-          //                     Icon(
-          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
-          //                       size: 25,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           SizedBox(height: 7,),
-          //           Text(
-          //             '부산 해운대구 · 복합쇼핑몰 · 후기 99+',
-          //             style: TextStyle(
-          //               fontFamily: 'NotoSansKR',
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.0,
-          //             ),
-          //           ),
-          //           SizedBox(height: 15),
-          //           Align(
-          //             alignment: Alignment.centerRight,
-          //             child: Text(
-          //               '0원',
-          //               style: TextStyle(
-          //                 fontFamily: 'NotoSansKR',
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 15,),
-          // Row(
-          //   children: [
-          //     Text(
-          //       '5',
-          //       style: TextStyle(
-          //         fontFamily: 'NotoSansKR',
-          //         fontWeight: FontWeight.w500,
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     SizedBox(width: 13,),
-          //     ClipRRect(
-          //       borderRadius: BorderRadius.circular(10),
-          //       child: Image.network(
-          //         'https://i.namu.wiki/i/SfOtPBKLQsoKnp73v8bQ0llPsi9wuhM9HaIcf7TUjf5qNXjbjHPx4YKbJTsloZZiYCmEUnK8arhWXzaK-pQtIXKXi-HqZEk_QfQt0p0pmggqrYOOgOuIYGSDHEjI_LxiTJ1lH3AFaw6KAv7TznUbsw.webp',
-          //         width: 75,
-          //         height: 75,
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          //     SizedBox(width: 10,),
-          //     Expanded(
-          //       child: Column(
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Row(
-          //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //             children: [
-          //               Text(
-          //                   '해운대 해수욕장',
-          //                   style: TextStyle(
-          //                     fontFamily: 'NotoSansKR',
-          //                     fontWeight: FontWeight.w500,
-          //                     fontSize: 17,
-          //                     height: 1.0,
-          //                   ), overflow: TextOverflow.ellipsis
-          //               ),
-          //               GestureDetector(
-          //                 onTap: toggleFavorite,
-          //                 child: Column(
-          //                   children: [
-          //                     Icon(
-          //                       isFavorited ? Icons.favorite : Icons.favorite_outline,
-          //                       size: 25,
-          //                       color: Colors.red,
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           SizedBox(height: 7,),
-          //           Text(
-          //             '부산 해운대구 · 휴양지 · 후기 99+',
-          //             style: TextStyle(
-          //               fontFamily: 'NotoSansKR',
-          //               fontWeight: FontWeight.w400,
-          //               fontSize: 12,
-          //               color: Colors.grey,
-          //               height: 1.0,
-          //             ),
-          //           ),
-          //           SizedBox(height: 15),
-          //           Align(
-          //             alignment: Alignment.centerRight,
-          //             child: Text(
-          //               '0원',
-          //               style: TextStyle(
-          //                 fontFamily: 'NotoSansKR',
-          //                 fontWeight: FontWeight.w500,
-          //                 fontSize: 17,
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -1290,4 +872,3 @@ class _FeedCardState extends State<FeedCard> {
     );
   }
 }
-

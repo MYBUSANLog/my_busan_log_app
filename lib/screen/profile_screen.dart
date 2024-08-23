@@ -1,6 +1,11 @@
 import 'package:busan_trip/screen/login_opening_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -10,47 +15,187 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
 
   Offset _fabOffset = Offset(330, 650); // 초기 위치 설정
+  String _loginProvider = ''; // 현재 로그인 제공자
 
   @override
   void initState() {
     super.initState();
+
+    KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534');
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.white,
     ));
+
+    _determineLoginProvider(); // 로그인 제공자 확인
   }
 
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('로그아웃'),
-          content: Text('로그아웃 하시겠습니까?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // 다이얼로그 닫기
-              },
-              child: Text('취소'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // 다이얼로그 닫기
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginOpeningScreen()), // 화면 이동
-                );
-              },
-              child: Text('예'),
-            ),
-          ],
-        );
-      },
-    );
+  void _determineLoginProvider() async {
+    // 로그인 제공자 확인
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final providerData = user.providerData;
+
+      for (var profile in providerData) {
+        switch (profile.providerId) {
+          case 'google.com':
+            setState(() {
+              _loginProvider = 'google';
+            });
+            break;
+          case 'naver.com':
+            setState(() {
+              _loginProvider = 'naver';
+            });
+            break;
+          case 'kakao.com':
+            setState(() {
+              _loginProvider = 'kakao';
+            });
+            break;
+          default:
+            setState(() {
+              _loginProvider = 'email';
+            });
+            break;
+        }
+      }
+    }
   }
+
+  // void _logoutGoogle() async {
+  //   try {
+  //     await GoogleSignIn().signOut();
+  //     print('구글 로그아웃 성공');
+  //   } catch (error) {
+  //     print('구글 로그아웃 실패 $error');
+  //   }
+  // }
+
+  void _logoutNaver() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+    try {
+      await FlutterNaverLogin.logOut();
+      print('Naver logout successful');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => LoginOpeningScreen(),
+      ));
+    } catch (error) {
+      print('Naver logout failed: $error');
+      // You might want to handle the error here, like showing a message to the user
+    }
+  }
+
+
+  void _logoutKakao() async {
+    try {
+      // SharedPreferences에서 로그인 상태 해제
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+
+      // 카카오 로그아웃 처리
+      await kko.UserApi.instance.logout();
+      print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
+
+      // Firebase 로그아웃 처리
+      await FirebaseAuth.instance.signOut();
+      print('Firebase 로그아웃 성공');
+
+      // 로그아웃 후 로그인 화면으로 이동
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => LoginOpeningScreen(),
+        ),
+      );
+    } catch (error) {
+      print('로그아웃 실패 $error');
+      // 에러 처리: 필요시 추가적인 에러 핸들링 로직을 추가할 수 있습니다.
+    }
+  }
+
+
+  void _logoutEmail() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+      await FirebaseAuth.instance.signOut(); // Firebase 로그아웃
+
+      print('이메일 로그아웃 성공');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => LoginOpeningScreen(),
+      ));
+    } catch (error) {
+      print('이메일 로그아웃 실패 $error');
+    }
+  }
+
+
+  // void logout() async {
+  //   // 각 로그인 제공자에 맞는 로그아웃 호출
+  //   switch (_loginProvider) {
+  //     // case 'google':
+  //     //   await _logoutGoogle();
+  //     //   break;
+  //     case 'naver':
+  //       await _logoutNaver();
+  //       break;
+  //     case 'kakao':
+  //       await _logoutKakao();
+  //       break;
+  //     case 'basic':
+  //       await _logoutEmail();
+  //       break;
+  //     default:
+  //     // 알 수 없는 로그인 제공자
+  //       break;
+  //   }
+  //
+  //   // Firebase Auth 로그아웃
+  //   try {
+  //     await FirebaseAuth.instance.signOut();
+  //     print('Firebase 로그아웃 성공');
+  //   } catch (error) {
+  //     print('Firebase 로그아웃 실패 $error');
+  //   }
+  //
+  //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //     builder: (context) => LoginOpeningScreen(),
+  //   ));
+  // }
+
+  // void _showLogoutDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('로그아웃'),
+  //         content: Text('로그아웃 하시겠습니까?'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context); // 다이얼로그 닫기
+  //             },
+  //             child: Text('취소'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context); // 다이얼로그 닫기
+  //               Navigator.pushReplacement(
+  //                 context,
+  //                 MaterialPageRoute(builder: (context) => LoginOpeningScreen()), // 화면 이동
+  //               );
+  //             },
+  //             child: Text('예'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,19 +260,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(height: 13), // 아래로 패딩 추가
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                        title: Text(
-                          '로그아웃',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
+                      // if (_loginProvider == 'kakao')
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                          title: Text(
+                            '카카오 로그아웃',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
                           ),
+                          onTap: _logoutKakao,
                         ),
-                        onTap: () => _showLogoutDialog(context),
-                      ),
+                      // if (_loginProvider == 'google')
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                          title: Text(
+                            '구글 로그아웃',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          // onTap: logout,
+                        ),
+                      // if (_loginProvider == 'naver')
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                          title: Text(
+                            '네이버 로그아웃',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          // onTap: logout,
+                        ),
+                      // if (_loginProvider == 'basic')
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                          title: Text(
+                            '이메일 로그아웃',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          onTap: _logoutEmail,
+                        ),
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
