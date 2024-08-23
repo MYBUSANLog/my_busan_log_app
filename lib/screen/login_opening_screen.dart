@@ -46,17 +46,17 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       });
     });
 
-    _checkLoginStatus(); // 앱 시작 시 로그인 상태 확인
+    // _checkLoginStatus(); // 앱 시작 시 로그인 상태 확인
   }
 
-  void _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
-    if (isLoggedIn) {
-      navigateToMainPage(); // 로그인되어 있으면 메인 페이지로 이동
-    }
-  }
+  // void _checkLoginStatus() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  //
+  //   if (isLoggedIn) {
+  //     navigateToMainPage(); // 로그인되어 있으면 메인 페이지로 이동
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -198,16 +198,25 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       if (await kko.isKakaoTalkInstalled()) {
         try {
           await kko.UserApi.instance.loginWithKakaoTalk();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+          await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
           print('카카오톡으로 로그인 성공');
         } catch (error) {
           print('카카오톡으로 로그인 실패 $error');
           // 카카오톡 로그인 실패 시, 카카오 계정으로 로그인 시도
           await kko.UserApi.instance.loginWithKakaoAccount();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+          await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
           print('카카오 계정으로 로그인 성공');
         }
       } else {
         // 카카오톡이 설치되어 있지 않은 경우, 카카오 계정으로 로그인 시도
         await kko.UserApi.instance.loginWithKakaoAccount();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
+        await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
         print('카카오 계정으로 로그인 성공');
       }
 

@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<void> _loadingFuture = _simulateLoading();
 
   static Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 10));
   }
 
 
@@ -113,13 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     highlightColor: Colors.grey[100]!,
                     child: Container(
                       color: Colors.grey[300],
-                      height: 200,
+                      height: 250,
                       width: double.infinity,
                     ),
                   ),
                   SizedBox(height: 30,),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 7),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -265,86 +265,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    // SearchAnchor(
-                    //   viewBackgroundColor: Colors.white,
-                    //   searchController: controller,
-                    //   viewTrailing: [
-                    //     Container(
-                    //       decoration: BoxDecoration(
-                    //         color: Colors.grey[400], // 회색 배경색 설정
-                    //         shape: BoxShape.circle, // 동그란 모양 설정
-                    //       ), // 아이콘 주변에 여백 추가
-                    //       child: SizedBox(
-                    //         width: 16,
-                    //         height: 16,
-                    //         child: IconButton(
-                    //           icon: Icon(
-                    //             Icons.clear,
-                    //             size: 12,
-                    //             color: Colors.white, // 아이콘 색상을 흰색으로 설정
-                    //           ),
-                    //           padding: EdgeInsets.zero,
-                    //           onPressed: () {
-                    //             controller.clear(); // 아이콘 클릭 시 controller의 clear 메소드 호출
-                    //           },
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     IconButton(
-                    //       onPressed: () {
-                    //         searHistory.add(controller.text);
-                    //         controller.closeView(controller.text);
-                    //         Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) => SearchResultList(searchText: controller.text),
-                    //           ),
-                    //         );
-                    //       },
-                    //       icon: Icon(Icons.search_outlined),
-                    //     ),
-                    //   ],
-                    //   builder: (BuildContext context, SearchController controller) {
-                    //     return GestureDetector(
-                    //       onTap: () {
-                    //         controller.openView();
-                    //       },
-                    //       child: Column(
-                    //         children: [
-                    //           Icon(Icons.search_outlined, size: 35),
-                    //         ],
-                    //       ),
-                    //     );
-                    //   },
-                    //   suggestionsBuilder: (context, controller) {
-                    //     return [
-                    //       Wrap(
-                    //         children: List.generate(searHistory.length, (index) {
-                    //           final item = searHistory[index];
-                    //           return Padding(
-                    //             padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                    //             child: ChoiceChip(
-                    //               label: Text(item),
-                    //               selected: item == controller.text,
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.all(Radius.circular(24.0)),
-                    //               ),
-                    //               backgroundColor: Colors.white, // ChoiceChip의 배경 색상
-                    //               selectedColor: Colors.blueAccent, // 선택된 상태의 색상
-                    //             ),
-                    //           );
-                    //         }),
-                    //       ),
-                    //     ];
-                    //   },
-                    // ),
                   ],
                 ),
                 SizedBox(height: 20,),
                 sliderWidget(),
                 SizedBox(height: 30,),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -379,8 +306,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {},
                         child: Column(
                           children: [
-                            Icon(Icons.beach_access_outlined, size: 35),
-                            Text('휴양지', style: TextStyle(fontSize: 13)),
+                            Icon(Icons.kitesurfing_outlined, size: 35),
+                            Text('액티비티', style: TextStyle(fontSize: 13)),
                           ],
                         ),
                       ),
@@ -388,8 +315,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {},
                         child: Column(
                           children: [
-                            Icon(Icons.local_mall_outlined, size: 35),
-                            Text('복합쇼핑몰', style: TextStyle(fontSize: 13)),
+                            Icon(Icons.beach_access_outlined, size: 35),
+                            Text('휴양지', style: TextStyle(fontSize: 13)),
                           ],
                         ),
                       ),
@@ -403,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text('실시간 핫플레이스',
                       style: TextStyle(
                           fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           fontSize: 23
                       ),
                     ),
