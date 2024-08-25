@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'item_detail_screen.dart';
 
-class HotelListScreen extends StatefulWidget {
-  const HotelListScreen({super.key});
+class ExhibitionListScreen extends StatefulWidget {
+  const ExhibitionListScreen({super.key});
 
   @override
-  State<HotelListScreen> createState() => _HotelListScreenState();
+  State<ExhibitionListScreen> createState() => _ExhibitionListScreenState();
 }
 
-class _HotelListScreenState extends State<HotelListScreen> {
+class _ExhibitionListScreenState extends State<ExhibitionListScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isAtStart = true;
   bool _isAtEnd = false;
@@ -55,7 +55,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '호텔',
+          '전시회',
           style: TextStyle(
               fontFamily: 'NotoSansKR',
               fontWeight: FontWeight.w600,
