@@ -2,7 +2,7 @@ import 'package:busan_trip/model/join_model.dart';
 import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/accouncement_list_screen.dart';
 import 'package:busan_trip/screen/bookmark_list_screen.dart';
-import 'package:busan_trip/screen/detail_screen.dart';
+import 'package:busan_trip/screen/item_detail_screen.dart';
 import 'package:busan_trip/screen/heart_list_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
@@ -10,8 +10,6 @@ import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
-import 'package:busan_trip/screen/realtime_list_screen1.dart';
-import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/review_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/searchingpage.dart';
@@ -25,7 +23,6 @@ import 'package:busan_trip/screen/chatbot.dart';
 import 'package:busan_trip/screen/receipt.dart';
 import 'package:busan_trip/screen/pay.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
-import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -119,7 +116,7 @@ class MyApp extends StatelessWidget {
           '/profile_alter': (context) => ProfileAlterScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
           '/root_screen':(context) => RootScreen(),
-          '/detail_screen':(context) => DetailScreen(),
+          '/detail_screen':(context) => ItemDetailScreen(),
           '/notification_screen': (context) => NotificationScreen(),
           '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
           // 리뷰 북마크 찜목록 공지사항 추가 안율현
@@ -146,7 +143,8 @@ Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
   if(snapshot.hasError) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
-    return LoginOpeningScreen();
+    // return LoginOpeningScreen();
+    return RootScreen();
   } else {
     return const IntroScreen();
   }

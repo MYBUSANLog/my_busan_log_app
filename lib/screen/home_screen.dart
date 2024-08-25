@@ -1,7 +1,13 @@
+import 'package:busan_trip/screen/activity_list_screen.dart';
+import 'package:busan_trip/screen/exhibition_list_screen.dart';
+import 'package:busan_trip/screen/hotel_list_screen.dart';
+import 'package:busan_trip/screen/item_detail_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/search_result_list.dart';
 import 'package:busan_trip/screen/search_screen.dart';
+import 'package:busan_trip/screen/themepark_list_screen.dart';
+import 'package:busan_trip/screen/tour_list_screen.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -276,7 +282,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HotelListScreen()),
+                          );
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.hotel, size: 35),
@@ -285,7 +296,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ThemeparkListScreen()),
+                          );
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.attractions_outlined, size: 35),
@@ -294,7 +310,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ExhibitionListScreen()),
+                          );
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.vrpano_outlined, size: 35),
@@ -303,7 +324,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ActivityListScreen()),
+                          );
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.kitesurfing_outlined, size: 35),
@@ -312,11 +338,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TourListScreen()),
+                          );
+                        },
                         child: Column(
                           children: [
                             Icon(Icons.beach_access_outlined, size: 35),
-                            Text('휴양지', style: TextStyle(fontSize: 13)),
+                            Text('관광지', style: TextStyle(fontSize: 13)),
                           ],
                         ),
                       ),
@@ -476,7 +507,10 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/detail_screen');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
+              );
             },
             child: Row(
               children: [
