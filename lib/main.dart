@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
 import 'package:busan_trip/screen/receipt.dart';
-import 'package:busan_trip/screen/pay.dart';
+import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';

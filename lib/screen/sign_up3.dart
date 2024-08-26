@@ -282,12 +282,12 @@ class _SignUp3State extends State<SignUp3> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              border: Border(
-                bottom: BorderSide(
-                  color: isEntered ? Colors.green : Colors.grey,
-                  width: 2.0,
-                ),
-              ),
+              // border: Border(
+              //   bottom: BorderSide(
+              //     color: isEntered ? Colors.green : Colors.grey,
+              //     width: 2.0,
+              //   ),
+              // ),
             ),
             child: AbsorbPointer(  // TextField 비활성화
               child: TextField(
