@@ -1,6 +1,6 @@
+import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   const ItemDetailScreen({super.key});
@@ -23,14 +23,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     await Future.delayed(const Duration(seconds: 3));
   }
 
-  Future<void> _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,32 +39,31 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
+            SizedBox(
+              width: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  _launchURL('https://adventurebusan.lotteworld.com/kor/main/index.do');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 17,),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   elevation: 5,
                 ),
-                child: Text(
-                  '공식 사이트',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
+                child: Icon(Icons.share_outlined, size: 18, color: Colors.black,),
               ),
             ),
             SizedBox(width: 10),
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  // 결제하기 버튼을 눌렀을 때의 동작
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder:  (context) => PayScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff0e4194),
