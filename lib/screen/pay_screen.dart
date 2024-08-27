@@ -12,7 +12,20 @@ import 'package:intl/intl.dart';
 import 'item_detail_screen.dart';
 
 class PayScreen extends StatefulWidget {
-  const PayScreen({super.key});
+  final DateTime selectedDate;
+  final List<String> ticketNames;
+  final List<int> ticketPrices;
+  final List<int> ticketQuantities;
+
+  const PayScreen({
+    Key? key,
+    required this.selectedDate,
+    required this.ticketNames,
+    required this.ticketPrices,
+    required this.ticketQuantities,
+  }) : super(key: key);
+
+
 
   @override
   State<PayScreen> createState() => _PayScreenState();
@@ -165,10 +178,6 @@ class _PayScreenState extends State<PayScreen> {
     }
   }
 
-  void _validateAndNavigate() {
-    () => bootpayTest(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,132 +207,136 @@ class _PayScreenState extends State<PayScreen> {
               children: [
                 SizedBox(height: 15),
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14),
-                    child: FavoriteCard(),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  child: FavoriteCard(selectedDate: DateTime.now(),),
                 ),
                 SizedBox(height: 15),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
                 SizedBox(height: 15),
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14),
-                    child: Column(
-                      children: [
-                        itemDetail(),
-                        SizedBox(height: 18),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '총 상품 금액',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                height: 1.0,
-                              ),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  child: Column(
+                    children: [
+                      // ItemDetail(
+                      //   ticketNames: widget.ticketNames,
+                      //   ticketPrices: widget.ticketPrices,
+                      //   ticketQuantities: widget.ticketQuantities,
+                      // ),
+                      SizedBox(height: 18),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '총 상품 금액',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              height: 1.0,
                             ),
-                            Text(
-                              '42,300원',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 17,
-                                height: 1.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          // Text(
+                          //   '${widget.ticketPrices.asMap().entries.map((e) => double.parse(e.value) * widget.ticketQuantities[e.key]).reduce((a, b) => a + b).toString()}원',
+                          //   style: TextStyle(
+                          //     fontFamily: 'NotoSansKR',
+                          //     fontWeight: FontWeight.w600,
+                          //     fontSize: 17,
+                          //     height: 1.0,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 15),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '예약자',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          height: 1.0,
-                        ),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '예약자',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        height: 1.0,
                       ),
                     ),
+                  ),
                 ),
                 Divider(color: Colors.grey[300], thickness: 1.0,),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
                   child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '이름',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '이름',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildCustomTextField(
-                            '', _nameController, _isNameEntered),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '이메일',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                          SizedBox(height: 10),
+                          _buildCustomTextField(
+                              '', _nameController, _isNameEntered),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '이메일',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildCustomTextField(
-                            '', _emailController, _isEmailEntered),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '생년월일',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                          SizedBox(height: 10),
+                          _buildCustomTextField(
+                              '', _emailController, _isEmailEntered),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '생년월일',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        BirthdayText(false),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '전화번호',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                          SizedBox(height: 10),
+                          BirthdayText(false),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '전화번호',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildCustomPhoneField(
-                            '', _phoneController, _isPhoneEntered),
-                      ],
-                    )
+                          SizedBox(height: 10),
+                          _buildCustomPhoneField(
+                              '', _phoneController, _isPhoneEntered),
+                        ],
+                      )
                   ),
                 ),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
@@ -404,8 +417,8 @@ class _PayScreenState extends State<PayScreen> {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
-                      border: Border.all(color: Colors.grey)
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(color: Colors.grey)
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 3),
@@ -739,7 +752,9 @@ class _PayScreenState extends State<PayScreen> {
 }
 
 class FavoriteCard extends StatefulWidget {
-  const FavoriteCard({super.key});
+  final DateTime selectedDate;
+
+  const FavoriteCard({super.key, required this.selectedDate});
 
   @override
   State<FavoriteCard> createState() => _FavoriteCardState();
@@ -819,7 +834,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                   ),
                 ),
                 Text(
-                  '2024년 09월 01일 (일)',
+                  '${widget.selectedDate.toLocal().toString().split(' ')[0]}',
                   style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontWeight: FontWeight.w500,
@@ -837,46 +852,54 @@ class _FavoriteCardState extends State<FavoriteCard> {
   }
 }
 
-class itemDetail extends StatelessWidget {
-  const itemDetail({super.key});
+class ItemDetail extends StatelessWidget {
+  final List<String> ticketNames;
+  final List<String> ticketPrices;
+  final List<int> ticketQuantities;
+
+  const ItemDetail({
+    required this.ticketNames,
+    required this.ticketPrices,
+    required this.ticketQuantities,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: [
-          Container(
+        children: List.generate(ticketNames.length, (index) {
+          return Container(
             color: Colors.grey[100],
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                child: Row(
-                  children: [
-                    Text(
-                        '1인 종일 종합이용권',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          height: 1.0,
-                        ), overflow: TextOverflow.ellipsis
+              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+              child: Row(
+                children: [
+                  Text(
+                    '${ticketNames[index]} X ${ticketQuantities[index]}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      height: 1.0,
                     ),
-                    Spacer(),
-                    Text(
-                      '42,300원',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.0,
-                      ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Spacer(),
+                  Text(
+                    '${ticketPrices[index]}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      height: 1.0,
                     ),
-                  ],
-                ),
-            )
-          ),
-        ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
 }
-

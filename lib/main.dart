@@ -1,3 +1,4 @@
+import 'package:busan_trip/model/item_model.dart';
 import 'package:busan_trip/model/join_model.dart';
 import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/accouncement_list_screen.dart';
@@ -23,6 +24,7 @@ import 'package:busan_trip/screen/chatbot.dart';
 import 'package:busan_trip/screen/receipt.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,6 +50,8 @@ void main() async {
     // javaScriptAppKey: 'e09856d7367e723cf282ead8d304029a',
   );
 
+  await initializeDateFormatting('ko_KR', null);
+
   runApp(MyApp());
 }
 
@@ -68,6 +72,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => JoinModel()),
         ChangeNotifierProvider(create: (context) => UserModel()),
+        ChangeNotifierProvider(create: (context) => ItemModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -112,7 +117,6 @@ class MyApp extends StatelessWidget {
           // '/profile': (context) => ProfileScreen(),
           '/chatbot': (context) => ChatbotScreen(),
           '/receipt': (context) => ReceiptScreen(),
-          '/pay': (context) => PayScreen(),
           '/profile_alter': (context) => ProfileAlterScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
           '/root_screen':(context) => RootScreen(),

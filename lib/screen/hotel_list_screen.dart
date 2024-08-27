@@ -29,21 +29,6 @@ class _HotelListScreenState extends State<HotelListScreen> {
     });
   }
 
-  void _scrollRight() {
-    _scrollController.animateTo(
-      _scrollController.position.pixels + 100,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollLeft() {
-    _scrollController.animateTo(
-      _scrollController.position.pixels - 100,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
   void _onButtonPressed(int index) {
     setState(() {
       _selectedIndex = index;

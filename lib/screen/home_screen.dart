@@ -14,7 +14,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../model/item_model.dart';
+import '../vo/item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -386,15 +390,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Divider(color: Colors.grey, thickness: 1.0,),
                 SizedBox(height: 10,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
+                Consumer<ItemModel>(builder: (context, itemModel, child) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: itemModel.items.map((e) => FavoriteCard(item: e)).toList(),
+                    ),
+                  );
+                },),
                 SizedBox(height: 10,),
                 Divider(color: Colors.grey, thickness: 1.0,),
                 SizedBox(height: 30,),
@@ -597,7 +599,9 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
 }
 
 class FavoriteCard extends StatefulWidget {
-  const FavoriteCard({super.key});
+  final Item item;
+
+  const FavoriteCard({required this.item});
 
   @override
   State<FavoriteCard> createState() => _FavoriteCardState();
@@ -624,7 +628,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
             child: Row(
               children: [
                 Text(
-                  '3',
+                  '1',
                   style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontWeight: FontWeight.w500,
@@ -635,7 +639,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
-                    'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
+                    '${widget.item.i_image}',
                     width: 75,
                     height: 75,
                     fit: BoxFit.cover,
@@ -650,7 +654,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              '롯데월드 어드벤처 부산',
+                              '${widget.item.i_name}',
                               style: TextStyle(
                                 fontFamily: 'NotoSansKR',
                                 fontWeight: FontWeight.w500,
@@ -674,7 +678,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                       ),
                       SizedBox(height: 7,),
                       Text(
-                        '부산 기장군 · 테마파크 · 후기 99+',
+                        '${widget.item.i_address}',
                         style: TextStyle(
                           fontFamily: 'NotoSansKR',
                           fontWeight: FontWeight.w400,
@@ -687,7 +691,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          '29,000원~',
+                          '${widget.item.i_price}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
                             fontWeight: FontWeight.w500,

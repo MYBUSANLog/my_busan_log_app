@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -50,8 +51,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   padding: EdgeInsets.symmetric(vertical: 17,),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
+                    side: BorderSide(color: Colors.grey[400]!),
                   ),
-                  elevation: 5,
+                  elevation: 0,
                 ),
                 child: Icon(Icons.share_outlined, size: 18, color: Colors.black,),
               ),
@@ -62,7 +64,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:  (context) => PayScreen()),
+                    MaterialPageRoute(builder:  (context) => BookingCalendarScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -71,7 +73,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  elevation: 5,
+                  elevation: 0,
                 ),
                 child: Text(
                   '결제하기',
