@@ -14,6 +14,8 @@ class Item {
   int i_stock;
   int i_sales_quantity;
   String i_day;
+  int ui_rank;
+  String s_name;
 
   Item({
     this.i_idx=0,
@@ -29,6 +31,8 @@ class Item {
     this.i_stock=0,
     this.i_sales_quantity=0,
     this.i_day='',
+    required this.ui_rank,
+    this.s_name='',
   });
 
   factory Item.fromJson(Map<String, dynamic> json){
@@ -46,6 +50,8 @@ class Item {
       i_stock: json['i_stock'],
       i_sales_quantity: json['i_sales_quantity'],
       i_day: json['i_day'],
+      ui_rank: 0,
+      s_name: json['s_name']??''
     );
   }
 }

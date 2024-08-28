@@ -1,18 +1,16 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
-import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/review_screen.dart';
-import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ItemDetailScreen extends StatefulWidget {
-  const ItemDetailScreen({super.key});
+class StoreDetailScreen extends StatefulWidget {
+  const StoreDetailScreen({super.key});
 
   @override
-  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
+  State<StoreDetailScreen> createState() => _StoreDetailScreenState();
 }
 
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
+class _StoreDetailScreenState extends State<StoreDetailScreen> {
 
   late Future<void> _loadingFuture;
 
@@ -197,15 +195,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          expandedHeight: 180.0,
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Image.asset(
-              'assets/images/lotteworld.jfif',
-              fit: BoxFit.cover,
-            ),
-          ),
           iconTheme: IconThemeData(
             color: Colors.black,
           ),
@@ -243,38 +234,46 @@ class _DetailContentState extends State<DetailContent> {
       width: MediaQuery.of(context).size.width,  // Use screen width
       color: Colors.white,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '롯데월드 어드벤처 부산',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                      ),
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey[300]!,
+                      width: 1,
                     ),
-                    GestureDetector(
-                      onTap: toggleFavorite,
-                      child: Icon(
-                        isFavorited ? Icons.favorite : Icons.favorite_outline,
-                        size: 20,
-                        color: isFavorited ? Colors.red : Colors.black,
-                      ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      'https://i.namu.wiki/i/JTOjrkPhvIaaHsLE7B1qATa0_2o78b8yyKKWEM5zF4L-RpyonhKel3tW_m_HdDLiHzuZiiq2Kg-A_lfj4Q9ewxyww4AbM_yinCYX0FXCeBjg9rT8BTHNYtTHAHMvLiDUs1kZ8ZG9TOk3L-znc01wYw.svg',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
                     ),
-                  ],
+                  ),
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        '롯데월드 어드벤처 부산',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 24,
+                        ),
+                      ),
+                      SizedBox(height: 5),
                       Row(
                         children: [
                           Icon(
@@ -310,7 +309,7 @@ class _DetailContentState extends State<DetailContent> {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                    bottom: BorderSide(color: Colors.black,width: 1.0),
+                                  bottom: BorderSide(color: Colors.black,width: 1.0),
                                 ),
                               ),
                               child: Text(
@@ -325,73 +324,82 @@ class _DetailContentState extends State<DetailContent> {
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            '12,000원 ',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Text(
-                            '~',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
-                Divider(color: Colors.grey[200], thickness: 1.0,),
-                SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
-                    );
-                  },
-                  child: Row(
+                Divider(color: Colors.grey[200], thickness: 7.0,),
+                _buildInfoSection(),
+                Divider(color: Colors.grey[200], thickness: 7.0,),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey[300]!,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.network(
-                            'https://i.namu.wiki/i/JTOjrkPhvIaaHsLE7B1qATa0_2o78b8yyKKWEM5zF4L-RpyonhKel3tW_m_HdDLiHzuZiiq2Kg-A_lfj4Q9ewxyww4AbM_yinCYX0FXCeBjg9rT8BTHNYtTHAHMvLiDUs1kZ8ZG9TOk3L-znc01wYw.svg',
-                            width: 35,
-                            height: 35,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10),
                       Text(
-                        '롯데월드 어드벤처 부산',
+                        '상품 설명',
                         style: TextStyle(
                           fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Divider(color: Colors.grey[200], thickness: 1.0,),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/eSeHbg8cH0gPskLE',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/achV2D1nsKKi4KsP',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/jbq0y0E4SCCpBVeX',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/86ccgNX3RHA8sQ0l',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/PDnHAa15yO2f0NML',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/kLHpL4hlSYZCItxS',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/uGJuI9R0WQEPxL3H',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/ch2khfEECTJESUcg',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/sd8CHbgrG90YJLo7',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/CoYb4UJB7KJHMZ3O',
+                              fit: BoxFit.cover,
+                            ),
+                            Image.network(
+                              'https://image6.yanolja.com/leisure/fyjtVXwzPMJgBe7c',
+                              fit: BoxFit.cover,
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 10),
               ],
             ),
           ),

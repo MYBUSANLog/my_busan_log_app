@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -49,7 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<void> _loadingFuture = _simulateLoading();
 
   static Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(seconds: 5));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ItemModel>(context, listen: false).set5Items();
+    });
   }
 
 
@@ -389,15 +399,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Divider(color: Colors.grey, thickness: 1.0,),
-                SizedBox(height: 10,),
+                SizedBox(height: 5,),
                 Consumer<ItemModel>(builder: (context, itemModel, child) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: itemModel.items.map((e) => FavoriteCard(item: e)).toList(),
-                    ),
+                  return Column(
+                    children: itemModel.items.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Item item = entry.value;
+                      return FavoriteCard(item: item, rank: index + 1);
+                    }).toList(),
                   );
-                },),
-                SizedBox(height: 10,),
+                }),
+                SizedBox(height: 5,),
                 Divider(color: Colors.grey, thickness: 1.0,),
                 SizedBox(height: 30,),
                 Column(
@@ -531,8 +543,8 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
                   highlightColor: Colors.grey[100]!,
                   child: Container(
                     color: Colors.grey[300],
-                    height: 75,
-                    width: 75,
+                    height: 80,
+                    width: 80,
                   ),
                 ),
                 SizedBox(width: 10,),
@@ -540,33 +552,26 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              color: Colors.grey[300],
-                              height: 25,
-                              width: 150,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.favorite_outline,
-                                  size: 25,
-                                  color: Colors.red,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 10,
+                          width: 60,
+                        ),
                       ),
-                      SizedBox(height: 7,),
+                      SizedBox(height: 5,),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 25,
+                          width: 150,
+                        ),
+                      ),
+                      SizedBox(height: 5,),
                       Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
@@ -576,7 +581,7 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
                           width: 250,
                         ),
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 10),
                       Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
@@ -600,8 +605,9 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
 
 class FavoriteCard extends StatefulWidget {
   final Item item;
+  final int rank;
 
-  const FavoriteCard({required this.item});
+  const FavoriteCard({required this.item, required this.rank});
 
   @override
   State<FavoriteCard> createState() => _FavoriteCardState();
@@ -609,6 +615,35 @@ class FavoriteCard extends StatefulWidget {
 
 class _FavoriteCardState extends State<FavoriteCard> {
   bool isFavorited = false;
+  final formatter = NumberFormat('#,###');
+
+  String _formatAddress(String address) {
+    // 주소를 공백을 기준으로 나눕니다.
+    final parts = address.split(' ');
+
+    if (parts.length >= 3) {
+      // 부산광역시 기장군 기장읍 동부산관광로 42에서 '부산 기장군'을 추출
+      return '${parts[0]} ${parts[1]}';
+    }
+
+    // 예상된 형식이 아닌 경우 원래 주소를 반환합니다.
+    return address;
+  }
+
+  String _mapTypeToString(int type) {
+    switch (type) {
+      case 1:
+        return '호텔';
+      case 2:
+        return '테마파크';
+      case 3:
+        return '전시회';
+      case 4:
+        return '액티비티';
+      default:
+        return '기타'; // 기본값
+    }
+  }
 
   void toggleFavorite() {
     setState(() {
@@ -625,84 +660,103 @@ class _FavoriteCardState extends State<FavoriteCard> {
             onTap: () {
               Navigator.pushNamed(context, '/detail_screen');
             },
-            child: Row(
-              children: [
-                Text(
-                  '1',
-                  style: TextStyle(
-                    fontFamily: 'NotoSansKR',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                children: [
+                  Text(
+                    '${widget.rank}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
                   ),
-                ),
-                SizedBox(width: 13,),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    '${widget.item.i_image}',
-                    width: 75,
-                    height: 75,
-                    fit: BoxFit.cover,
+                  SizedBox(width: 13,),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      '${widget.item.i_image}',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(width: 10,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                              '${widget.item.i_name}',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                                height: 1.0,
-                              ), overflow: TextOverflow.ellipsis
-                          ),
-                          GestureDetector(
-                            onTap: toggleFavorite,
-                            child: Column(
-                              children: [
-                                Icon(
-                                  isFavorited ? Icons.favorite : Icons.favorite_outline,
-                                  size: 25,
-                                  color: Colors.red,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7,),
-                      Text(
-                        '${widget.item.i_address}',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: Colors.grey,
-                          height: 1.0,
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '${widget.item.i_price}',
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${widget.item.s_idx}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.grey,
+                            height: 1.0,
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 5,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                  '${widget.item.i_name}',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                    height: 1.0,
+                                  ), overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Visibility(
+                              visible: false,
+                              child: GestureDetector(
+                                onTap: toggleFavorite,
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      isFavorited ? Icons.favorite : Icons.favorite_outline,
+                                      size: 25,
+                                      color: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5,),
+                        Text(
+                          '${_formatAddress(widget.item.i_address)} · ${_mapTypeToString(widget.item.c_type)}',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.grey,
+                            height: 1.0,
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '${formatter.format(widget.item.i_price)}원 ~',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
