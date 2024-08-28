@@ -18,6 +18,7 @@ import 'package:busan_trip/screen/searchingpage.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:busan_trip/screen/sign_up2.dart';
 import 'package:busan_trip/screen/sign_up3.dart';
+import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -150,7 +151,8 @@ Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
     // return LoginOpeningScreen();
-    return RootScreen();
+    // return RootScreen();
+    return StoreDetailScreen();
   } else {
     return const IntroScreen();
   }

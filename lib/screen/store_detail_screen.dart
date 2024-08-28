@@ -13,11 +13,31 @@ class StoreDetailScreen extends StatefulWidget {
 class _StoreDetailScreenState extends State<StoreDetailScreen> {
 
   late Future<void> _loadingFuture;
+  late ScrollController _scrollController;
+  static const kHeaderHeight = 235.0;
+
+  double get _headerOffset {
+    if (_scrollController.hasClients) {
+      if (_scrollController.offset > kHeaderHeight) {
+        return -1 * (kHeaderHeight + 0.0);
+      } else {
+        return -1 * (_scrollController.offset * 1.5);
+      }
+    }
+    return 0.0;
+  }
 
   @override
   void initState() {
     super.initState();
     _loadingFuture = _simulateLoading();
+    _scrollController = ScrollController()..addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _simulateLoading() async {
@@ -191,27 +211,70 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
   }
 
   Widget _buildDetailContent() {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          pinned: true,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          iconTheme: IconThemeData(
-            color: Colors.black,
-          ),
-          elevation: 0,
+    return Stack(
+      children: [
+        CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: kHeaderHeight,
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.transparent,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Image.asset(
+                  'assets/images/lotteworld.jfif',
+                  fit: BoxFit.cover,
+                ),
+              ),
+              iconTheme: IconThemeData(
+                color: Colors.black,
+              ),
+              elevation: 0,
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(color: Colors.white ,child: SizedBox(height: 40)), // `Container`가 겹쳐질 공간 확보
+                  DetailContent()
+                ],
+              ),
+            ),
+          ],
         ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              DetailContent()
-            ],
+        // 이 부분이 SliverAppBar 위로 튀어나오는 Container
+        Positioned(
+          top: kHeaderHeight + _headerOffset, // SliverAppBar 위로 튀어나오는 위치 조절
+          left: 16, // 좌우 위치 조절
+          child: Opacity(
+            opacity: 1 - (_scrollController.offset / kHeaderHeight).clamp(0, 1), // 스크롤에 따라 점점 투명해짐
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey[300]!,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  'https://scontent-ssn1-1.xx.fbcdn.net/v/t39.30808-6/332953938_1879697915719235_6365380102897356357_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hes9gGl4of4Q7kNvgEKagxf&_nc_ht=scontent-ssn1-1.xx&oh=00_AYCezD298ihgq6Pr_APxLWaALs16AHtZB15Fv8yV9lio2g&oe=66D508B1',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           ),
         ),
       ],
     );
   }
+
 }
 
 class DetailContent extends StatefulWidget {
@@ -234,32 +297,14 @@ class _DetailContentState extends State<DetailContent> {
       width: MediaQuery.of(context).size.width,  // Use screen width
       color: Colors.white,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey[300]!,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      'https://i.namu.wiki/i/JTOjrkPhvIaaHsLE7B1qATa0_2o78b8yyKKWEM5zF4L-RpyonhKel3tW_m_HdDLiHzuZiiq2Kg-A_lfj4Q9ewxyww4AbM_yinCYX0FXCeBjg9rT8BTHNYtTHAHMvLiDUs1kZ8ZG9TOk3L-znc01wYw.svg',
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   child: Column(
@@ -327,79 +372,6 @@ class _DetailContentState extends State<DetailContent> {
                     ],
                   ),
                 ),
-                Divider(color: Colors.grey[200], thickness: 7.0,),
-                _buildInfoSection(),
-                Divider(color: Colors.grey[200], thickness: 7.0,),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '상품 설명',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w800,
-                          fontSize: 18,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Divider(color: Colors.grey[200], thickness: 1.0,),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Column(
-                          children: [
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/eSeHbg8cH0gPskLE',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/achV2D1nsKKi4KsP',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/jbq0y0E4SCCpBVeX',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/86ccgNX3RHA8sQ0l',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/PDnHAa15yO2f0NML',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/kLHpL4hlSYZCItxS',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/uGJuI9R0WQEPxL3H',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/ch2khfEECTJESUcg',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/sd8CHbgrG90YJLo7',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/CoYb4UJB7KJHMZ3O',
-                              fit: BoxFit.cover,
-                            ),
-                            Image.network(
-                              'https://image6.yanolja.com/leisure/fyjtVXwzPMJgBe7c',
-                              fit: BoxFit.cover,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 10),
               ],
             ),
           ),

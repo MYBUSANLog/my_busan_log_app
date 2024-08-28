@@ -2,6 +2,7 @@ import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/review_screen.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
+import 'package:busan_trip/screen/test1.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -353,6 +354,10 @@ class _DetailContentState extends State<DetailContent> {
                 SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                    // );
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
