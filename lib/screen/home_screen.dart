@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../model/item_model.dart';
+import '../model/store_model.dart';
 import '../vo/item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -360,98 +361,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class RealTimeListSkeleton extends StatefulWidget {
-  const RealTimeListSkeleton({super.key});
 
-  @override
-  State<RealTimeListSkeleton> createState() => _RealTimeListSkeletonState();
-}
-
-class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {},
-            child: Row(
-              children: [
-                Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    color: Colors.grey[300],
-                    height: 10,
-                    width: 10,
-                  ),
-                ),
-                SizedBox(width: 13,),
-                Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    color: Colors.grey[300],
-                    height: 80,
-                    width: 80,
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 10,
-                          width: 60,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 25,
-                          width: 150,
-                        ),
-                      ),
-                      SizedBox(height: 5,),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 15,
-                          width: 250,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 17,
-                          width: 100,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 
 
@@ -514,7 +424,7 @@ class FavoriteCard extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-                  SizedBox(width: 13,),
+                  SizedBox(width: 13),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
@@ -524,47 +434,60 @@ class FavoriteCard extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
-                            );
+                        Consumer<StoreModel>(
+                          builder: (context, storeModel, child) {
+                            final store = storeModel.getStoreById(item.s_idx);
+                            if (store == null) {
+                              // Fetch store data if not already fetched
+                              storeModel.fetchStoreById(item.s_idx);
+                              return Text(
+                                'Loading...',  // Placeholder while loading
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  height: 1.0,
+                                ),
+                              );
+                            } else {
+                              return Text(
+                                '${store.s_name}',
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                  height: 1.0,
+                                ),
+                              );
+                            }
                           },
-                          child: Text(
-                            '${item.s_idx}',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: Colors.grey,
-                              height: 1.0,
-                            ),
-                          ),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: Text(
-                                  '${item.i_name}',
-                                  style: TextStyle(
-                                    fontFamily: 'NotoSansKR',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17,
-                                    height: 1.0,
-                                  ), overflow: TextOverflow.ellipsis,
+                                '${item.i_name}',
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                  height: 1.0,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(height: 5),
                         Text(
                           '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
                           style: TextStyle(
@@ -575,7 +498,7 @@ class FavoriteCard extends StatelessWidget {
                             height: 1.0,
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10),
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
