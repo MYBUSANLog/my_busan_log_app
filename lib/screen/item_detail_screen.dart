@@ -378,7 +378,7 @@ class _DetailContentState extends State<DetailContent> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(
-                            'https://i.namu.wiki/i/JTOjrkPhvIaaHsLE7B1qATa0_2o78b8yyKKWEM5zF4L-RpyonhKel3tW_m_HdDLiHzuZiiq2Kg-A_lfj4Q9ewxyww4AbM_yinCYX0FXCeBjg9rT8BTHNYtTHAHMvLiDUs1kZ8ZG9TOk3L-znc01wYw.svg',
+                            'https://scontent-ssn1-1.xx.fbcdn.net/v/t39.30808-6/332953938_1879697915719235_6365380102897356357_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hes9gGl4of4Q7kNvgEKagxf&_nc_ht=scontent-ssn1-1.xx&oh=00_AYCezD298ihgq6Pr_APxLWaALs16AHtZB15Fv8yV9lio2g&oe=66D508B1',
                             width: 35,
                             height: 35,
                             fit: BoxFit.cover,
@@ -390,8 +390,8 @@ class _DetailContentState extends State<DetailContent> {
                         '롯데월드 어드벤처 부산',
                         style: TextStyle(
                           fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
                         ),
                       ),
                     ],

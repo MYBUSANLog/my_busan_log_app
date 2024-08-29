@@ -6,6 +6,7 @@ import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/search_result_list.dart';
 import 'package:busan_trip/screen/search_screen.dart';
+import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:busan_trip/screen/themepark_list_screen.dart';
 import 'package:busan_trip/screen/tour_list_screen.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -402,10 +403,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 5,),
                 Consumer<ItemModel>(builder: (context, itemModel, child) {
                   return Column(
-                    children: itemModel.items.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      Item item = entry.value;
-                      return FavoriteCard(item: item, rank: index + 1);
+                    children: itemModel.items.map((item) {
+                      return FavoriteCard(item: item, rank: rank,);
                     }).toList(),
                   );
                 }),
@@ -520,12 +519,7 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
-              );
-            },
+            onTap: () {},
             child: Row(
               children: [
                 Shimmer.fromColors(
@@ -603,19 +597,14 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
   }
 }
 
-class FavoriteCard extends StatefulWidget {
+
+
+class FavoriteCard extends StatelessWidget {
+  final formatter = NumberFormat('#,###');
   final Item item;
   final int rank;
 
-  const FavoriteCard({required this.item, required this.rank});
-
-  @override
-  State<FavoriteCard> createState() => _FavoriteCardState();
-}
-
-class _FavoriteCardState extends State<FavoriteCard> {
-  bool isFavorited = false;
-  final formatter = NumberFormat('#,###');
+  FavoriteCard({required this.item, required this.rank, super.key});
 
   String _formatAddress(String address) {
     // 주소를 공백을 기준으로 나눕니다.
@@ -645,12 +634,6 @@ class _FavoriteCardState extends State<FavoriteCard> {
     }
   }
 
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -658,14 +641,17 @@ class _FavoriteCardState extends State<FavoriteCard> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/detail_screen');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Row(
                 children: [
                   Text(
-                    '${widget.rank}',
+                    '${rank}',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w500,
@@ -676,7 +662,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      '${widget.item.i_image}',
+                      '${item.i_image}',
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
@@ -687,14 +673,22 @@ class _FavoriteCardState extends State<FavoriteCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${widget.item.s_idx}',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Colors.grey,
-                            height: 1.0,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                            );
+                          },
+                          child: Text(
+                            '${item.s_idx}',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: Colors.grey,
+                              height: 1.0,
+                            ),
                           ),
                         ),
                         SizedBox(height: 5,),
@@ -703,7 +697,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                           children: [
                             Flexible(
                               child: Text(
-                                  '${widget.item.i_name}',
+                                  '${item.i_name}',
                                   style: TextStyle(
                                     fontFamily: 'NotoSansKR',
                                     fontWeight: FontWeight.w500,
@@ -712,26 +706,11 @@ class _FavoriteCardState extends State<FavoriteCard> {
                                   ), overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Visibility(
-                              visible: false,
-                              child: GestureDetector(
-                                onTap: toggleFavorite,
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      isFavorited ? Icons.favorite : Icons.favorite_outline,
-                                      size: 25,
-                                      color: Colors.red,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         SizedBox(height: 5,),
                         Text(
-                          '${_formatAddress(widget.item.i_address)} · ${_mapTypeToString(widget.item.c_type)}',
+                          '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
                             fontWeight: FontWeight.w400,
@@ -744,7 +723,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            '${formatter.format(widget.item.i_price)}원 ~',
+                            '${formatter.format(item.i_price)}원 ~',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w500,

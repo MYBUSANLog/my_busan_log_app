@@ -151,8 +151,8 @@ Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
     // return LoginOpeningScreen();
-    // return RootScreen();
-    return StoreDetailScreen();
+    return RootScreen();
+    // return StoreDetailScreen();
   } else {
     return const IntroScreen();
   }

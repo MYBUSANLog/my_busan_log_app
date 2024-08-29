@@ -1,7 +1,10 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/review_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'item_detail_screen.dart';
 
 class StoreDetailScreen extends StatefulWidget {
   const StoreDetailScreen({super.key});
@@ -10,39 +13,57 @@ class StoreDetailScreen extends StatefulWidget {
   State<StoreDetailScreen> createState() => _StoreDetailScreenState();
 }
 
-class _StoreDetailScreenState extends State<StoreDetailScreen> {
+class _StoreDetailScreenState extends State<StoreDetailScreen> with SingleTickerProviderStateMixin {
 
   late Future<void> _loadingFuture;
   late ScrollController _scrollController;
-  static const kHeaderHeight = 235.0;
+  static const kHeaderHeight = 200.0;
+  late TabController _tabController;
 
-  double get _headerOffset {
-    if (_scrollController.hasClients) {
-      if (_scrollController.offset > kHeaderHeight) {
-        return -1 * (kHeaderHeight + 0.0);
-      } else {
-        return -1 * (_scrollController.offset * 1.5);
-      }
-    }
-    return 0.0;
-  }
+  final GlobalKey _detailKey = GlobalKey();
+  final GlobalKey _itemKey = GlobalKey();
+  final GlobalKey _infoKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _loadingFuture = _simulateLoading();
     _scrollController = ScrollController()..addListener(() => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+    _tabController = TabController(length: 3, vsync: this)
+      ..addListener(() {
+        if (_tabController.indexIsChanging) {
+          _scrollToTab(_tabController.index);
+        }
+      });
   }
 
   Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 6));
+    await Future.delayed(const Duration(seconds: 3));
   }
+
+  void _scrollToTab(int index) {
+    // 각 탭에 대응하는 `GlobalKey`를 설정합니다.
+    final GlobalKey? key = index == 0
+        ? _detailKey
+        : index == 1
+        ? _itemKey
+        : _infoKey;
+
+    if (key != null && key.currentContext != null) {
+      final RenderBox? renderBox = key.currentContext!.findRenderObject() as RenderBox?;
+      final double? scrollPosition = renderBox?.localToGlobal(Offset.zero).dy;
+
+      if (scrollPosition != null) {
+        _scrollController.animateTo(
+          scrollPosition,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,53 +77,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
             return _buildDetailContent();
           }
         },
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 50,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[100],
-                  padding: EdgeInsets.symmetric(vertical: 17,),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: Icon(Icons.share_outlined, size: 18, color: Colors.grey[600],),
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder:  (context) => BookingCalendarScreen()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff0e4194),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: Text(
-                  '결제하기',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -211,180 +185,185 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> {
   }
 
   Widget _buildDetailContent() {
-    return Stack(
-      children: [
-        CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: kHeaderHeight,
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.transparent,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Image.asset(
-                  'assets/images/lotteworld.jfif',
-                  fit: BoxFit.cover,
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          expandedHeight: kHeaderHeight,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          flexibleSpace: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              double percentage = (constraints.maxHeight - kToolbarHeight) /
+                  (kHeaderHeight - kToolbarHeight);
+              return FlexibleSpaceBar(
+                centerTitle: true,
+                title: _scrollController.hasClients &&
+                    _scrollController.offset >
+                        kHeaderHeight - kToolbarHeight
+                    ? Text(
+                  '롯데월드 어드벤처 부산',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+                    : null,
+                background: Stack(
+                  children: [
+                    ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.5),
+                        BlendMode.darken,
+                      ),
+                      child: Image.asset(
+                        'assets/images/lotteworld.jfif',
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                      ),
+                    ),
+                    Positioned(
+                      top: kHeaderHeight / 2,
+                      left: 16,
+                      child: Opacity(
+                        opacity: percentage.clamp(0.0, 1.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 70,
+                              height: 70,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[300]!,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  'https://scontent-ssn1-1.xx.fbcdn.net/v/t39.30808-6/332953938_1879697915719235_6365380102897356357_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hes9gGl4of4Q7kNvgEKagxf&_nc_ht=scontent-ssn1-1.xx&oh=00_AYCezD298ihgq6Pr_APxLWaALs16AHtZB15Fv8yV9lio2g&oe=66D508B1',
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              '롯데월드 어드벤처 부산',
+                              style: TextStyle(
+                                fontFamily: 'Noto Sans KR',
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              iconTheme: IconThemeData(
-                color: Colors.black,
-              ),
-              elevation: 0,
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Container(color: Colors.white ,child: SizedBox(height: 40)), // `Container`가 겹쳐질 공간 확보
-                  DetailContent()
-                ],
-              ),
-            ),
-          ],
+              );
+            },
+          ),
+          iconTheme: IconThemeData(
+            color: _scrollController.hasClients &&
+                _scrollController.offset >
+                    kHeaderHeight - kToolbarHeight
+                ? Colors.black
+                : Colors.white,
+          ),
+          elevation: 0,
         ),
-        // 이 부분이 SliverAppBar 위로 튀어나오는 Container
-        Positioned(
-          top: kHeaderHeight + _headerOffset, // SliverAppBar 위로 튀어나오는 위치 조절
-          left: 16, // 좌우 위치 조절
-          child: Opacity(
-            opacity: 1 - (_scrollController.offset / kHeaderHeight).clamp(0, 1), // 스크롤에 따라 점점 투명해짐
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey[300]!,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  'https://scontent-ssn1-1.xx.fbcdn.net/v/t39.30808-6/332953938_1879697915719235_6365380102897356357_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hes9gGl4of4Q7kNvgEKagxf&_nc_ht=scontent-ssn1-1.xx&oh=00_AYCezD298ihgq6Pr_APxLWaALs16AHtZB15Fv8yV9lio2g&oe=66D508B1',
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
-              ),
+        SliverPersistentHeader(
+          delegate: _SliverAppBarDelegate(
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: '상점 소개'),
+                Tab(text: '판매 상품'),
+                Tab(text: '이용 안내',)
+              ],
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.black,
+              indicatorColor: Color(0xff0e4194),
             ),
+          ),
+          pinned: true,
+        ),
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              DetailContent(
+                key: _detailKey,
+                scrollController: _scrollController,
+              ),
+              ItemSection(
+                key: _itemKey,
+                scrollController: _scrollController,
+              ),
+              InfoSection(
+                key: _infoKey,
+                scrollController: _scrollController,
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
+
 }
 
-class DetailContent extends StatefulWidget {
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
   @override
-  _DetailContentState createState() => _DetailContentState();
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.white,
+      child: _tabBar,
+    );
+  }
+
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
+  }
 }
 
-class _DetailContentState extends State<DetailContent> {
-  bool isFavorited = false;
+class DetailContent extends StatelessWidget {
+  final ScrollController scrollController;
 
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
+  DetailContent({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,  // Use screen width
       color: Colors.white,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '롯데월드 어드벤처 부산',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star_rounded,
-                            size: 20,
-                            color: Colors.yellow,
-                          ),
-                          SizedBox(width: 2),
-                          Text(
-                            '4.8',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            ' · ',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder:  (context) => ReviewScreen()),
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.black,width: 1.0),
-                                ),
-                              ),
-                              child: Text(
-                                '후기 763개',
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Divider(color: Colors.grey[200], thickness: 7.0,),
-          _buildInfoSection(),
-          Divider(color: Colors.grey[200], thickness: 7.0,),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '상품 설명',
+                  '상점 소개',
                   style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontWeight: FontWeight.w800,
@@ -398,48 +377,17 @@ class _DetailContentState extends State<DetailContent> {
                   child: Column(
                     children: [
                       Image.network(
-                        'https://image6.yanolja.com/leisure/eSeHbg8cH0gPskLE',
+                        'https://adventurebusan.lotteworld.com/common/images/partnership-img1.jpg',
                         fit: BoxFit.cover,
                       ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/achV2D1nsKKi4KsP',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/jbq0y0E4SCCpBVeX',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/86ccgNX3RHA8sQ0l',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/PDnHAa15yO2f0NML',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/kLHpL4hlSYZCItxS',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/uGJuI9R0WQEPxL3H',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/ch2khfEECTJESUcg',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/sd8CHbgrG90YJLo7',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/CoYb4UJB7KJHMZ3O',
-                        fit: BoxFit.cover,
-                      ),
-                      Image.network(
-                        'https://image6.yanolja.com/leisure/fyjtVXwzPMJgBe7c',
-                        fit: BoxFit.cover,
+                      SizedBox(height: 15),
+                      Text(
+                        '마법과 환상의 세계! 롯데월드 어드벤처가 부산에서 개장했다. 숲 속의 청량함과 짜릿한 스릴감을 완벽하게 즐길 수 있도록 준비되어 있다. 놀이공원하면 떠오르는 언제나 즐겁고 신나는 공연 그리고 퍼레이드를 경험할 수 있다. 부산롯데월드는 대한민국 제2의 도시라고 불리는 부산에 세워진 데다 대중교통을 이용한 접근성도 편리해 개장 첫날부터 끊임없는 발길이 이어지고 있다. 롯데월드 부산은 6개의 테마존으로 꾸려져 있다. 요정 마을 팅커폴스 존 중심에 토킹트리가 있는데 이 나무는 애니매트로닉스 기술이 적용되어 파크 내 6개 테마에 관한 이야기를 들려준다. 롯데월드 내 가장 높은 곳에 위치한 로얄가든 존의 로리캐슬은 물에 떠 있는 듯한 모습으로 연출되어 있으며 부산의 전경과 함께 기장 앞바다를 한눈에 즐길 수 있다. 이외의 놀이 기구들 특히 자이언트 디거, 자이언트 스플래쉬 등 대표 어트랙션은 그 짜릿함이 벌써 입소문을 타고 있다. 이렇게 어른들을 위한 어트랙션뿐만 아니라 유아를 동반한 가족 이용객을 위한 놀이 기구도 준비되어 있다. 날씨와 관계없이 아이와 안전하게 즐길 수 있도록 실내에 배치되어 있다. 놀이공원의 하이라이트라고 할 수 있는 퍼레이드는 하루에 2번, 약 30분간 진행된다.',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        ),
                       ),
                     ],
                   ),
@@ -447,49 +395,143 @@ class _DetailContentState extends State<DetailContent> {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          Divider(color: Colors.grey[200], thickness: 7.0,),
+        ],
+      )
+    );
+  }
+}
+
+class ItemSection extends StatelessWidget {
+  final ScrollController scrollController;
+
+  ItemSection({Key? key, required this.scrollController}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '판매 상품',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Divider(color: Colors.grey[200], thickness: 1.0,),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FavoriteCard(),
+                      SizedBox(height: 10),
+                      FavoriteCard(),
+                      SizedBox(height: 10),
+                      FavoriteCard(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
-
-  Widget _buildInfoSection() {
-    return Container(
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '이용 안내',
-              style: TextStyle(
+  Widget _buildInfoRow(String title, String content) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
                 fontFamily: 'NotoSansKR',
                 fontWeight: FontWeight.w800,
-                fontSize: 18,
-              ),
+                fontSize: 16,
+                color: Colors.grey[600]
             ),
-            SizedBox(height: 10),
-            Divider(color: Colors.grey[200], thickness: 1.0,),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoRow('주소', '부산광역시 기장군 기장읍 동부산관광로 42'),
-                  _buildInfoRow('홈페이지', 'https://adventurebusan.lotteworld.com/kor/main/index.do'),
-                  _buildInfoRow('운영요일 및 시간', '매일 10:00 ~ 20:00 (* 자세한 운영시간은 홈페이지 참조)'),
-                  _buildInfoRow('전화번호', '1661-2000'),
-                  _buildInfoRow('휴무일', '연중휴무 (* 기상상황에 따른 운휴)'),
-                ],
-              ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            content,
+            style: TextStyle(
+              fontFamily: 'NotoSansKR',
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
 
+class InfoSection extends StatelessWidget {
+  final ScrollController scrollController;
+
+  InfoSection({Key? key, required this.scrollController}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '이용 안내',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Divider(color: Colors.grey[200], thickness: 1.0,),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildInfoRow('주소', '부산광역시 기장군 기장읍 동부산관광로 42'),
+                          _buildInfoRow('홈페이지', 'https://adventurebusan.lotteworld.com/kor/main/index.do'),
+                          _buildInfoRow('운영요일 및 시간', '매일 10:00 ~ 20:00 (* 자세한 운영시간은 홈페이지 참조)'),
+                          _buildInfoRow('전화번호', '1661-2000'),
+                          _buildInfoRow('휴무일', '연중휴무 (* 기상상황에 따른 운휴)'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildInfoRow(String title, String content) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
@@ -502,6 +544,7 @@ class _DetailContentState extends State<DetailContent> {
               fontFamily: 'NotoSansKR',
               fontWeight: FontWeight.w800,
               fontSize: 16,
+              color: Colors.grey[600]
             ),
           ),
           SizedBox(height: 5),
@@ -510,7 +553,140 @@ class _DetailContentState extends State<DetailContent> {
             style: TextStyle(
               fontFamily: 'NotoSansKR',
               fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+class FavoriteCard extends StatefulWidget {
+
+  const FavoriteCard({super.key});
+
+  @override
+  State<FavoriteCard> createState() => _FavoriteCardState();
+}
+
+class _FavoriteCardState extends State<FavoriteCard> {
+  bool isFavorited = false;
+
+  void toggleFavorite() {
+    setState(() {
+      isFavorited = !isFavorited;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ItemDetailScreen()),
+                  );
+                },
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(width: 15,),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '롯데월드 어드벤처 부산',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: Colors.grey,
+                              height: 1.0,
+                            ),
+                          ),
+                          SizedBox(height: 5,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  '[QR바로입장] 부산 롯데월드 어드벤처',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                    height: 1.0,
+                                  ), overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Visibility(
+                                visible: false,
+                                child: GestureDetector(
+                                  onTap: toggleFavorite,
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        isFavorited ? Icons.favorite : Icons.favorite_outline,
+                                        size: 25,
+                                        color: Colors.red,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5,),
+                          Text(
+                            '부산광역시 기장군 · 테마파크',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: Colors.grey,
+                              height: 1.0,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              '12,000원 ~',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
