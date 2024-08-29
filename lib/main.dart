@@ -123,7 +123,6 @@ class MyApp extends StatelessWidget {
           '/profile_alter': (context) => ProfileAlterScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
           '/root_screen':(context) => RootScreen(),
-          '/detail_screen':(context) => ItemDetailScreen(),
           '/notification_screen': (context) => NotificationScreen(),
           '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
           // 리뷰 북마크 찜목록 공지사항 추가 안율현

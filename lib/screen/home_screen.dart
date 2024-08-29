@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
         future: _loadingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildSkeletonLoader();
+            return _buildDetailContent();
           } else {
             return _buildDetailContent();
           }
@@ -91,153 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSkeletonLoader() {
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery
-              .of(context)
-              .size
-              .height, // 최소 높이를 화면 높이로 설정
-        ),
-        child: IntrinsicHeight(
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 60),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/images/006.png',
-                        width: 120,
-                        fit: BoxFit.cover,
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Column(
-                          children: [
-                            Icon(Icons.search_outlined, size: 35),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 250,
-                      width: double.infinity,
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 30,
-                          width: 200,
-                        ),
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 20,
-                          width: 30,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(color: Colors.grey, thickness: 1.0,),
-                  SizedBox(height: 10,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 10,),
-                  Divider(color: Colors.grey, thickness: 1.0,),
-                  SizedBox(height: 30,),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildDetailContent() {
     final SearchController controller = SearchController();
@@ -403,8 +257,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 5,),
                 Consumer<ItemModel>(builder: (context, itemModel, child) {
                   return Column(
-                    children: itemModel.items.map((item) {
-                      return FavoriteCard(item: item, rank: rank,);
+                    children: itemModel.items.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Item item = entry.value;
+                      return FavoriteCard(item: item, rank: index + 1);
                     }).toList(),
                   );
                 }),

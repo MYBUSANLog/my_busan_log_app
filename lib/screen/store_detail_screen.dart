@@ -1,4 +1,5 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
+import 'package:busan_trip/screen/item_detail_screen2.dart';
 import 'package:busan_trip/screen/review_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -198,19 +199,6 @@ class _StoreDetailScreenState extends State<StoreDetailScreen> with SingleTicker
               double percentage = (constraints.maxHeight - kToolbarHeight) /
                   (kHeaderHeight - kToolbarHeight);
               return FlexibleSpaceBar(
-                centerTitle: true,
-                title: _scrollController.hasClients &&
-                    _scrollController.offset >
-                        kHeaderHeight - kToolbarHeight
-                    ? Text(
-                  '롯데월드 어드벤처 부산',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-                    : null,
                 background: Stack(
                   children: [
                     ColorFiltered(
@@ -597,7 +585,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ItemDetailScreen()),
+                    MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
                   );
                 },
                 child: Row(

@@ -3,6 +3,7 @@ import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart';
 import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
+import 'package:busan_trip/screen/item_detail_screen2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -778,7 +779,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
+                MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
               );
             },
             child: Row(

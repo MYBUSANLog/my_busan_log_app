@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'item_detail_screen2.dart';
+
 class SearchResultList extends StatefulWidget {
   final String searchTerm;
 
@@ -196,7 +198,10 @@ class _FavoriteCardState extends State<FavoriteCard> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/detail_screen');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
+              );
             },
             child: Row(
               children: [
