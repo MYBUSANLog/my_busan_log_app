@@ -1,5 +1,6 @@
 import 'package:busan_trip/model/item_model.dart';
 import 'package:busan_trip/model/join_model.dart';
+import 'package:busan_trip/model/option_model.dart';
 import 'package:busan_trip/model/store_model.dart';
 import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/accouncement_list_screen.dart';
@@ -76,6 +77,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserModel()),
         ChangeNotifierProvider(create: (context) => ItemModel()),
         ChangeNotifierProvider(create: (context) => StoreModel()),
+        ChangeNotifierProvider(create: (context) => OptionModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,8 +1,18 @@
+import 'package:busan_trip/model/option_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 
+import '../vo/item.dart';
+import '../vo/option.dart';
+import '../vo/user.dart';
+
 class BookingCalendarScreen extends StatefulWidget {
+  final Item item;
+
+  const BookingCalendarScreen({Key? key, required this.item}) : super(key: key);
+
   @override
   _BookingCalendarScreenState createState() => _BookingCalendarScreenState();
 }
@@ -11,138 +21,26 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   DateTime _today = DateTime.now();
-  int _adultAlldayTickets = 0;
-  int _teenAlldayTickets = 0;
-  int _childAlldayTickets = 0;
-  int _babyAlldayTickets = 0;
-  int _adultAfterTickets = 0;
-  int _teenAfterTickets = 0;
-  int _childAfterTickets = 0;
-  int _babyAfterTickets = 0;
 
-  List<String> _ticketNames = [];
-  List<String> _ticketPrices = [];
-  List<int> _ticketQuantities = [];
+  Map<int, int> optionQuantities = {};
 
-  void _decrementTickets(String type) {
+  void _decrementTickets(int optionIndex) {
     setState(() {
-      switch (type) {
-        case 'adultAllday':
-          if (_adultAlldayTickets > 0) _adultAlldayTickets--;
-          break;
-        case 'teenAllday':
-          if (_teenAlldayTickets > 0) _teenAlldayTickets--;
-          break;
-        case 'childAllday':
-          if (_childAlldayTickets > 0) _childAlldayTickets--;
-          break;
-        case 'babyAllday':
-          if (_babyAlldayTickets > 0) _babyAlldayTickets--;
-          break;
-        case 'adultAfter':
-          if (_adultAfterTickets > 0) _adultAfterTickets--;
-          break;
-        case 'teenAfter':
-          if (_teenAfterTickets > 0) _teenAfterTickets--;
-          break;
-        case 'childAfter':
-          if (_childAfterTickets > 0) _childAfterTickets--;
-          break;
-        case 'babyAfter':
-          if (_babyAfterTickets > 0) _babyAfterTickets--;
-          break;
+      if (optionQuantities[optionIndex]! > 0) {
+        optionQuantities[optionIndex] = optionQuantities[optionIndex]! - 1;
       }
     });
   }
 
-  void _incrementTickets(String type) {
+  void _incrementTickets(int optionIndex) {
     setState(() {
-      switch (type) {
-        case 'adultAllday':
-          _adultAlldayTickets++;
-          break;
-        case 'teenAllday':
-          _teenAlldayTickets++;
-          break;
-        case 'childAllday':
-          _childAlldayTickets++;
-          break;
-        case 'babyAllday':
-          _babyAlldayTickets++;
-          break;
-        case 'adultAfter':
-          _adultAfterTickets++;
-          break;
-        case 'teenAfter':
-          _teenAfterTickets++;
-          break;
-        case 'childAfter':
-          _childAfterTickets++;
-          break;
-        case 'babyAfter':
-          _babyAfterTickets++;
-          break;
-      }
+      optionQuantities[optionIndex] = optionQuantities[optionIndex]! + 1;
     });
   }
 
   bool isAnyTicketSelected() {
-    return _adultAlldayTickets > 0 ||
-        _teenAlldayTickets > 0 ||
-        _childAlldayTickets > 0 ||
-        _babyAlldayTickets > 0 ||
-        _adultAfterTickets > 0 ||
-        _teenAfterTickets > 0 ||
-        _childAfterTickets > 0 ||
-        _babyAfterTickets > 0;
+    return optionQuantities.values.any((quantity) => quantity > 0);
   }
-
-  // void _populateTicketDetails() {
-  //   _ticketNames.clear();
-  //   _ticketPrices.clear();
-  //   _ticketQuantities.clear();
-  //
-  //   if (_adultAlldayTickets > 0) {
-  //     _ticketNames.add('종일권 - 어른');
-  //     _ticketPrices.add(47000);
-  //     _ticketQuantities.add(_adultAlldayTickets);
-  //   }
-  //   if (_teenAlldayTickets > 0) {
-  //     _ticketNames.add('종일권 - 청소년');
-  //     _ticketPrices.add('39,000원');
-  //     _ticketQuantities.add(_teenAlldayTickets);
-  //   }
-  //   if (_childAlldayTickets > 0) {
-  //     _ticketNames.add('종일권 - 어린이/경로');
-  //     _ticketPrices.add('33,000원');
-  //     _ticketQuantities.add(_childAlldayTickets);
-  //   }
-  //   if (_babyAlldayTickets > 0) {
-  //     _ticketNames.add('종일권 - 베이비');
-  //     _ticketPrices.add('12,000원');
-  //     _ticketQuantities.add(_babyAlldayTickets);
-  //   }
-  //   if (_adultAfterTickets > 0) {
-  //     _ticketNames.add('오후권 - 어른');
-  //     _ticketPrices.add('36,000원');
-  //     _ticketQuantities.add(_adultAfterTickets);
-  //   }
-  //   if (_teenAfterTickets > 0) {
-  //     _ticketNames.add('오후권 - 청소년');
-  //     _ticketPrices.add('32,000원');
-  //     _ticketQuantities.add(_teenAfterTickets);
-  //   }
-  //   if (_childAfterTickets > 0) {
-  //     _ticketNames.add('오후권 - 어린이/경로');
-  //     _ticketPrices.add('30,000원');
-  //     _ticketQuantities.add(_childAfterTickets);
-  //   }
-  //   if (_babyAfterTickets > 0) {
-  //     _ticketNames.add('오후권 - 베이비');
-  //     _ticketPrices.add('12,000원');
-  //     _ticketQuantities.add(_babyAfterTickets);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +82,7 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                       _selectedDay = selectedDay; // 날짜 선택
                       _focusedDay = focusedDay; // 포커스된 날짜 업데이트
                     });
+                    Provider.of<OptionModel>(context, listen: false).setOptions(widget.item.i_idx);
                   },
                   calendarFormat: CalendarFormat.month,
                   startingDayOfWeek: StartingDayOfWeek.sunday,
@@ -215,61 +114,22 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
                   child: Column(
                     children: [
-                      _ticketCounter(
-                        'adultAllday',
-                        _adultAlldayTickets,
-                        '종일권 - 어른',
-                        47000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'teenAllday',
-                        _teenAlldayTickets,
-                        '종일권 - 청소년',
-                        39000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'childAllday',
-                        _childAlldayTickets,
-                        '종일권 - 어린이/경로',
-                        33000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'babyAllday',
-                        _babyAlldayTickets,
-                        '종일권 - 베이비',
-                        12000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'adultAfter',
-                        _adultAfterTickets,
-                        '오후권 - 어른',
-                        36000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'teenAfter',
-                        _teenAfterTickets,
-                        '오후권 - 청소년',
-                        32000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'childAfter',
-                        _childAfterTickets,
-                        '오후권 - 어린이/경로',
-                        30000,
-                      ),
-                      SizedBox(height: 15),
-                      _ticketCounter(
-                        'babyAfter',
-                        _babyAfterTickets,
-                        '오후권 - 베이비',
-                        12000,
-                      ),
+                      Consumer<OptionModel>(builder: (context, optionModel, child) {
+                        return Column(
+                          children: optionModel.options.asMap().entries.map((entry) {
+                            Option option = entry.value;
+                            int index = entry.key;
+                            optionQuantities.putIfAbsent(index, () => 0);
+
+                            return buildOptionListBox(
+                              option: option,
+                              option_quantity: optionQuantities[index]!,
+                              onIncrement: () => _incrementTickets(index),
+                              onDecrement: () => _decrementTickets(index),
+                            );
+                          }).toList(),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -288,14 +148,28 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
               child: ElevatedButton(
                 onPressed: isAnyTicketSelected() && _selectedDay != null
                     ? () {
+                  // _selectedDay를 YYYY-MM-DD 형식의 문자열로 변환하여 전달
+                  String formattedDate = _selectedDay != null
+                      ? "${_selectedDay!.year}-${_selectedDay!.month.toString().padLeft(2, '0')}-${_selectedDay!.day.toString().padLeft(2, '0')}"
+                      : '';
+
+                  // 선택된 옵션을 리스트로 변환
+                  List<Map<String, dynamic>> selectedOptions = optionQuantities.entries
+                      .where((entry) => entry.value > 0)
+                      .map((entry) => {
+                    'op_name': widget.item.i_name, // 옵션 이름 설정
+                    'op_price': Provider.of<OptionModel>(context, listen: false).options[entry.key].op_price,
+                    'quantity': entry.value // 선택한 수량 설정
+                  })
+                      .toList();
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => PayScreen(
-                        selectedDate: _selectedDay!,
-                        ticketNames: _ticketNames,
-                        ticketPrices: [10000],
-                        ticketQuantities: _ticketQuantities,
+                        item: widget.item,
+                        selectedDate: formattedDate,
+                        selectedOptions: selectedOptions,
                       ),
                     ),
                   );
@@ -320,94 +194,113 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
       ),
     );
   }
+}
 
-  Widget _ticketCounter(String type, int count, String label, int price) {
-    bool isDecrementEnabled = count > 0;
+class buildOptionListBox extends StatelessWidget {
+  final Option option;
+  final int option_quantity;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
 
-    return Container(
-      color: Colors.grey[100],
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16),
-                  ),
-                  Text(
-                    '${price}원',
-                    style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey,
-                        fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-            Row(
+  buildOptionListBox({
+    required this.option,
+    required this.option_quantity,
+    required this.onIncrement,
+    required this.onDecrement,
+    super.key
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    bool isDecrementEnabled = option_quantity > 0;
+
+    return Column(
+      children: [
+        Container(
+          color: Colors.grey[100],
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey[400]!,
-                      width: 1,
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: InkWell(
-                    onTap: isDecrementEnabled
-                        ? () => _decrementTickets(type)
-                        : null,
-                    child: Icon(
-                      Icons.remove,
-                      color: isDecrementEnabled ? Color(0xff0e4194) : Colors.grey,
-                      size: 20,
-                    ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${option.op_name}',
+                        style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16),
+                      ),
+                      Text(
+                        '${option.op_price}원',
+                        style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                            fontSize: 16),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(width: 15),
-                Text(
-                  '$count',
-                  style: TextStyle(
-                      fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      fontSize: 18),
-                ),
-                SizedBox(width: 15),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey[400]!,
-                      width: 1,
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                          width: 1,
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: InkWell(
+                        onTap: isDecrementEnabled ? onDecrement : null,
+                        child: Icon(
+                          Icons.remove,
+                          color: isDecrementEnabled ? Color(0xff0e4194) : Colors.grey,
+                          size: 20,
+                        ),
+                      ),
                     ),
-                    color: Colors.white,
-                  ),
-                  child: InkWell(
-                    onTap: () => _incrementTickets(type),
-                    child: Icon(
-                      Icons.add,
-                      color: Color(0xff0e4194),
-                      size: 20,
+                    SizedBox(width: 15),
+                    Text(
+                      '${option_quantity}',
+                      style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                          fontSize: 18),
                     ),
-                  ),
+                    SizedBox(width: 15),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                          width: 1,
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: InkWell(
+                        onTap: onIncrement,
+                        child: Icon(
+                          Icons.add,
+                          color: Color(0xff0e4194),
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        SizedBox(height: 15),
+      ],
     );
   }
 }

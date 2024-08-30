@@ -2,7 +2,6 @@ import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/review_screen.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
-import 'package:busan_trip/screen/test1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +29,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   }
 
   Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 6));
+    await Future.delayed(const Duration(seconds: 4));
   }
 
   @override
@@ -47,7 +46,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         future: _loadingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildDetailContent();
+            return _buildSkeletonLoader();
           } else {
             return _buildDetailContent();
           }
@@ -80,7 +79,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:  (context) => BookingCalendarScreen()),
+                    MaterialPageRoute(builder:  (context) => BookingCalendarScreen(item: widget.item)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -103,7 +102,116 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     );
   }
 
-
+  Widget _buildSkeletonLoader() {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          pinned: true,
+          expandedHeight: 200.0,
+          flexibleSpace: FlexibleSpaceBar(
+            background: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                color: Colors.grey[300],
+              ),
+            ),
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 25, horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 35,
+                        width: double.infinity,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 25,
+                        width: double.infinity,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Divider(color: Colors.grey[200], thickness: 1.0,),
+                    SizedBox(height: 15),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 30,
+                        width: double.infinity,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Divider(color: Colors.grey[200], thickness: 7.0,),
+                    SizedBox(height: 15),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 25,
+                        width: 100,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Divider(color: Colors.grey[200], thickness: 1.0,),
+                    SizedBox(height: 15),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 50,
+                        width: double.infinity,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 50,
+                        width: double.infinity,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 50,
+                        width: double.infinity,
+                      ),
+                    ),
+                    SizedBox(height: 35),
+                    Divider(color: Colors.grey[200], thickness: 7.0,),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildDetailContent() {
     return CustomScrollView(
@@ -130,9 +238,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               DetailContent(
                 image: widget.item.i_image,
                 name: widget.item.i_name,
-                // wishes: widget.item.i_wishes,
+                wishes: widget.item.i_wishes,
                 avgScore: widget.item.averageScore,
-                // reviews: widget.item.i_reviews,
+                reviews: widget.item.review_count,
                 price: widget.item.i_price,
                 // shop_img_url: widget.item.s_img_url,
                 // shop_name: widget.item.s_name,
@@ -152,9 +260,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 class DetailContent extends StatefulWidget {
   final String image;
   final String name;
-  // final int wishes; (누적 좋아요 갯수)
+  final int wishes;
   final double avgScore;
-  // final int reviews; (누적 리뷰 갯수)
+  final int reviews;
   final int price;
   // final String shop_img_url (상점 이미지)
   // final String shop_name; (상점 이름)
@@ -167,9 +275,9 @@ class DetailContent extends StatefulWidget {
     Key? key,
     required this.image,
     required this.name,
-    // required this.wishes,
+    required this.wishes,
     required this.avgScore,
-    // required this.reviews,
+    required this.reviews,
     required this.price,
     // required this.shop_img_url,
     // required this.shop_name,
@@ -280,7 +388,7 @@ class _DetailContentState extends State<DetailContent> {
                           ),
                           SizedBox(width: 2),
                           Text(
-                            '100',
+                            '${widget.wishes}',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w600,
@@ -310,7 +418,7 @@ class _DetailContentState extends State<DetailContent> {
                                 ),
                               ),
                               child: Text(
-                                '후기 763개',
+                                '후기 ${widget.reviews}개',
                                 style: TextStyle(
                                   fontFamily: 'NotoSansKR',
                                   fontWeight: FontWeight.w600,
@@ -428,50 +536,6 @@ class _DetailContentState extends State<DetailContent> {
                         '${widget.image}',
                         fit: BoxFit.cover,
                       ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/eSeHbg8cH0gPskLE',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/achV2D1nsKKi4KsP',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/jbq0y0E4SCCpBVeX',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/86ccgNX3RHA8sQ0l',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/PDnHAa15yO2f0NML',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/kLHpL4hlSYZCItxS',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/uGJuI9R0WQEPxL3H',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/ch2khfEECTJESUcg',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/sd8CHbgrG90YJLo7',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/CoYb4UJB7KJHMZ3O',
-                      //   fit: BoxFit.cover,
-                      // ),
-                      // Image.network(
-                      //   'https://image6.yanolja.com/leisure/fyjtVXwzPMJgBe7c',
-                      //   fit: BoxFit.cover,
-                      // ),
                     ],
                   ),
                 ),
@@ -508,7 +572,6 @@ class _DetailContentState extends State<DetailContent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildInfoRow('주소', '${widget.address}'),
-                  // _buildInfoRow('홈페이지', 'https://adventurebusan.lotteworld.com/kor/main/index.do'),
                   _buildInfoRow('운영요일 및 시간', '${widget.opr_house}'),
                   // _buildInfoRow('전화번호', '1661-2000'),
                   _buildInfoRow('휴무일', '${widget.cld_days}'),

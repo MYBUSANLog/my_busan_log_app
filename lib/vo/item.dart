@@ -1,5 +1,3 @@
-import 'package:bootpay/model/item.dart';
-
 class Item {
   int i_idx; // 상품 idx
   int s_idx; // 상점 idx
@@ -13,13 +11,12 @@ class Item {
   String closed_days; // 상품 휴무일
   int i_stock; // 상품 재고수량
   int i_sales_quantity; // 상품 판매수량
-  String i_day; // 상품 이용일자
   int ui_rank;
   String s_img_url; // 상점 이미지
   String s_name; // 상점 이름
   int i_wishes; // 누적 상품 좋아요 수
   double averageScore; // 상품 평점
-  int i_reviews; // 누적 리뷰 갯수
+  int review_count; // 누적 리뷰 갯수
 
   Item({
     this.i_idx=0,
@@ -34,13 +31,12 @@ class Item {
     this.closed_days='',
     this.i_stock=0,
     this.i_sales_quantity=0,
-    this.i_day='',
     required this.ui_rank,
     this.s_img_url='',
     this.s_name='',
     this.i_wishes=0,
     this.averageScore=0.0,
-    this.i_reviews=0,
+    this.review_count=0,
   });
 
   factory Item.fromJson(Map<String, dynamic> json){
@@ -57,13 +53,12 @@ class Item {
       closed_days: json['closed_days'],
       i_stock: json['i_stock'],
       i_sales_quantity: json['i_sales_quantity'],
-      i_day: json['i_day'],
       ui_rank: 0,
       s_img_url: json['s_img_url']??'',
       s_name: json['s_name']??'',
       i_wishes: json['i_wishes']??0,
-      averageScore: json['averageScore'],
-      i_reviews: json['i_reviews']??0,
+      averageScore: json['average_score'] ?? 0.0,
+      review_count: json['review_count']??0,
     );
   }
 }

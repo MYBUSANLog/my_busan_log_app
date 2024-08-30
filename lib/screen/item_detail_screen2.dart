@@ -1,6 +1,7 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/review_screen.dart';
+import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:busan_trip/screen/test1.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _ItemDetailScreen2State extends State<ItemDetailScreen2> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:  (context) => BookingCalendarScreen()),
+                    MaterialPageRoute(builder:  (context) => RootScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

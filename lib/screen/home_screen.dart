@@ -22,8 +22,10 @@ import 'package:shimmer/shimmer.dart';
 import '../model/item_model.dart';
 import '../model/store_model.dart';
 import '../vo/item.dart';
+import '../vo/option.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
 
   @override
@@ -456,14 +458,22 @@ class FavoriteCard extends StatelessWidget {
                                 ),
                               );
                             } else {
-                              return Text(
-                                '${store.s_name}',
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  height: 1.0,
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                                  );
+                                },
+                                child: Text(
+                                  '${store.s_name}',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    height: 1.0,
+                                  ),
                                 ),
                               );
                             }

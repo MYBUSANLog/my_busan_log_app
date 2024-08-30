@@ -1,9 +1,11 @@
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
-import 'package:bootpay/model/item.dart';
+import 'package:bootpay/model/item.dart' as bp;
 import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
 import 'package:busan_trip/screen/item_detail_screen2.dart';
+import 'package:busan_trip/vo/item.dart';
+import 'package:busan_trip/vo/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,20 +15,17 @@ import 'package:intl/intl.dart';
 import 'item_detail_screen.dart';
 
 class PayScreen extends StatefulWidget {
-  final DateTime selectedDate;
-  final List<String> ticketNames;
-  final List<int> ticketPrices;
-  final List<int> ticketQuantities;
+
+  final Item item;
+  final String selectedDate;
+  final List<Map<String, dynamic>> selectedOptions;
 
   const PayScreen({
     Key? key,
+    required this.item,
     required this.selectedDate,
-    required this.ticketNames,
-    required this.ticketPrices,
-    required this.ticketQuantities,
+    required this.selectedOptions,
   }) : super(key: key);
-
-
 
   @override
   State<PayScreen> createState() => _PayScreenState();
@@ -37,6 +36,14 @@ class _PayScreenState extends State<PayScreen> {
   final String webApplicationId = '5b8f6a4d396fa665fdc2b5e7';
   final String androidApplicationId = '5b8f6a4d396fa665fdc2b5e8';
   final String iosApplicationId = '5b8f6a4d396fa665fdc2b5e9';
+
+  // 총 결제 금액을 계산하는 메서드
+  double get totalAmount {
+    return widget.selectedOptions.fold(
+      0.0,
+          (sum, option) => sum + (option['op_price'] * option['quantity']),
+    );
+  }
 
   void bootpayTest(BuildContext context) {
     Payload payload = getPayload();
@@ -73,26 +80,19 @@ class _PayScreenState extends State<PayScreen> {
 
   Payload getPayload() {
     Payload payload = Payload();
-    Item item1 = Item();
-    item1.name = "미키 '마우스";
-    item1.qty = 1;
-    item1.id = "ITEM_CODE_MOUSE";
-    item1.price = 150000;
-
-    Item item2 = Item();
-    item2.name = "키보드";
-    item2.qty = 1;
-    item2.id = "ITEM_CODE_KEYBOARD";
-    item2.price = 150000;
-    List<Item> itemList = [item1, item2];
+    bp.Item item = bp.Item();
+    item.name = widget.item.i_name;
+    item.qty = 1;
+    item.id = "ITEM_CODE_${widget.item.i_idx}";
+    item.price = totalAmount;
 
     payload.webApplicationId = webApplicationId;
     payload.androidApplicationId = androidApplicationId;
     payload.iosApplicationId = iosApplicationId;
 
     payload.pg = '나이스페이';
-    payload.orderName = "해운대 패키지 여행";
-    payload.price = 300000.0;
+    payload.orderName = widget.item.i_name;
+    payload.price = totalAmount;
     payload.orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
     payload.metadata = {
@@ -101,14 +101,14 @@ class _PayScreenState extends State<PayScreen> {
       "callbackParam3": "value56",
       "callbackParam4": "value78",
     };
-    payload.items = itemList;
+    payload.items = [item];
 
     User user = User();
-    user.username = "사용자 이름";
-    user.email = "user1234@gmail.com";
-    user.area = "서울";
-    user.phone = "010-4033-4678";
-    user.addr = '서울시 동작구 상도로 222';
+    user.username = _nameController.text;
+    user.email = _emailController.text;
+    // user.area = "서울";
+    user.phone = _phoneController.text;
+    // user.addr = '서울시 동작구 상도로 222';
 
     Extra extra = Extra();
     extra.appScheme = 'bootpayFlutterExample';
@@ -209,7 +209,7 @@ class _PayScreenState extends State<PayScreen> {
                 SizedBox(height: 15),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 14),
-                  child: FavoriteCard(selectedDate: DateTime.now(),),
+                  child: FavoriteCard(item: widget.item, selectedDate: widget.selectedDate),
                 ),
                 SizedBox(height: 15),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
@@ -218,11 +218,7 @@ class _PayScreenState extends State<PayScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 14),
                   child: Column(
                     children: [
-                      // ItemDetail(
-                      //   ticketNames: widget.ticketNames,
-                      //   ticketPrices: widget.ticketPrices,
-                      //   ticketQuantities: widget.ticketQuantities,
-                      // ),
+                      ItemDetail(selectedOptions: widget.selectedOptions),
                       SizedBox(height: 18),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,20 +227,20 @@ class _PayScreenState extends State<PayScreen> {
                             '총 상품 금액',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
                               height: 1.0,
                             ),
                           ),
-                          // Text(
-                          //   '${widget.ticketPrices.asMap().entries.map((e) => double.parse(e.value) * widget.ticketQuantities[e.key]).reduce((a, b) => a + b).toString()}원',
-                          //   style: TextStyle(
-                          //     fontFamily: 'NotoSansKR',
-                          //     fontWeight: FontWeight.w600,
-                          //     fontSize: 17,
-                          //     height: 1.0,
-                          //   ),
-                          // ),
+                          Text(
+                            '${NumberFormat("#,###").format(totalAmount)}원',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                              height: 1.0,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -375,7 +371,7 @@ class _PayScreenState extends State<PayScreen> {
                             ),
                           ),
                           Text(
-                            '42,300원',
+                            '${NumberFormat("#,###").format(totalAmount)}원',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w400,
@@ -398,8 +394,9 @@ class _PayScreenState extends State<PayScreen> {
                               height: 1.0,
                             ),
                           ),
+                          SizedBox(height: 20),
                           Text(
-                            '42,300원',
+                            '${NumberFormat("#,###").format(totalAmount)}원',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w600,
@@ -532,10 +529,6 @@ class _PayScreenState extends State<PayScreen> {
                   ),
                 ),
                 SizedBox(height: 15),
-                // ElevatedButton(
-                //   onPressed: () => bootpayTest(context),
-                //   child: Text('결제하기', style: TextStyle(fontFamily: 'NotoSansKR')),
-                // ),
               ],
             ),
           ),
@@ -609,12 +602,6 @@ class _PayScreenState extends State<PayScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              // border: Border(
-              //   bottom: BorderSide(
-              //     color: isEntered ? Colors.green : Colors.grey,
-              //     width: 2.0,
-              //   ),
-              // ),
             ),
             child: AbsorbPointer(  // TextField 비활성화
               child: TextField(
@@ -752,26 +739,19 @@ class _PayScreenState extends State<PayScreen> {
   }
 }
 
-class FavoriteCard extends StatefulWidget {
-  final DateTime selectedDate;
+class FavoriteCard extends StatelessWidget {
 
-  const FavoriteCard({super.key, required this.selectedDate});
+  final Item item;
+  final String selectedDate;
 
-  @override
-  State<FavoriteCard> createState() => _FavoriteCardState();
-}
-
-class _FavoriteCardState extends State<FavoriteCard> {
-  bool isFavorited = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
+  const FavoriteCard({Key? key, required this.item, required this.selectedDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final String imageUrl = item.i_image;
+    final String itemName = item.i_name;
+
     return Container(
       child: Column(
         children: [
@@ -779,7 +759,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
+                MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
               );
             },
             child: Row(
@@ -787,7 +767,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
+                    imageUrl,
                     width: 75,
                     height: 75,
                     fit: BoxFit.cover,
@@ -802,7 +782,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              '롯데월드 어드벤처 부산',
+                              itemName,
                               style: TextStyle(
                                 fontFamily: 'NotoSansKR',
                                 fontWeight: FontWeight.w500,
@@ -835,7 +815,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                   ),
                 ),
                 Text(
-                  '${widget.selectedDate.toLocal().toString().split(' ')[0]}',
+                  selectedDate,
                   style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontWeight: FontWeight.w500,
@@ -854,43 +834,47 @@ class _FavoriteCardState extends State<FavoriteCard> {
 }
 
 class ItemDetail extends StatelessWidget {
-  final List<String> ticketNames;
-  final List<String> ticketPrices;
-  final List<int> ticketQuantities;
+  final List<Map<String, dynamic>> selectedOptions;
 
-  const ItemDetail({
-    required this.ticketNames,
-    required this.ticketPrices,
-    required this.ticketQuantities,
-  });
+  const ItemDetail({Key? key, required this.selectedOptions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: List.generate(ticketNames.length, (index) {
-          return Container(
+        children: [
+          ...selectedOptions.map((option) => Container(
             color: Colors.grey[100],
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
               child: Row(
                 children: [
                   Text(
-                    '${ticketNames[index]} X ${ticketQuantities[index]}',
+                    '${option['op_name']} ',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                       fontSize: 14,
                       height: 1.0,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Spacer(),
                   Text(
-                    '${ticketPrices[index]}',
+                    'X ${option['quantity']}',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      height: 1.0,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    '${NumberFormat("#,###").format(option['op_price'] * option['quantity'])}원',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w600,
                       fontSize: 14,
                       height: 1.0,
                     ),
@@ -898,8 +882,8 @@ class ItemDetail extends StatelessWidget {
                 ],
               ),
             ),
-          );
-        }),
+          )),
+        ],
       ),
     );
   }
