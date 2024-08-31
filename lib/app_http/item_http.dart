@@ -7,7 +7,7 @@ class ItemHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/item';
 
   static Future<List<Item>> fetchAll() async {
-    var url = await http.get(Uri.parse('${apiUrl}/fall'));
+    var url = await http.get(Uri.parse('${apiUrl}/all'));
     var mapList = jsonDecode(utf8.decode(url.bodyBytes));
 
     List<Item> list = [];

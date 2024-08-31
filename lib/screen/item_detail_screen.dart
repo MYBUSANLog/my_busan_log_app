@@ -361,7 +361,7 @@ class _DetailContentState extends State<DetailContent> {
                           Icon(
                             Icons.star_rounded,
                             size: 22,
-                            color: Colors.yellow,
+                            color: Colors.amber,
                           ),
                           SizedBox(width: 2),
                           Text(

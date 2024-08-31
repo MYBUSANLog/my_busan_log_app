@@ -157,7 +157,7 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                   List<Map<String, dynamic>> selectedOptions = optionQuantities.entries
                       .where((entry) => entry.value > 0)
                       .map((entry) => {
-                    'op_name': widget.item.i_name, // 옵션 이름 설정
+                    'op_name': Provider.of<OptionModel>(context, listen: false).options[entry.key].op_name, // 옵션 이름 설정
                     'op_price': Provider.of<OptionModel>(context, listen: false).options[entry.key].op_price,
                     'quantity': entry.value // 선택한 수량 설정
                   })

@@ -18,4 +18,9 @@ class ItemModel extends ChangeNotifier {
     items.sort((a, b) => a.ui_rank.compareTo(b.ui_rank));
     notifyListeners();
   }
+
+  void clearItems() {
+    items.clear(); // 리스트 비우기
+    notifyListeners(); // 상태 변경 알림
+  }
 }

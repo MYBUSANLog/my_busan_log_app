@@ -512,7 +512,7 @@ class FavoriteCard extends StatelessWidget {
                             fontFamily: 'NotoSansKR',
                             fontWeight: FontWeight.w400,
                             fontSize: 12,
-                            color: Colors.grey,
+                            color: Colors.black,
                             height: 1.0,
                           ),
                         ),
