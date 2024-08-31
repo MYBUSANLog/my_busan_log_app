@@ -782,13 +782,16 @@ class FavoriteCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              itemName,
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                                height: 1.0,
-                              ), overflow: TextOverflow.ellipsis
+                            itemName,
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              height: 1.0,
+                            ),
+                            softWrap: true,
+                            maxLines: 3,
+                            overflow: TextOverflow.visible,
                           ),
                         ],
                       ),

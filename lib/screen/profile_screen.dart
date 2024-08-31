@@ -1,4 +1,5 @@
 import 'package:busan_trip/screen/login_opening_screen.dart';
+import 'package:busan_trip/screen/my_review_list_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -377,7 +378,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         onTap: () {
-                          // 내가 쓴 리뷰 화면으로 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:  (context) => MyReviewListScreen()),
+                          );
                         },
                       ),
                       Divider(color: Colors.grey, thickness: 1.0),

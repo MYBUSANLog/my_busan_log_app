@@ -1,6 +1,6 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/item_detail_screen2.dart';
-import 'package:busan_trip/screen/review_screen.dart';
+import 'package:busan_trip/screen/item_review_list_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';

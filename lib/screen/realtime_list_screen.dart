@@ -1,7 +1,14 @@
 import 'dart:ui';
 
+import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../model/item_model.dart';
+import '../model/store_model.dart';
+import '../vo/item.dart';
 
 class RealtimeListScreen extends StatefulWidget {
   const RealtimeListScreen({super.key});
@@ -21,6 +28,10 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ItemModel>(context, listen: false).setItems();
+    });
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -88,16 +99,15 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
+                Consumer<ItemModel>(builder: (context, itemModel, child) {
+                  return Column(
+                    children: itemModel.items.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Item item = entry.value;
+                      return RealTimeList(item: item, rank: index + 1);
+                    }).toList(),
+                  );
+                }),
                 Container(color: Colors.white, child: SizedBox(height: 20,)),
               ],
             ),
@@ -109,113 +119,190 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
 }
 
 class RealTimeList extends StatelessWidget {
-  const RealTimeList({super.key});
+  final formatter = NumberFormat('#,###');
+  final Item item;
+  final int rank;
+
+  RealTimeList({required this.item, required this.rank, super.key});
+
+  String _formatAddress(String address) {
+    // 주소를 공백을 기준으로 나눕니다.
+    final parts = address.split(' ');
+
+    if (parts.length >= 3) {
+      // 부산광역시 기장군 기장읍 동부산관광로 42에서 '부산 기장군'을 추출
+      return '${parts[0]} ${parts[1]}';
+    }
+
+    // 예상된 형식이 아닌 경우 원래 주소를 반환합니다.
+    return address;
+  }
+
+  String _mapTypeToString(int type) {
+    switch (type) {
+      case 1:
+        return '호텔';
+      case 2:
+        return '테마파크';
+      case 3:
+        return '액티비티';
+      case 4:
+        return '전시회';
+      default:
+        return '기타'; // 기본값
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail_screen'); // 항목 클릭 시 DetailScreen으로 이동
-      },
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Row(
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    'https://newsroom-prd-data.s3.ap-northeast-2.amazonaws.com/wp-content/uploads/2024/02/%EC%A7%80%EB%82%9C%ED%95%B4%EC%97%90-%EA%B0%80%EC%9E%A5-%EC%9D%B8%EA%B8%B0-%EC%9E%88%EB%8D%98-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%9D%BC%EB%B3%B8-%EB%9C%A8%EB%8A%94-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%96%B4%EB%94%94_02.png',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '장소 1',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                              height: 1.0,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          size: 22,
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          ' 4.0',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            height: 1.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.favorite_outline, size: 22, color: Colors.red),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5), // Shadow color with opacity
+                        offset: Offset(0, -2), // Offset the shadow upwards (top shadow effect)
+                        blurRadius: 4.0, // Blur radius for the shadow
+                        spreadRadius: 0, // Spread radius of the shadow
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        '부산 사상구 · 맛집',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.grey,
-                          height: 1.0,
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          '${item.i_image}',
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(height: 40),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '410,000원~',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Consumer<StoreModel>(
+                            //   builder: (context, storeModel, child) {
+                            //     final store = storeModel.getStoreById(item.s_idx);
+                            //     if (store == null) {
+                            //       // Fetch store data if not already fetched
+                            //       storeModel.fetchStoreById(item.s_idx);
+                            //       return Text(
+                            //         'Loading...',  // Placeholder while loading
+                            //         style: TextStyle(
+                            //           fontFamily: 'NotoSansKR',
+                            //           fontWeight: FontWeight.w400,
+                            //           fontSize: 12,
+                            //           color: Colors.grey,
+                            //           height: 1.0,
+                            //         ),
+                            //       );
+                            //     } else {
+                            //       return GestureDetector(
+                            //         onTap: () {
+                            //           Navigator.push(
+                            //             context,
+                            //             MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                            //           );
+                            //         },
+                            //         child: Text(
+                            //           '가게 이름 Store',
+                            //           style: TextStyle(
+                            //             fontFamily: 'NotoSansKR',
+                            //             fontWeight: FontWeight.w400,
+                            //             fontSize: 12,
+                            //             color: Colors.grey,
+                            //             height: 1.0,
+                            //           ),
+                            //         ),
+                            //       );
+                            //     }
+                            //   },
+                            // ),
+                            // Text(
+                            //   '가게 이름 Store',
+                            //   style: TextStyle(
+                            //     fontFamily: 'NotoSansKR',
+                            //     fontWeight: FontWeight.w400,
+                            //     fontSize: 12,
+                            //     color: Colors.grey,
+                            //     height: 1.0,
+                            //   ),
+                            // ),
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    '${item.i_name}',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 18,
+                                      height: 1.0,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Text(
+                                  '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)} · ',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                    height: 1.0,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.star_rounded,
+                                  size: 20,
+                                  color: Colors.yellow,
+                                ),
+                                SizedBox(width: 2),
+                                Text(
+                                  '${item.averageScore}',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                    height: 1.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                '${formatter.format(item.i_price)}원 ~',
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -223,8 +310,8 @@ class RealTimeList extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

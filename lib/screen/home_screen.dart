@@ -3,6 +3,7 @@ import 'package:busan_trip/screen/exhibition_list_screen.dart';
 import 'package:busan_trip/screen/hotel_list_screen.dart';
 import 'package:busan_trip/screen/item_detail_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/search_result_list.dart';
 import 'package:busan_trip/screen/search_screen.dart';
@@ -239,7 +240,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/realtime_list_screen');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder:  (context) => RealtimeListScreen()),
+                        );
                       },
                       child: Column(
                         children: [
@@ -278,6 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         image: DecorationImage(
                           image: AssetImage('assets/images/banner.png'),
                           fit: BoxFit.cover,
+
                         ),
                       ),
                     ),
@@ -444,6 +449,9 @@ class FavoriteCard extends StatelessWidget {
                         Consumer<StoreModel>(
                           builder: (context, storeModel, child) {
                             final store = storeModel.getStoreById(item.s_idx);
+                            print("159195159915195915951195159195918918");
+                            print(store);
+                            print("159195159915195915951195159195918918");
                             if (store == null) {
                               // Fetch store data if not already fetched
                               storeModel.fetchStoreById(item.s_idx);

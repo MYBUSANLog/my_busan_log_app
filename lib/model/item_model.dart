@@ -8,6 +8,7 @@ class ItemModel extends ChangeNotifier {
 
   Future<void> setItems() async{
     items = await ItemHttp.fetchAll();
+    items.sort((a, b) => a.ui_rank.compareTo(b.ui_rank));
     notifyListeners();
   }
 

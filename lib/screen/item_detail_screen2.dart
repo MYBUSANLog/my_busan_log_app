@@ -1,6 +1,6 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
-import 'package:busan_trip/screen/review_screen.dart';
+import 'package:busan_trip/screen/item_review_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:busan_trip/screen/test1.dart';
@@ -306,7 +306,7 @@ class _DetailContentState extends State<DetailContent> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder:  (context) => ReviewScreen()),
+                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen()),
                               );
                             },
                             child: Container(

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ReviewScreen extends StatefulWidget {
-  const ReviewScreen({super.key});
+class ItemReviewListScreen extends StatefulWidget {
+  const ItemReviewListScreen({super.key});
 
   @override
-  State<ReviewScreen> createState() => _ReviewScreenState();
+  State<ItemReviewListScreen> createState() => _ItemReviewListScreenState();
 }
 
-class _ReviewScreenState extends State<ReviewScreen> {
+class _ItemReviewListScreenState extends State<ItemReviewListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
         ),
         elevation: 0,
         title: Text(
-          '후기',
+          '리뷰',
           style: TextStyle(
               fontFamily: 'NotoSansKR',
               fontWeight: FontWeight.w600,

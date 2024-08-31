@@ -13,7 +13,7 @@ import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
-import 'package:busan_trip/screen/review_list_screen.dart';
+import 'package:busan_trip/screen/item_review_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/searchingpage.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
@@ -130,7 +130,6 @@ class MyApp extends StatelessWidget {
           // 리뷰 북마크 찜목록 공지사항 추가 안율현
           '/bookmark_list': (context) => BookmarkListScreen(),
           '/heart_list': (context) => HeartListScreen(),
-          '/review_list': (context) => ReviewListScreen(),
           '/announcement_list': (context) => AccouncementListScreen(),
           '/login': (context) => LoginScreen(),
           '/sign_up2': (context) => SignUp2(),

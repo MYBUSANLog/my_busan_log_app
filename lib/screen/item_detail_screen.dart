@@ -1,6 +1,6 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
-import 'package:busan_trip/screen/review_screen.dart';
+import 'package:busan_trip/screen/item_review_list_screen.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -218,7 +218,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          expandedHeight: 200.0,
+          expandedHeight: MediaQuery.of(context).size.width,
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           flexibleSpace: FlexibleSpaceBar(
@@ -408,7 +408,7 @@ class _DetailContentState extends State<DetailContent> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder:  (context) => ReviewScreen()),
+                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen()),
                               );
                             },
                             child: Container(
@@ -418,7 +418,7 @@ class _DetailContentState extends State<DetailContent> {
                                 ),
                               ),
                               child: Text(
-                                '후기 ${widget.reviews}개',
+                                '리뷰 ${widget.reviews}개',
                                 style: TextStyle(
                                   fontFamily: 'NotoSansKR',
                                   fontWeight: FontWeight.w600,
@@ -520,6 +520,7 @@ class _DetailContentState extends State<DetailContent> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${widget.content}',
