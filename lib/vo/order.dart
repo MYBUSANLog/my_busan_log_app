@@ -3,6 +3,7 @@ class Order {
   int s_idx;
   int u_idx;
   int i_idx;
+  String i_image;
   String order_num;
   String o_name;
   String o_email;
@@ -18,6 +19,7 @@ class Order {
     this.s_idx=0,
     this.u_idx=0,
     this.i_idx=0,
+    this.i_image='',
     this.order_num='',
     this.o_name='',
     this.o_email='',

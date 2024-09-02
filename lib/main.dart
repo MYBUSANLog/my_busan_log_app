@@ -14,6 +14,7 @@ import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/item_review_list_screen.dart';
+import 'package:busan_trip/screen/review_writer_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/searchingpage.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
@@ -24,7 +25,7 @@ import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
-import 'package:busan_trip/screen/receipt.dart';
+import 'package:busan_trip/screen/receipt_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -32,6 +33,10 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart'; //구글로그인
+
+import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
+import '../vo/order.dart' as od;
+import 'model/order_model.dart';
 
 //새로운 작업 from 정민
 // new repository
@@ -55,11 +60,14 @@ void main() async {
 
   await initializeDateFormatting('ko_KR', null);
 
-  runApp(MyApp());
+  final od.Order order = od.Order();
+
+  runApp(MyApp(order: order));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final od.Order order;
+  const MyApp({Key? key, required this.order}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -78,6 +86,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ItemModel()),
         ChangeNotifierProvider(create: (context) => StoreModel()),
         ChangeNotifierProvider(create: (context) => OptionModel()),
+        ChangeNotifierProvider(create: (context) => OrderModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -121,10 +130,9 @@ class MyApp extends StatelessWidget {
           '/home': (context) => HomeScreen(),
           // '/profile': (context) => ProfileScreen(),
           '/chatbot': (context) => ChatbotScreen(),
-          '/receipt': (context) => ReceiptScreen(),
           '/profile_alter': (context) => ProfileAlterScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
-          '/root_screen':(context) => RootScreen(),
+          '/root_screen':(context) => RootScreen(order: order),
           '/notification_screen': (context) => NotificationScreen(),
           '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
           // 리뷰 북마크 찜목록 공지사항 추가 안율현
@@ -134,7 +142,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/sign_up2': (context) => SignUp2(),
           '/sign_up3': (context) => SignUp3(),
-          '/login_opening_screen': (context) => LoginOpeningScreen(),
+          '/login_opening_screen': (context) => LoginOpeningScreen(order: order),
           '/searchingpage': (context) => Searchingpage(),
           '/daumpostcodesearchexample': (context) => DaumPostcodeSearch(),
       
@@ -147,14 +155,15 @@ class MyApp extends StatelessWidget {
 }
 //intro screen 수진추가
 Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
+  final od.Order order = od.Order();
   if(snapshot.hasError) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
     // return LoginOpeningScreen();
-    return RootScreen();
+    return RootScreen(order: order);
     // return StoreDetailScreen();
   } else {
-    return const IntroScreen();
+    return IntroScreen(order: order);
   }
 }
 

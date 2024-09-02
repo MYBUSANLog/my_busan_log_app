@@ -7,8 +7,13 @@ import 'package:busan_trip/screen/test1.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
+import '../vo/order.dart' as od;
+
 class ItemDetailScreen2 extends StatefulWidget {
-  const ItemDetailScreen2({super.key});
+
+  final od.Order order;
+  const ItemDetailScreen2({Key? key, required this.order}) : super(key: key);
 
   @override
   State<ItemDetailScreen2> createState() => _ItemDetailScreen2State();
@@ -68,7 +73,7 @@ class _ItemDetailScreen2State extends State<ItemDetailScreen2> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:  (context) => RootScreen()),
+                    MaterialPageRoute(builder:  (context) => RootScreen(order: widget.order)),
                   );
                 },
                 style: ElevatedButton.styleFrom(

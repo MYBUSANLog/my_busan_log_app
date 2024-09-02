@@ -446,48 +446,48 @@ class FavoriteCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Consumer<StoreModel>(
-                          builder: (context, storeModel, child) {
-                            final store = storeModel.getStoreById(item.s_idx);
-                            print("159195159915195915951195159195918918");
-                            print(store);
-                            print("159195159915195915951195159195918918");
-                            if (store == null) {
-                              // Fetch store data if not already fetched
-                              storeModel.fetchStoreById(item.s_idx);
-                              return Text(
-                                'Loading...',  // Placeholder while loading
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  height: 1.0,
-                                ),
-                              );
-                            } else {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
-                                  );
-                                },
-                                child: Text(
-                                  '${store.s_name}',
-                                  style: TextStyle(
-                                    fontFamily: 'NotoSansKR',
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                    height: 1.0,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                        SizedBox(height: 5),
+                        // Consumer<StoreModel>(
+                        //   builder: (context, storeModel, child) {
+                        //     final store = storeModel.getStoreById(item.s_idx);
+                        //     print("159195159915195915951195159195918918");
+                        //     print(store);
+                        //     print("159195159915195915951195159195918918");
+                        //     if (store == null) {
+                        //       // Fetch store data if not already fetched
+                        //       storeModel.fetchStoreById(item.s_idx);
+                        //       return Text(
+                        //         'Loading...',  // Placeholder while loading
+                        //         style: TextStyle(
+                        //           fontFamily: 'NotoSansKR',
+                        //           fontWeight: FontWeight.w400,
+                        //           fontSize: 12,
+                        //           color: Colors.grey,
+                        //           height: 1.0,
+                        //         ),
+                        //       );
+                        //     } else {
+                        //       return GestureDetector(
+                        //         onTap: () {
+                        //           Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                        //           );
+                        //         },
+                        //         child: Text(
+                        //           '${store.s_name}',
+                        //           style: TextStyle(
+                        //             fontFamily: 'NotoSansKR',
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 12,
+                        //             color: Colors.grey,
+                        //             height: 1.0,
+                        //           ),
+                        //         ),
+                        //       );
+                        //     }
+                        //   },
+                        // ),
+                        // SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

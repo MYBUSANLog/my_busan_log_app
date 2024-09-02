@@ -30,8 +30,8 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
     _loadingFuture = _simulateLoading();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ItemModel>(context, listen: false).clearItems();
       Provider.of<ItemModel>(context, listen: false).setItems();
+      Provider.of<ItemModel>(context, listen: false).clearItems();
     });
   }
 
@@ -379,45 +379,45 @@ class RealTimeList extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Consumer<StoreModel>(
-                      builder: (context, storeModel, child) {
-                        final store = storeModel.getStoreById(item.s_idx);
-                        if (store == null) {
-                          storeModel.fetchStoreById(item.s_idx);
-                          return Text(
-                            'Loading...',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                              color: Colors.grey,
-                              height: 1.0,
-                            ),
-                          );
-                        } else {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => StoreDetailScreen()),
-                              );
-                            },
-                            child: Text(
-                              '${store.s_name}',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: Colors.grey,
-                                height: 1.0,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(height: 5),
+                    // Consumer<StoreModel>(
+                    //   builder: (context, storeModel, child) {
+                    //     final store = storeModel.getStoreById(item.s_idx);
+                    //     if (store == null) {
+                    //       storeModel.fetchStoreById(item.s_idx);
+                    //       return Text(
+                    //         'Loading...',
+                    //         style: TextStyle(
+                    //           fontFamily: 'NotoSansKR',
+                    //           fontWeight: FontWeight.w400,
+                    //           fontSize: 12,
+                    //           color: Colors.grey,
+                    //           height: 1.0,
+                    //         ),
+                    //       );
+                    //     } else {
+                    //       return GestureDetector(
+                    //         onTap: () {
+                    //           Navigator.push(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //                 builder: (context) => StoreDetailScreen()),
+                    //           );
+                    //         },
+                    //         child: Text(
+                    //           '${store.s_name}',
+                    //           style: TextStyle(
+                    //             fontFamily: 'NotoSansKR',
+                    //             fontWeight: FontWeight.w400,
+                    //             fontSize: 14,
+                    //             color: Colors.grey,
+                    //             height: 1.0,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+                    // SizedBox(height: 5),
                     Row(
                       children: [
                         Expanded(

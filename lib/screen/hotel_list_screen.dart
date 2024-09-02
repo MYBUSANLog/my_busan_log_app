@@ -218,10 +218,10 @@ class _FavoriteCardState extends State<FavoriteCard> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
+              // );
             },
             child: Row(
               children: [
