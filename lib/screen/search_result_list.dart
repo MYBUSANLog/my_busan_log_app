@@ -6,6 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
+import '../vo/order.dart' as od;
+
+import 'item_detail_screen2.dart';
+
 class SearchResultList extends StatefulWidget {
   final String searchTerm;
 
@@ -196,7 +201,10 @@ class _FavoriteCardState extends State<FavoriteCard> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, '/detail_screen');
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
+              // );
             },
             child: Row(
               children: [

@@ -2,13 +2,16 @@ import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
-import 'package:busan_trip/screen/realtime_list_screen.dart';
-import 'package:busan_trip/screen/realtime_list_screen1.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:flutter/material.dart';
 
+import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
+import '../vo/order.dart' as od;
+
 class RootScreen extends StatefulWidget {
-  const RootScreen({super.key});
+  final od.Order order;
+
+  const RootScreen({Key? key, required this.order}) : super(key: key);
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -17,15 +20,20 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
 
   int _nowIndex = 2;
+  late List<Widget> screens;
 
 
-  List<Widget> screens = [
-    RestaurantMap(),
-    AiRecommendScreen(),
-    HomeScreen(),
-    NotificationScreen(),
-    ProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    screens = [
+      RestaurantMap(),
+      AiRecommendScreen(),
+      HomeScreen(),
+      NotificationScreen(),
+      ProfileScreen(order: widget.order), // widget.order를 사용
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

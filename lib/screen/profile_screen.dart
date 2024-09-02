@@ -1,13 +1,23 @@
 import 'package:busan_trip/screen/login_opening_screen.dart';
+import 'package:busan_trip/screen/my_review_list_screen.dart';
+import 'package:busan_trip/screen/receipt_screen.dart';
+import 'package:busan_trip/screen/review_writer_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko;
+import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:busan_trip/vo/order.dart' as od;
+
 class ProfileScreen extends StatefulWidget {
+  final od.Order order;
+
+  ProfileScreen({Key? key, required this.order}) : super(key: key);
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -82,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await FlutterNaverLogin.logOut();
       print('Naver logout successful');
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => LoginOpeningScreen(),
+        builder: (context) => LoginOpeningScreen(order: widget.order),
       ));
     } catch (error) {
       print('Naver logout failed: $error');
@@ -108,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // 로그아웃 후 로그인 화면으로 이동
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LoginOpeningScreen(),
+          builder: (context) => LoginOpeningScreen(order: widget.order),
         ),
       );
     } catch (error) {
@@ -126,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       print('이메일 로그아웃 성공');
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => LoginOpeningScreen(),
+        builder: (context) => LoginOpeningScreen(order: widget.order),
       ));
     } catch (error) {
       print('이메일 로그아웃 실패 $error');
@@ -345,7 +355,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         onTap: () {
-                          Navigator.pushNamed(context, '/receipt');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:  (context) => ReviewWriterScreen()),
+                          );
                         },
                       ),
                       Divider(color: Colors.grey, thickness: 1.0),
@@ -377,7 +390,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         onTap: () {
-                          // 내가 쓴 리뷰 화면으로 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:  (context) => MyReviewListScreen()),
+                          );
                         },
                       ),
                       Divider(color: Colors.grey, thickness: 1.0),

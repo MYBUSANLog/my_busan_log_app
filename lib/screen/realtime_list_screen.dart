@@ -1,7 +1,17 @@
-import 'dart:ui';
-
+import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../model/item_model.dart';
+import '../model/store_model.dart';
+import '../vo/item.dart';
+import 'item_detail_screen.dart';
+
+
 
 class RealtimeListScreen extends StatefulWidget {
   const RealtimeListScreen({super.key});
@@ -11,223 +21,498 @@ class RealtimeListScreen extends StatefulWidget {
 }
 
 class _RealtimeListScreenState extends State<RealtimeListScreen> {
-  final ScrollController _scrollController = ScrollController();
-  double _appBarHeight = 200.0; // AppBar의 최대 높이
-  double _titlePadding = 16.0;  // 제목의 패딩
-  // Color _titleColor = Colors.white;
-  Shadow _titleShadow = Shadow(offset: Offset(1.0, 1.0), blurRadius: 2.0, color: Colors.black.withOpacity(0.5),);
-  // Color _iconColor = Colors.white;
+
+  late Future<void> _loadingFuture;
 
   @override
   void initState() {
     super.initState();
+    _loadingFuture = _simulateLoading();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ItemModel>(context, listen: false).setItems();
+      Provider.of<ItemModel>(context, listen: false).clearItems();
+    });
+  }
+
+  Future<void> _simulateLoading() async {
+    await Future.delayed(const Duration(seconds: 6));
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
     ));
 
-    _scrollController.addListener(() {
-      if (_scrollController.hasClients) {
-        double offset = _scrollController.offset;
-        setState(() {
-          _titlePadding = offset > (_appBarHeight - kToolbarHeight) ? 64.0 : 16.0;
-          // _titleColor = offset > (_appBarHeight - kToolbarHeight) ? Colors.black : Colors.white;
-          _titleShadow = offset > (_appBarHeight - kToolbarHeight)
-              ? Shadow(offset: Offset(0.0, 0.0), blurRadius: 0.0, color: Colors.black.withOpacity(0.0),)
-              : Shadow(offset: Offset(1.0, 1.0), blurRadius: 2.0, color: Colors.black.withOpacity(0.5),);
-          // _iconColor = offset > (_appBarHeight - kToolbarHeight) ? Colors.black : Colors.white;
-        });
-      }
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 200.0, // AppBar의 최대 높이 설정
-            flexibleSpace: FlexibleSpaceBar(
-              title: Padding(
-                padding: EdgeInsets.only(left:  _titlePadding, bottom: 0.0),
-                child: Text(
-                  '실시간 핫플레이스',
-                  style: TextStyle(
-                    fontFamily: 'NotoSansKR',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 23,
-                    color: Colors.white,
-                    shadows: [
-                      _titleShadow,
-                    ],
+      appBar: AppBar(
+        titleSpacing: 0,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            )
+        ),
+        elevation: 0,
+        title: Text(
+          '실시간 핫플레이스',
+          style: TextStyle(
+              fontFamily: 'NotoSansKR',
+              fontWeight: FontWeight.w600,
+              fontSize: 18),
+        ),
+        centerTitle: true,
+      ),
+      body: FutureBuilder<void>(
+        future: _loadingFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _buildSkeletonLoader();
+          } else {
+            return _buildRealTimeContent();
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildSkeletonLoader() {
+    return Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  color: Colors.grey[300],
+                  height: 300,
+                  width: double.infinity,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      color: Colors.grey[300],
+                      height: 300,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
               ),
-              titlePadding: EdgeInsets.only(left: 0.0, bottom: 14.0), // 제목 위치 설정
-              background: ClipRRect( //사진 자르는 것
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(20.0),
-                  bottomRight: Radius.circular(20.0),
-                ),
-                child: Image.network(
-                  'https://newsroom-prd-data.s3.ap-northeast-2.amazonaws.com/wp-content/uploads/2024/02/%EC%A7%80%EB%82%9C%ED%95%B4%EC%97%90-%EA%B0%80%EC%9E%A5-%EC%9D%B8%EA%B8%B0-%EC%9E%88%EB%8D%98-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%9D%BC%EB%B3%B8-%EB%9C%A8%EB%8A%94-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%96%B4%EB%94%94_02.png',
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Container(
+                      color: Colors.grey[300],
+                      height: 300,
+                      width: double.infinity,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
-            backgroundColor: Color(0xff0e4194),
+            ],
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                RealTimeList(),
-                Container(color: Colors.white, child: SizedBox(height: 20,)),
-              ],
-            ),
-          ),
-        ],
+        ),
+    );
+  }
+
+
+  Widget _buildRealTimeContent() {
+
+    final AppBar appBar = AppBar(
+      titleSpacing: 0,
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      shape: Border(
+        bottom: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
       ),
+      elevation: 0,
+      title: Text(
+        '실시간 핫플레이스',
+        style: TextStyle(
+          fontFamily: 'NotoSansKR',
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      ),
+      centerTitle: true,
+    );
+
+    final double availableHeight =
+        MediaQuery.of(context).size.height - appBar.preferredSize.height;
+
+    return Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: Color(0xff0e4194),
+                width: MediaQuery.of(context).size.width,
+                height: availableHeight * 0.4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20),
+                      child: Text(
+                        '지금 뜨는',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
+                      child: Text(
+                        '가장 핫한 플레이스.zip',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w800,
+                          fontSize: 28,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Image.asset(
+                          'assets/images/busan_map.png',
+                          width: MediaQuery.of(context).size.width - 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Consumer<ItemModel>(builder: (context, itemModel, child) {
+                return Column(
+                  children: itemModel.items.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    Item item = entry.value;
+                    return RealTimeList(item: item, rank: index + 1);
+                  }).toList(),
+                );
+              }),
+            ],
+          ),
+        )
     );
   }
 }
 
 class RealTimeList extends StatelessWidget {
-  const RealTimeList({super.key});
+  final formatter = NumberFormat('#,###');
+  final Item item;
+  final int rank;
+
+  RealTimeList({required this.item, required this.rank, super.key});
+
+  String _formatAddress(String address) {
+    final parts = address.split(' ');
+
+    if (parts.length >= 3) {
+      return '${parts[0]} ${parts[1]}';
+    }
+
+    return address;
+  }
+
+  String _mapTypeToString(int type) {
+    switch (type) {
+      case 1:
+        return '호텔';
+      case 2:
+        return '테마파크';
+      case 3:
+        return '액티비티';
+      case 4:
+        return '전시회';
+      default:
+        return '기타';
+    }
+  }
+
+  Color _getRankColor(int rank) {
+    switch (rank) {
+      case 1:
+        return Colors.amber[600]!; // 첫 번째 아이템은 노란색 배경
+      case 2:
+        return Colors.grey[600]!;   // 두 번째 아이템은 회색 배경
+      case 3:
+        return Colors.brown;  // 세 번째 아이템은 갈색 배경
+      default:
+        return Colors.black;  // 나머지는 검은색 배경
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/detail_screen'); // 항목 클릭 시 DetailScreen으로 이동
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
+        );
       },
       child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    'https://newsroom-prd-data.s3.ap-northeast-2.amazonaws.com/wp-content/uploads/2024/02/%EC%A7%80%EB%82%9C%ED%95%B4%EC%97%90-%EA%B0%80%EC%9E%A5-%EC%9D%B8%EA%B8%B0-%EC%9E%88%EB%8D%98-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%9D%BC%EB%B3%B8-%EB%9C%A8%EB%8A%94-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%96%B4%EB%94%94_02.png',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // 그림자 색상
+                spreadRadius: 2, // 그림자 퍼짐 정도
+                blurRadius: 6, // 그림자 흐림 정도
+                offset: Offset(0, 2), // 그림자의 위치
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '장소 1',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                              height: 1.0,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                      // 첫 번째 이미지
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10)),
+                          child: Image.network(
+                            '${item.i_image}',
+                            width: double.infinity,
+                            height: 162,
+                            fit: BoxFit.cover,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          size: 22,
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          ' 4.0',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            height: 1.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.favorite_outline, size: 22, color: Colors.red),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        '부산 사상구 · 맛집',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.grey,
-                          height: 1.0,
                         ),
                       ),
-                      SizedBox(height: 40),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '410,000원~',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          ),
+                      SizedBox(width: 2), // 간격
+                      Expanded(
+                        child: Column(
+                          children: [
+                            // 두 번째 이미지
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
+                              child: Image.network(
+                                '${item.i_image}',
+                                width: double.infinity,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            SizedBox(height: 2),
+                            // 세 번째 이미지
+                            ClipRRect(
+                              child: Image.network(
+                                '${item.i_image}',
+                                width: double.infinity,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: _getRankColor(rank),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        '$rank',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              // Expanded를 사용하기 전에 높이 제약을 가진 위젯으로 감싸기
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Consumer<StoreModel>(
+                    //   builder: (context, storeModel, child) {
+                    //     final store = storeModel.getStoreById(item.s_idx);
+                    //     if (store == null) {
+                    //       storeModel.fetchStoreById(item.s_idx);
+                    //       return Text(
+                    //         'Loading...',
+                    //         style: TextStyle(
+                    //           fontFamily: 'NotoSansKR',
+                    //           fontWeight: FontWeight.w400,
+                    //           fontSize: 12,
+                    //           color: Colors.grey,
+                    //           height: 1.0,
+                    //         ),
+                    //       );
+                    //     } else {
+                    //       return GestureDetector(
+                    //         onTap: () {
+                    //           Navigator.push(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //                 builder: (context) => StoreDetailScreen()),
+                    //           );
+                    //         },
+                    //         child: Text(
+                    //           '${store.s_name}',
+                    //           style: TextStyle(
+                    //             fontFamily: 'NotoSansKR',
+                    //             fontWeight: FontWeight.w400,
+                    //             fontSize: 14,
+                    //             color: Colors.grey,
+                    //             height: 1.0,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }
+                    //   },
+                    // ),
+                    // SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${item.i_name}',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              height: 1.0,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star_rounded,
+                              size: 20,
+                              color: Colors.amber,
+                            ),
+                            Text(
+                              '${item.averageScore}',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              ' (${item.review_count})',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                color: Colors.grey[500],
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 7),
+                    Row(
+                      children: [
+                        Text(
+                          '${_formatAddress(item.i_address)}',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            height: 1.0,
+                          ),
+                        ),
+                        Text(
+                          ' · ',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14,
+                            color: Colors.grey[400],
+                            height: 1.0,
+                          ),
+                        ),
+                        Text(
+                          '${_mapTypeToString(item.c_type)}',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            height: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${formatter.format(item.i_price)}원 ~',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-

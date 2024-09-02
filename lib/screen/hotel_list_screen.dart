@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/item_detail_screen2.dart';
 import 'package:flutter/material.dart';
 
 import 'item_detail_screen.dart';
@@ -29,21 +30,6 @@ class _HotelListScreenState extends State<HotelListScreen> {
     });
   }
 
-  void _scrollRight() {
-    _scrollController.animateTo(
-      _scrollController.position.pixels + 100,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollLeft() {
-    _scrollController.animateTo(
-      _scrollController.position.pixels - 100,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
   void _onButtonPressed(int index) {
     setState(() {
       _selectedIndex = index;
@@ -232,10 +218,10 @@ class _FavoriteCardState extends State<FavoriteCard> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
+              // );
             },
             child: Row(
               children: [

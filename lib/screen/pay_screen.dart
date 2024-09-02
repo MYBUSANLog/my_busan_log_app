@@ -1,8 +1,11 @@
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
-import 'package:bootpay/model/item.dart';
+import 'package:bootpay/model/item.dart' as bp;
 import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
+import 'package:busan_trip/screen/item_detail_screen2.dart';
+import 'package:busan_trip/vo/item.dart';
+import 'package:busan_trip/vo/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +15,17 @@ import 'package:intl/intl.dart';
 import 'item_detail_screen.dart';
 
 class PayScreen extends StatefulWidget {
-  const PayScreen({super.key});
+
+  final Item item;
+  final String selectedDate;
+  final List<Map<String, dynamic>> selectedOptions;
+
+  const PayScreen({
+    Key? key,
+    required this.item,
+    required this.selectedDate,
+    required this.selectedOptions,
+  }) : super(key: key);
 
   @override
   State<PayScreen> createState() => _PayScreenState();
@@ -23,6 +36,14 @@ class _PayScreenState extends State<PayScreen> {
   final String webApplicationId = '5b8f6a4d396fa665fdc2b5e7';
   final String androidApplicationId = '5b8f6a4d396fa665fdc2b5e8';
   final String iosApplicationId = '5b8f6a4d396fa665fdc2b5e9';
+
+  // 총 결제 금액을 계산하는 메서드
+  double get totalAmount {
+    return widget.selectedOptions.fold(
+      0.0,
+          (sum, option) => sum + (option['op_price'] * option['quantity']),
+    );
+  }
 
   void bootpayTest(BuildContext context) {
     Payload payload = getPayload();
@@ -59,26 +80,19 @@ class _PayScreenState extends State<PayScreen> {
 
   Payload getPayload() {
     Payload payload = Payload();
-    Item item1 = Item();
-    item1.name = "미키 '마우스";
-    item1.qty = 1;
-    item1.id = "ITEM_CODE_MOUSE";
-    item1.price = 150000;
-
-    Item item2 = Item();
-    item2.name = "키보드";
-    item2.qty = 1;
-    item2.id = "ITEM_CODE_KEYBOARD";
-    item2.price = 150000;
-    List<Item> itemList = [item1, item2];
+    bp.Item item = bp.Item();
+    item.name = widget.item.i_name;
+    item.qty = 1;
+    item.id = "ITEM_CODE_${widget.item.i_idx}";
+    item.price = totalAmount;
 
     payload.webApplicationId = webApplicationId;
     payload.androidApplicationId = androidApplicationId;
     payload.iosApplicationId = iosApplicationId;
 
     payload.pg = '나이스페이';
-    payload.orderName = "해운대 패키지 여행";
-    payload.price = 300000.0;
+    payload.orderName = widget.item.i_name;
+    payload.price = totalAmount;
     payload.orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
     payload.metadata = {
@@ -87,14 +101,14 @@ class _PayScreenState extends State<PayScreen> {
       "callbackParam3": "value56",
       "callbackParam4": "value78",
     };
-    payload.items = itemList;
+    payload.items = [item];
 
     User user = User();
-    user.username = "사용자 이름";
-    user.email = "user1234@gmail.com";
-    user.area = "서울";
-    user.phone = "010-4033-4678";
-    user.addr = '서울시 동작구 상도로 222';
+    user.username = _nameController.text;
+    user.email = _emailController.text;
+    // user.area = "서울";
+    user.phone = _phoneController.text;
+    // user.addr = '서울시 동작구 상도로 222';
 
     Extra extra = Extra();
     extra.appScheme = 'bootpayFlutterExample';
@@ -165,10 +179,6 @@ class _PayScreenState extends State<PayScreen> {
     }
   }
 
-  void _validateAndNavigate() {
-    () => bootpayTest(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,132 +208,132 @@ class _PayScreenState extends State<PayScreen> {
               children: [
                 SizedBox(height: 15),
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14),
-                    child: FavoriteCard(),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  child: FavoriteCard(item: widget.item, selectedDate: widget.selectedDate),
                 ),
                 SizedBox(height: 15),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
                 SizedBox(height: 15),
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14),
-                    child: Column(
-                      children: [
-                        itemDetail(),
-                        SizedBox(height: 18),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '총 상품 금액',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                height: 1.0,
-                              ),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  child: Column(
+                    children: [
+                      ItemDetail(selectedOptions: widget.selectedOptions),
+                      SizedBox(height: 18),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '총 상품 금액',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              height: 1.0,
                             ),
-                            Text(
-                              '42,300원',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w600,
-                                fontSize: 17,
-                                height: 1.0,
-                              ),
+                          ),
+                          Text(
+                            '${NumberFormat("#,###").format(totalAmount)}원',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                              height: 1.0,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 15),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
                 Padding(
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '예약자',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          height: 1.0,
-                        ),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '예약자',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        height: 1.0,
                       ),
                     ),
+                  ),
                 ),
                 Divider(color: Colors.grey[300], thickness: 1.0,),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
                   child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '이름',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '이름',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildCustomTextField(
-                            '', _nameController, _isNameEntered),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '이메일',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                          SizedBox(height: 10),
+                          _buildCustomTextField(
+                              '', _nameController, _isNameEntered),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '이메일',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildCustomTextField(
-                            '', _emailController, _isEmailEntered),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '생년월일',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                          SizedBox(height: 10),
+                          _buildCustomTextField(
+                              '', _emailController, _isEmailEntered),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '생년월일',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        BirthdayText(false),
-                        SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            '전화번호',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              height: 1.0,
+                          SizedBox(height: 10),
+                          BirthdayText(false),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              '전화번호',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15,
+                                height: 1.0,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        _buildCustomPhoneField(
-                            '', _phoneController, _isPhoneEntered),
-                      ],
-                    )
+                          SizedBox(height: 10),
+                          _buildCustomPhoneField(
+                              '', _phoneController, _isPhoneEntered),
+                        ],
+                      )
                   ),
                 ),
                 Divider(color: Colors.grey[200], thickness: 7.0,),
@@ -361,7 +371,7 @@ class _PayScreenState extends State<PayScreen> {
                             ),
                           ),
                           Text(
-                            '42,300원',
+                            '${NumberFormat("#,###").format(totalAmount)}원',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w400,
@@ -384,8 +394,9 @@ class _PayScreenState extends State<PayScreen> {
                               height: 1.0,
                             ),
                           ),
+                          SizedBox(height: 20),
                           Text(
-                            '42,300원',
+                            '${NumberFormat("#,###").format(totalAmount)}원',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w600,
@@ -404,8 +415,8 @@ class _PayScreenState extends State<PayScreen> {
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 14),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4.0),
-                      border: Border.all(color: Colors.grey)
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all(color: Colors.grey)
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 3),
@@ -518,10 +529,6 @@ class _PayScreenState extends State<PayScreen> {
                   ),
                 ),
                 SizedBox(height: 15),
-                // ElevatedButton(
-                //   onPressed: () => bootpayTest(context),
-                //   child: Text('결제하기', style: TextStyle(fontFamily: 'NotoSansKR')),
-                // ),
               ],
             ),
           ),
@@ -595,12 +602,6 @@ class _PayScreenState extends State<PayScreen> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.0),
-              // border: Border(
-              //   bottom: BorderSide(
-              //     color: isEntered ? Colors.green : Colors.grey,
-              //     width: 2.0,
-              //   ),
-              // ),
             ),
             child: AbsorbPointer(  // TextField 비활성화
               child: TextField(
@@ -738,24 +739,19 @@ class _PayScreenState extends State<PayScreen> {
   }
 }
 
-class FavoriteCard extends StatefulWidget {
-  const FavoriteCard({super.key});
+class FavoriteCard extends StatelessWidget {
 
-  @override
-  State<FavoriteCard> createState() => _FavoriteCardState();
-}
+  final Item item;
+  final String selectedDate;
 
-class _FavoriteCardState extends State<FavoriteCard> {
-  bool isFavorited = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
+  const FavoriteCard({Key? key, required this.item, required this.selectedDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final String imageUrl = item.i_image;
+    final String itemName = item.i_name;
+
     return Container(
       child: Column(
         children: [
@@ -763,7 +759,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
+                MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
               );
             },
             child: Row(
@@ -771,7 +767,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
+                    imageUrl,
                     width: 75,
                     height: 75,
                     fit: BoxFit.cover,
@@ -786,13 +782,16 @@ class _FavoriteCardState extends State<FavoriteCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                              '롯데월드 어드벤처 부산',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                                height: 1.0,
-                              ), overflow: TextOverflow.ellipsis
+                            itemName,
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              height: 1.0,
+                            ),
+                            softWrap: true,
+                            maxLines: 3,
+                            overflow: TextOverflow.visible,
                           ),
                         ],
                       ),
@@ -819,7 +818,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                   ),
                 ),
                 Text(
-                  '2024년 09월 01일 (일)',
+                  selectedDate,
                   style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontWeight: FontWeight.w500,
@@ -837,46 +836,58 @@ class _FavoriteCardState extends State<FavoriteCard> {
   }
 }
 
-class itemDetail extends StatelessWidget {
-  const itemDetail({super.key});
+class ItemDetail extends StatelessWidget {
+  final List<Map<String, dynamic>> selectedOptions;
+
+  const ItemDetail({Key? key, required this.selectedOptions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
+          ...selectedOptions.map((option) => Container(
             color: Colors.grey[100],
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                child: Row(
-                  children: [
-                    Text(
-                        '1인 종일 종합이용권',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          height: 1.0,
-                        ), overflow: TextOverflow.ellipsis
+              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+              child: Row(
+                children: [
+                  Text(
+                    '${option['op_name']} ',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      height: 1.0,
                     ),
-                    Spacer(),
-                    Text(
-                      '42,300원',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.0,
-                      ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    'X ${option['quantity']}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      height: 1.0,
                     ),
-                  ],
-                ),
-            )
-          ),
+                  ),
+                  Spacer(),
+                  Text(
+                    '${NumberFormat("#,###").format(option['op_price'] * option['quantity'])}원',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      height: 1.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )),
         ],
       ),
     );
   }
 }
-

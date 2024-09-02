@@ -1,24 +1,25 @@
 import 'package:busan_trip/screen/booking_calendar_screen.dart';
 import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/item_review_list_screen.dart';
+import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
+import 'package:busan_trip/screen/test1.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../vo/item.dart';
+import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
+import '../vo/order.dart' as od;
 
-class ItemDetailScreen extends StatefulWidget {
-  final Item item; // Item 객체를 받도록 수정
+class ItemDetailScreen2 extends StatefulWidget {
 
-  const ItemDetailScreen({Key? key, required this.item}) : super(key: key);
+  final od.Order order;
+  const ItemDetailScreen2({Key? key, required this.order}) : super(key: key);
 
   @override
-  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
+  State<ItemDetailScreen2> createState() => _ItemDetailScreen2State();
 }
 
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
+class _ItemDetailScreen2State extends State<ItemDetailScreen2> {
 
   late Future<void> _loadingFuture;
 
@@ -29,18 +30,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   }
 
   Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 6));
   }
 
   @override
   Widget build(BuildContext context) {
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-    ));
-
     return Scaffold(
       body: FutureBuilder<void>(
         future: _loadingFuture,
@@ -79,7 +73,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:  (context) => BookingCalendarScreen(item: widget.item)),
+                    MaterialPageRoute(builder:  (context) => RootScreen(order: widget.order)),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -107,7 +101,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          expandedHeight: 200.0,
+          expandedHeight: 180.0,
           flexibleSpace: FlexibleSpaceBar(
             background: Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
@@ -131,6 +125,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       highlightColor: Colors.grey[100]!,
                       child: Container(
                         color: Colors.grey[300],
+                        height: 20,
+                        width: 200,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
                         height: 35,
                         width: double.infinity,
                       ),
@@ -141,68 +145,50 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       highlightColor: Colors.grey[100]!,
                       child: Container(
                         color: Colors.grey[300],
+                        height: 20,
+                        width: 100,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 20,
+                        width: 150,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
                         height: 25,
+                        width: 150,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 200,
                         width: double.infinity,
                       ),
                     ),
                     SizedBox(height: 10),
-                    Divider(color: Colors.grey[200], thickness: 1.0,),
-                    SizedBox(height: 15),
                     Shimmer.fromColors(
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
                       child: Container(
                         color: Colors.grey[300],
-                        height: 30,
+                        height: 200,
                         width: double.infinity,
                       ),
                     ),
-                    SizedBox(height: 15),
-                    Divider(color: Colors.grey[200], thickness: 7.0,),
-                    SizedBox(height: 15),
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                        height: 25,
-                        width: 100,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Divider(color: Colors.grey[200], thickness: 1.0,),
-                    SizedBox(height: 15),
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                        height: 50,
-                        width: double.infinity,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                        height: 50,
-                        width: double.infinity,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                        height: 50,
-                        width: double.infinity,
-                      ),
-                    ),
-                    SizedBox(height: 35),
-                    Divider(color: Colors.grey[200], thickness: 7.0,),
                   ],
                 ),
               ),
@@ -218,12 +204,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       slivers: [
         SliverAppBar(
           pinned: true,
-          expandedHeight: MediaQuery.of(context).size.width,
+          expandedHeight: 180.0,
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           flexibleSpace: FlexibleSpaceBar(
-            background: Image.network(
-              '${widget.item.i_image}',
+            background: Image.asset(
+              'assets/images/lotteworld.jfif',
               fit: BoxFit.cover,
             ),
           ),
@@ -235,20 +221,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              DetailContent(
-                image: widget.item.i_image,
-                name: widget.item.i_name,
-                wishes: widget.item.i_wishes,
-                avgScore: widget.item.averageScore,
-                reviews: widget.item.review_count,
-                price: widget.item.i_price,
-                // shop_img_url: widget.item.s_img_url,
-                // shop_name: widget.item.s_name,
-                address: widget.item.i_address,
-                opr_house: widget.item.operation_house,
-                cld_days: widget.item.closed_days,
-                content: widget.item.i_content,
-              ),
+              DetailContent()
             ],
           ),
         ),
@@ -258,42 +231,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 }
 
 class DetailContent extends StatefulWidget {
-  final String image;
-  final String name;
-  final int wishes;
-  final double avgScore;
-  final int reviews;
-  final int price;
-  // final String shop_img_url (상점 이미지)
-  // final String shop_name; (상점 이름)
-  final String address;
-  final String opr_house;
-  final String cld_days;
-  final String content;
-
-  const DetailContent({
-    Key? key,
-    required this.image,
-    required this.name,
-    required this.wishes,
-    required this.avgScore,
-    required this.reviews,
-    required this.price,
-    // required this.shop_img_url,
-    // required this.shop_name,
-    required this.address,
-    required this.opr_house,
-    required this.cld_days,
-    required this.content,
-  }) : super(key: key);
-
   @override
   _DetailContentState createState() => _DetailContentState();
 }
 
 class _DetailContentState extends State<DetailContent> {
   bool isFavorited = false;
-  final formatter = NumberFormat('#,###');
 
   void toggleFavorite() {
     setState(() {
@@ -314,41 +257,24 @@ class _DetailContentState extends State<DetailContent> {
             child: Column(
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: Container(
-                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 100), // 32는 패딩 등을 고려한 너비
-                        child: Text(
-                          '${widget.name}',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                          softWrap: true,
-                        ),
+                    Text(
+                      '롯데월드 어드벤처 부산',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
                       ),
                     ),
-
-                    SizedBox(
-                      height: 40,
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: toggleFavorite,
-                            child: Icon(
-                              isFavorited ? Icons.favorite : Icons.favorite_outline,
-                              size: 22,
-                              color: isFavorited ? Colors.red : Colors.black,
-                            ),
-                          ),
-                        ],
+                    GestureDetector(
+                      onTap: toggleFavorite,
+                      child: Icon(
+                        isFavorited ? Icons.favorite : Icons.favorite_outline,
+                        size: 20,
+                        color: isFavorited ? Colors.red : Colors.black,
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Padding(
@@ -360,35 +286,12 @@ class _DetailContentState extends State<DetailContent> {
                         children: [
                           Icon(
                             Icons.star_rounded,
-                            size: 22,
-                            color: Colors.amber,
+                            size: 20,
+                            color: Colors.yellow,
                           ),
                           SizedBox(width: 2),
                           Text(
-                            '${widget.avgScore}',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            ' · ',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                          Icon(
-                            Icons.favorite,
-                            size: 22,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: 2),
-                          Text(
-                            '${widget.wishes}',
+                            '4.8',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w600,
@@ -414,11 +317,11 @@ class _DetailContentState extends State<DetailContent> {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                    bottom: BorderSide(color: Colors.black,width: 1.0),
+                                  bottom: BorderSide(color: Colors.black,width: 1.0),
                                 ),
                               ),
                               child: Text(
-                                '리뷰 ${widget.reviews}개',
+                                '후기 763개',
                                 style: TextStyle(
                                   fontFamily: 'NotoSansKR',
                                   fontWeight: FontWeight.w600,
@@ -432,7 +335,7 @@ class _DetailContentState extends State<DetailContent> {
                       Row(
                         children: [
                           Text(
-                            '${formatter.format(widget.price)}원 ',
+                            '12,000원 ',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w600,
@@ -457,9 +360,13 @@ class _DetailContentState extends State<DetailContent> {
                 SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                    // );
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => StoreDetailScreen()),
+                      MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
                     );
                   },
                   child: Row(
@@ -520,21 +427,49 @@ class _DetailContentState extends State<DetailContent> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '${widget.content}',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                        softWrap: true,
-                        overflow: TextOverflow.visible,
-                      ),
-                      SizedBox(height: 15),
                       Image.network(
-                        '${widget.image}',
+                        'https://image6.yanolja.com/leisure/eSeHbg8cH0gPskLE',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/achV2D1nsKKi4KsP',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/jbq0y0E4SCCpBVeX',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/86ccgNX3RHA8sQ0l',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/PDnHAa15yO2f0NML',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/kLHpL4hlSYZCItxS',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/uGJuI9R0WQEPxL3H',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/ch2khfEECTJESUcg',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/sd8CHbgrG90YJLo7',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/CoYb4UJB7KJHMZ3O',
+                        fit: BoxFit.cover,
+                      ),
+                      Image.network(
+                        'https://image6.yanolja.com/leisure/fyjtVXwzPMJgBe7c',
                         fit: BoxFit.cover,
                       ),
                     ],
@@ -572,10 +507,11 @@ class _DetailContentState extends State<DetailContent> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInfoRow('주소', '${widget.address}'),
-                  _buildInfoRow('운영요일 및 시간', '${widget.opr_house}'),
-                  // _buildInfoRow('전화번호', '1661-2000'),
-                  _buildInfoRow('휴무일', '${widget.cld_days}'),
+                  _buildInfoRow('주소', '부산광역시 기장군 기장읍 동부산관광로 42'),
+                  _buildInfoRow('홈페이지', 'https://adventurebusan.lotteworld.com/kor/main/index.do'),
+                  _buildInfoRow('운영요일 및 시간', '매일 10:00 ~ 20:00 (* 자세한 운영시간은 홈페이지 참조)'),
+                  _buildInfoRow('전화번호', '1661-2000'),
+                  _buildInfoRow('휴무일', '연중휴무 (* 기상상황에 따른 운휴)'),
                 ],
               ),
             ),

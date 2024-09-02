@@ -3,9 +3,11 @@ import 'package:busan_trip/screen/exhibition_list_screen.dart';
 import 'package:busan_trip/screen/hotel_list_screen.dart';
 import 'package:busan_trip/screen/item_detail_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
 import 'package:busan_trip/screen/search_result_list.dart';
 import 'package:busan_trip/screen/search_screen.dart';
+import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:busan_trip/screen/themepark_list_screen.dart';
 import 'package:busan_trip/screen/tour_list_screen.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -14,9 +16,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../model/item_model.dart';
+import '../model/store_model.dart';
+import '../vo/item.dart';
+import '../vo/option.dart';
+
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
 
   @override
@@ -45,7 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final Future<void> _loadingFuture = _simulateLoading();
 
   static Future<void> _simulateLoading() async {
-    await Future.delayed(const Duration(seconds: 10));
+    await Future.delayed(const Duration(seconds: 5));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ItemModel>(context, listen: false).set5Items();
+    });
   }
 
 
@@ -67,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
         future: _loadingFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildSkeletonLoader();
+            return _buildDetailContent();
           } else {
             return _buildDetailContent();
           }
@@ -76,153 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSkeletonLoader() {
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery
-              .of(context)
-              .size
-              .height, // 최소 높이를 화면 높이로 설정
-        ),
-        child: IntrinsicHeight(
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 60),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/images/006.png',
-                        width: 120,
-                        fit: BoxFit.cover,
-                      ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Column(
-                          children: [
-                            Icon(Icons.search_outlined, size: 35),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 250,
-                      width: double.infinity,
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 7),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: Container(
-                            color: Colors.grey[300],
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 30,
-                          width: 200,
-                        ),
-                      ),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 20,
-                          width: 30,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(color: Colors.grey, thickness: 1.0,),
-                  SizedBox(height: 10,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 15,),
-                  RealTimeListSkeleton(),
-                  SizedBox(height: 10,),
-                  Divider(color: Colors.grey, thickness: 1.0,),
-                  SizedBox(height: 30,),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildDetailContent() {
     final SearchController controller = SearchController();
@@ -367,7 +240,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/realtime_list_screen');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder:  (context) => RealtimeListScreen()),
+                        );
                       },
                       child: Column(
                         children: [
@@ -385,17 +261,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Divider(color: Colors.grey, thickness: 1.0,),
-                SizedBox(height: 10,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 15,),
-                FavoriteCard(),
-                SizedBox(height: 10,),
+                SizedBox(height: 5,),
+                Consumer<ItemModel>(builder: (context, itemModel, child) {
+                  return Column(
+                    children: itemModel.items.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      Item item = entry.value;
+                      return FavoriteCard(item: item, rank: index + 1);
+                    }).toList(),
+                  );
+                }),
+                SizedBox(height: 5,),
                 Divider(color: Colors.grey, thickness: 1.0,),
                 SizedBox(height: 30,),
                 Column(
@@ -406,6 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         image: DecorationImage(
                           image: AssetImage('assets/images/banner.png'),
                           fit: BoxFit.cover,
+
                         ),
                       ),
                     ),
@@ -491,14 +368,44 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class RealTimeListSkeleton extends StatefulWidget {
-  const RealTimeListSkeleton({super.key});
 
-  @override
-  State<RealTimeListSkeleton> createState() => _RealTimeListSkeletonState();
-}
 
-class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
+
+
+class FavoriteCard extends StatelessWidget {
+  final formatter = NumberFormat('#,###');
+  final Item item;
+  final int rank;
+
+  FavoriteCard({required this.item, required this.rank, super.key});
+
+  String _formatAddress(String address) {
+    // 주소를 공백을 기준으로 나눕니다.
+    final parts = address.split(' ');
+
+    if (parts.length >= 3) {
+      // 부산광역시 기장군 기장읍 동부산관광로 42에서 '부산 기장군'을 추출
+      return '${parts[0]} ${parts[1]}';
+    }
+
+    // 예상된 형식이 아닌 경우 원래 주소를 반환합니다.
+    return address;
+  }
+
+  String _mapTypeToString(int type) {
+    switch (type) {
+      case 1:
+        return '호텔';
+      case 2:
+        return '테마파크';
+      case 3:
+        return '전시회';
+      case 4:
+        return '액티비티';
+      default:
+        return '기타'; // 기본값
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -509,196 +416,123 @@ class _RealTimeListSkeletonState extends State<RealTimeListSkeleton> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
+                MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
               );
             },
-            child: Row(
-              children: [
-                Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    color: Colors.grey[300],
-                    height: 10,
-                    width: 10,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                children: [
+                  Text(
+                    '${rank}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
                   ),
-                ),
-                SizedBox(width: 13,),
-                Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    color: Colors.grey[300],
-                    height: 75,
-                    width: 75,
+                  SizedBox(width: 13),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      '${item.i_image}',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(width: 10,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              color: Colors.grey[300],
-                              height: 25,
-                              width: 150,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.favorite_outline,
-                                  size: 25,
-                                  color: Colors.red,
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Consumer<StoreModel>(
+                        //   builder: (context, storeModel, child) {
+                        //     final store = storeModel.getStoreById(item.s_idx);
+                        //     print("159195159915195915951195159195918918");
+                        //     print(store);
+                        //     print("159195159915195915951195159195918918");
+                        //     if (store == null) {
+                        //       // Fetch store data if not already fetched
+                        //       storeModel.fetchStoreById(item.s_idx);
+                        //       return Text(
+                        //         'Loading...',  // Placeholder while loading
+                        //         style: TextStyle(
+                        //           fontFamily: 'NotoSansKR',
+                        //           fontWeight: FontWeight.w400,
+                        //           fontSize: 12,
+                        //           color: Colors.grey,
+                        //           height: 1.0,
+                        //         ),
+                        //       );
+                        //     } else {
+                        //       return GestureDetector(
+                        //         onTap: () {
+                        //           Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                        //           );
+                        //         },
+                        //         child: Text(
+                        //           '${store.s_name}',
+                        //           style: TextStyle(
+                        //             fontFamily: 'NotoSansKR',
+                        //             fontWeight: FontWeight.w400,
+                        //             fontSize: 12,
+                        //             color: Colors.grey,
+                        //             height: 1.0,
+                        //           ),
+                        //         ),
+                        //       );
+                        //     }
+                        //   },
+                        // ),
+                        // SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                '${item.i_name}',
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 17,
+                                  height: 1.0,
                                 ),
-                              ],
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7,),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 15,
-                          width: 250,
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 15),
-                      Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          color: Colors.grey[300],
-                          height: 17,
-                          width: 100,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class FavoriteCard extends StatefulWidget {
-  const FavoriteCard({super.key});
-
-  @override
-  State<FavoriteCard> createState() => _FavoriteCardState();
-}
-
-class _FavoriteCardState extends State<FavoriteCard> {
-  bool isFavorited = false;
-
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/detail_screen');
-            },
-            child: Row(
-              children: [
-                Text(
-                  '3',
-                  style: TextStyle(
-                    fontFamily: 'NotoSansKR',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                  ),
-                ),
-                SizedBox(width: 13,),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    'https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20240327_99%2F1711515295127evmbz_JPEG%2F%25B7%25CE%25B8%25AE%25BF%25A9%25BF%25D5.jpg',
-                    width: 75,
-                    height: 75,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                              '롯데월드 어드벤처 부산',
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                                height: 1.0,
-                              ), overflow: TextOverflow.ellipsis
-                          ),
-                          GestureDetector(
-                            onTap: toggleFavorite,
-                            child: Column(
-                              children: [
-                                Icon(
-                                  isFavorited ? Icons.favorite : Icons.favorite_outline,
-                                  size: 25,
-                                  color: Colors.red,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 7,),
-                      Text(
-                        '부산 기장군 · 테마파크 · 후기 99+',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: Colors.grey,
-                          height: 1.0,
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '29,000원~',
+                        SizedBox(height: 5),
+                        Text(
+                          '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black,
+                            height: 1.0,
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '${formatter.format(item.i_price)}원 ~',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

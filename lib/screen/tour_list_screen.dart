@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/item_detail_screen2.dart';
 import 'package:flutter/material.dart';
 
 import 'item_detail_screen.dart';
@@ -232,10 +233,10 @@ class _FavoriteCardState extends State<FavoriteCard> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ItemDetailScreen2()),
+              // );
             },
             child: Row(
               children: [
