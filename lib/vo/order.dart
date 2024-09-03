@@ -37,7 +37,7 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json){
     return Order(
-      o_idx: json['o_idx'],
+      o_idx: json['o_idx']??0,
       s_idx: json['s_idx']??0,
       u_idx: json['u_idx']??0,
       i_idx: json['i_idx']??0,

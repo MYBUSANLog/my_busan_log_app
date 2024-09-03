@@ -1,3 +1,4 @@
+import 'package:busan_trip/screen/receipt_detail_screen.dart';
 import 'package:busan_trip/screen/review_writer_screen.dart';
 import 'package:busan_trip/vo/order.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,17 @@ class ReceiptCard extends StatelessWidget {
     return date;
   }
 
+  void navigateToReceiptDetailScreen(BuildContext context) {
+
+    // ReceiptDetailScreen으로 화면 전환
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReceiptDetailScreen(order: order),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -164,7 +176,9 @@ class ReceiptCard extends StatelessWidget {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              navigateToReceiptDetailScreen(context);
+                            },
                             child: Text(
                               '결제상세 >',
                               style: TextStyle(

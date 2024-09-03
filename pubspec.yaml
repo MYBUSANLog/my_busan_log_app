@@ -66,6 +66,7 @@ dependencies:
   loading_animation_widget: ^1.2.1
   url_launcher: ^6.3.0
   table_calendar: ^3.0.9
+  qr_flutter: ^4.1.0
 
 
 dev_dependencies:
