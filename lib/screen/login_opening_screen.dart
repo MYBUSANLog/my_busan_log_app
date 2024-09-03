@@ -16,9 +16,7 @@ import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_ord
 import '../vo/order.dart' as od;
 
 class LoginOpeningScreen extends StatefulWidget {
-
-  final od.Order order;
-  const LoginOpeningScreen({Key? key, required this.order}) : super(key: key);
+  const LoginOpeningScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginOpeningScreen> createState() => _LoginOpeningScreenState();
@@ -71,7 +69,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
   void navigateToMainPage() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => RootScreen(order: widget.order),
+      builder: (context) => RootScreen(),
     ));
   }
 
@@ -271,7 +269,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       // 로그인 성공 시, 팝업 닫기 및 메인 페이지로 이동
       // Navigator.of(context).pop();  // 팝업 닫기
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => RootScreen(order: widget.order)),
+        MaterialPageRoute(builder: (context) => RootScreen()),
       );
 
     } catch (error) {

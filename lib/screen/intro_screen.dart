@@ -9,9 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../vo/order.dart' as od;
 
 class IntroScreen extends StatefulWidget {
-  final od.Order order;
 
-  IntroScreen({Key? key, required this.order}) : super(key: key);
+  IntroScreen({Key? key}) : super(key: key);
 
   @override
   State<IntroScreen> createState() => _IntroScreenState();
@@ -28,7 +27,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
   void navigateToMainPage() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => RootScreen(order: widget.order),
+      builder: (context) => RootScreen(),
     ));
   }
 

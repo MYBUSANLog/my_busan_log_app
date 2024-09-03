@@ -60,14 +60,11 @@ void main() async {
 
   await initializeDateFormatting('ko_KR', null);
 
-  final od.Order order = od.Order();
-
-  runApp(MyApp(order: order));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final od.Order order;
-  const MyApp({Key? key, required this.order}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -132,7 +129,7 @@ class MyApp extends StatelessWidget {
           '/chatbot': (context) => ChatbotScreen(),
           '/profile_alter': (context) => ProfileAlterScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
-          '/root_screen':(context) => RootScreen(order: order),
+          '/root_screen':(context) => RootScreen(),
           '/notification_screen': (context) => NotificationScreen(),
           '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
           // 리뷰 북마크 찜목록 공지사항 추가 안율현
@@ -142,7 +139,7 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginScreen(),
           '/sign_up2': (context) => SignUp2(),
           '/sign_up3': (context) => SignUp3(),
-          '/login_opening_screen': (context) => LoginOpeningScreen(order: order),
+          '/login_opening_screen': (context) => LoginOpeningScreen(),
           '/searchingpage': (context) => Searchingpage(),
           '/daumpostcodesearchexample': (context) => DaumPostcodeSearch(),
       
@@ -155,15 +152,14 @@ class MyApp extends StatelessWidget {
 }
 //intro screen 수진추가
 Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
-  final od.Order order = od.Order();
   if(snapshot.hasError) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
     // return LoginOpeningScreen();
-    return RootScreen(order: order);
+    return LoginOpeningScreen();
     // return StoreDetailScreen();
   } else {
-    return IntroScreen(order: order);
+    return IntroScreen();
   }
 }
 

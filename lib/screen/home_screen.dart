@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 5,),
                 Consumer<ItemModel>(builder: (context, itemModel, child) {
                   return Column(
-                    children: itemModel.items.asMap().entries.map((entry) {
+                    children: itemModel.item5.asMap().entries.map((entry) {
                       int index = entry.key;
                       Item item = entry.value;
                       return FavoriteCard(item: item, rank: index + 1);

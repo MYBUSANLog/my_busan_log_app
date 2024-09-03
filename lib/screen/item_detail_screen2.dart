@@ -73,7 +73,7 @@ class _ItemDetailScreen2State extends State<ItemDetailScreen2> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder:  (context) => RootScreen(order: widget.order)),
+                    MaterialPageRoute(builder:  (context) => RootScreen()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

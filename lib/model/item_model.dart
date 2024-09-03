@@ -4,6 +4,7 @@ import '../vo/item.dart';
 
 class ItemModel extends ChangeNotifier {
   List<Item> items = [];
+  List<Item> item5 = [];
 
 
   Future<void> setItems() async{
@@ -13,8 +14,9 @@ class ItemModel extends ChangeNotifier {
 
   // home_screen 실시간 핫플레이스 5개 정렬(defaultValue = latest)
   Future<void> set5Items() async{
-    items = await ItemHttp.fetch5Items();
-    items.sort((a, b) => a.ui_rank.compareTo(b.ui_rank));
+    item5 = [];
+    item5 = await ItemHttp.fetch5Items();
+    item5.sort((a, b) => a.ui_rank.compareTo(b.ui_rank));
     notifyListeners();
   }
 

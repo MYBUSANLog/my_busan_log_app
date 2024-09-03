@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 class OrderHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/order';
 
-  static Future<List<Order>> fetchAll() async {
+  static Future<List<Order>> fetchAll(int u_idx) async {
     try {
-      var response = await http.get(Uri.parse('${apiUrl}/all'));
+      var response = await http.get(Uri.parse('${apiUrl}/findByUIdx?u_idx=${u_idx}'));
       if (response.statusCode == 200) {
         var mapList = jsonDecode(utf8.decode(response.bodyBytes)) as List;
         List<Order> list = [];
