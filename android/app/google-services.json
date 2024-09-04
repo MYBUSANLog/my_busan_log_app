@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "912009490863",
+    "project_id": "mybusanlog-b600f",
+    "storage_bucket": "mybusanlog-b600f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912009490863:android:9cb21e605f062f28bc7f5a",
+        "android_client_info": {
+          "package_name": "com.ds.busan_trip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3R-0gHpg3mqGkaqHU0Qvzq4Mz6GtQi8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
