@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class Review {
   int r_idx;
   int u_idx;
@@ -8,6 +10,7 @@ class Review {
   String r_img_url;
   String r_content;
   String created_date;
+  List<File> images;
 
   Review({
     this.r_idx=0,
@@ -19,6 +22,7 @@ class Review {
     this.r_img_url='',
     this.r_content='',
     this.created_date='',
+    this.images = const [],
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,7 @@ class Review {
       r_img_url: json['r_img_url']??'',
       r_content: json['r_content']??'',
       created_date: json['created_date']??'',
+      images: json['images'] != null ? List<File>.from(json['images']) : [],
     );
   }
 }

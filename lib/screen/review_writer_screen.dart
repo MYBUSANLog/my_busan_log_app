@@ -430,4 +430,3 @@ class ReviewWriterCard extends StatelessWidget {
     );
   }
 }
-

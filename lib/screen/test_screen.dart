@@ -66,8 +66,17 @@ class _TestScreenState extends State<TestScreen> {
                     if(imgFiles != null) {
                       List<Uint8List>? imageBytesList = [];
                       for(var imgFile in imgFiles) {
-                        Uint8List bytes = await ImgUtil.convertResizedUint8List(xFile: imgFile);
-                        imageBytesList.add(bytes);
+                        try {
+                          Uint8List bytes =
+                          await ImgUtil.convertResizedUint8List(
+                              xFile: imgFile);
+                          print("선택한 이미지의 데이터 크기: ${bytes.lengthInBytes} bytes");
+                          imageBytesList.add(bytes);
+                        } catch (e) {
+                          print(
+                              "이미지 데이터 크기 오류 발생! 선택한 이미지의 데이터 크기: ${await imgFile.length()} bytes");
+                          print("오류: $e");
+                        }
                       }
                       setState(() {
                         previewImgBytesList = imageBytesList;
