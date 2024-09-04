@@ -76,7 +76,7 @@ class TicketWidget extends StatelessWidget {
         child: Stack(
           children: [
             CustomPaint(
-              size: Size(double.infinity, 1050.0), // 티켓의 높이 설정
+              size: Size(double.infinity, 1200.0), // 티켓의 높이 설정
               painter: TicketPainter(),
             ),
             Positioned.fill(
@@ -84,377 +84,621 @@ class TicketWidget extends StatelessWidget {
                 alignment: Alignment.topLeft, // 텍스트를 중앙에 배치합니다.
                 child: Column(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '주문이 완료되었습니다', // 표시할 텍스트
-                          style: TextStyle(
-                            fontSize: 28, // 텍스트 크기
-                            fontWeight: FontWeight.w700, // 텍스트 굵기
-                            color: Colors.black, // 텍스트 색상
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(4.0), topRight: Radius.circular(4.0)),
+                        color: Color(0xff0e4194),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 44.3, horizontal: 84.5),
+                        child: Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: Align(
+                            alignment: Alignment.topCenter, // QR 코드를 중앙에 배치합니다.
+                            child: GestureDetector(
+                              onTap: () => _showQrCodeDialog(context),
+                              child: QrImageView(
+                                data: order.order_num, // QR 코드에 포함될 주문 ID
+                                version: QrVersions.auto,
+                                size: 200.0, // QR 코드의 크기 설정
+                                gapless: false, // QR 코드의 배경을 투명하게 설정
+                              ),
+                            ),
                           ),
                         ),
-                      ]
+                      ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 14),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 50),
-                              Text(
-                                '구매 정보',
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 17,
-                                  height: 2.0,
+                    SizedBox(height: 10),
+                    Container(
+                      color: Colors.white,
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 14),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '결제 정보',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17,
+                                    height: 2.0,
+                                  ),
                                 ),
-                              ),
-                              Divider(color: Colors.grey[500], thickness: 1.0,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '상품명',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
+                                Divider(color: Colors.grey[500], thickness: 1.0,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '주문번호',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '[QR바로입장] 부산 롯데월드 어드벤처',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Text(
-                                    '선택 옵션',
-                                    style: TextStyle(
-                                      fontFamily: 'NotoSansKR',
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 17,
-                                      color: Colors.grey,
-                                      height: 1.2,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 5),
-                                  Container(
-                                    width: double.infinity, // Ensures the container takes the full width
-                                    child: Column(// Aligns content to the right
-                                      children: [
-                                        Container(
-                                          color: Colors.grey[200],
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                          SizedBox(height: 5),
+                                          Container(
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text(
-                                                  '옵션이름 ',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                    height: 1.0,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Text(
-                                                  'X 2',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 14,
-                                                    color: Colors.grey[600],
-                                                    height: 1.0,
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Text(
-                                                  '20,000원',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                    height: 1.0,
+                                                Expanded(
+                                                  child: Text(
+                                                    '0000-0000-0000-0000',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 17,
+                                                      height: 1.2,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3, // Adjust the number of lines as needed
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width / 3.0,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '결제 일시',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  color: Colors.grey,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 5),
+                                              Container(
+                                                width: 150, // Ensures the container takes the full width
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '2024-09-25 00:00',
+                                                        style: TextStyle(
+                                                          fontFamily: 'NotoSansKR',
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 17,
+                                                          height: 1.2,
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 3, // Adjust the number of lines as needed
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context).size.width / 3.3,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '결제 수단',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  color: Colors.grey,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 5),
+                                              Container(
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '신용카드',
+                                                        style: TextStyle(
+                                                          fontFamily: 'NotoSansKR',
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 17,
+                                                          height: 1.2,
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 3, // Adjust the number of lines as needed
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Container(
-                                    width: double.infinity, // Ensures the container takes the full width
-                                    child: Column(// Aligns content to the right
-                                      children: [
-                                        Container(
-                                          color: Colors.grey[200],
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                    SizedBox(height: 15),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '총 결제 금액',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Container(
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Text(
-                                                  '옵션이름 ',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                    height: 1.0,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Text(
-                                                  'X 2',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 14,
-                                                    color: Colors.grey[600],
-                                                    height: 1.0,
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Text(
-                                                  '20,000원',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14,
-                                                    height: 1.0,
+                                                Expanded(
+                                                  child: Text(
+                                                    '25,000원',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 17,
+                                                      height: 1.2,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3, // Adjust the number of lines as needed
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 25),
-                              Text(
-                                '결제 정보',
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 17,
-                                  height: 2.0,
+                                  ],
                                 ),
-                              ),
-                              Divider(color: Colors.grey[500], thickness: 1.0,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '주문번호',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '116161561156',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '결제 일시',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          width: 150, // Ensures the container takes the full width
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '2024-09-25',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '결제 수단',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '신용카드',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '총 결제 금액',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '25,000원',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 35),
-                              Align(
-                                alignment: Alignment.topCenter, // QR 코드를 중앙에 배치합니다.
-                                child: GestureDetector(
-                                  onTap: () => _showQrCodeDialog(context),
-                                  child: QrImageView(
-                                    data: order.order_num, // QR 코드에 포함될 주문 ID
-                                    version: QrVersions.auto,
-                                    size: 200.0, // QR 코드의 크기 설정
-                                    gapless: false, // QR 코드의 배경을 투명하게 설정
+                                SizedBox(height: 40),
+                                Text(
+                                  '구매 정보',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17,
+                                    height: 2.0,
                                   ),
                                 ),
-                              ),
-                            ],
+                                Divider(color: Colors.grey[500], thickness: 1.0,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '이용 일자',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Container(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    '2024-09-30',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 17,
+                                                      height: 1.2,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3, // Adjust the number of lines as needed
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '상품명',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Container(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    '[QR바로입장] 부산 롯데월드 어드벤처',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 17,
+                                                      height: 1.2,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3, // Adjust the number of lines as needed
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    Container(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '선택 옵션',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Container(
+                                            width: double.infinity, // Ensures the container takes the full width
+                                            child: Column(// Aligns content to the right
+                                              children: [
+                                                Container(
+                                                  color: Colors.grey[200],
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          '옵션이름 ',
+                                                          style: TextStyle(
+                                                            fontFamily: 'NotoSansKR',
+                                                            fontWeight: FontWeight.w500,
+                                                            fontSize: 14,
+                                                            height: 1.0,
+                                                          ),
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                        Text(
+                                                          'X 2',
+                                                          style: TextStyle(
+                                                            fontFamily: 'NotoSansKR',
+                                                            fontWeight: FontWeight.w400,
+                                                            fontSize: 14,
+                                                            color: Colors.grey[600],
+                                                            height: 1.0,
+                                                          ),
+                                                        ),
+                                                        Spacer(),
+                                                        Text(
+                                                          '20,000원',
+                                                          style: TextStyle(
+                                                            fontFamily: 'NotoSansKR',
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 14,
+                                                            height: 1.0,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Container(
+                                      width: double.infinity, // Ensures the container takes the full width
+                                      child: Column(// Aligns content to the right
+                                        children: [
+                                          Container(
+                                            color: Colors.grey[200],
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    '옵션이름 ',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 14,
+                                                      height: 1.0,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  Text(
+                                                    'X 2',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 14,
+                                                      color: Colors.grey[600],
+                                                      height: 1.0,
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Text(
+                                                    '20,000원',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w600,
+                                                      fontSize: 14,
+                                                      height: 1.0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 40),
+                                Text(
+                                  '구매자 정보',
+                                  style: TextStyle(
+                                    fontFamily: 'NotoSansKR',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17,
+                                    height: 2.0,
+                                  ),
+                                ),
+                                Divider(color: Colors.grey[500], thickness: 1.0,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width / 3.0,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '이름',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Container(
+                                            width: 150, // Ensures the container takes the full width
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    '홍길동',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 17,
+                                                      height: 1.2,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3, // Adjust the number of lines as needed
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '이메일',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              color: Colors.grey,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(height: 5),
+                                          Container(
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    'kimnahyun1124@gmail.com',
+                                                    style: TextStyle(
+                                                      fontFamily: 'NotoSansKR',
+                                                      fontWeight: FontWeight.w400,
+                                                      fontSize: 17,
+                                                      height: 1.2,
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3, // Adjust the number of lines as needed
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width / 3.0,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '전화번호',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  color: Colors.grey,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 5),
+                                              Container(
+                                                width: 150, // Ensures the container takes the full width
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '000-0000-0000',
+                                                        style: TextStyle(
+                                                          fontFamily: 'NotoSansKR',
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 17,
+                                                          height: 1.2,
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 3, // Adjust the number of lines as needed
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context).size.width / 3.0,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '생년월일',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  color: Colors.grey,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              SizedBox(height: 5),
+                                              Container(
+                                                width: 150, // Ensures the container takes the full width
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '2000-00-00',
+                                                        style: TextStyle(
+                                                          fontFamily: 'NotoSansKR',
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 17,
+                                                          height: 1.2,
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 3, // Adjust the number of lines as needed
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                          ),
                         ),
                       ),
                     ),

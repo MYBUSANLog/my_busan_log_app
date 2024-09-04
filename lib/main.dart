@@ -21,6 +21,7 @@ import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:busan_trip/screen/sign_up2.dart';
 import 'package:busan_trip/screen/sign_up3.dart';
 import 'package:busan_trip/screen/store_detail_screen.dart';
+import 'package:busan_trip/screen/test_screen.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,6 +37,7 @@ import 'package:provider/provider.dart'; //구글로그인
 
 import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
 import '../vo/order.dart' as od;
+import 'firebase_options.dart';
 import 'model/order_model.dart';
 
 //새로운 작업 from 정민
@@ -46,12 +48,14 @@ import 'model/order_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); //구글로그인 영욱
+  // await Firebase.initializeApp(); //구글로그인 영욱
   await NaverMapSdk.instance.initialize(
     clientId: 'qzi0n4lbj9',
   );
-
-  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 
   KakaoSdk.init(
     nativeAppKey: '3cbc4103340e6be3c6247d5228d55534',
@@ -109,15 +113,16 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //인트로스크린 수진 추가
-        home:FutureBuilder(
-          future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
-          builder: (context, snapshot) {
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                child: _splashLoadingWidget(snapshot)
-            );
-          },
-        ),
+        home: TestScreen(),
+        // FutureBuilder(
+        //   future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
+        //   builder: (context, snapshot) {
+        //     return AnimatedSwitcher(
+        //         duration: const Duration(milliseconds: 1000),
+        //         child: _splashLoadingWidget(snapshot)
+        //     );
+        //   },
+        // ),
         //RootScreen(), //위에 주석하고 아래 추가 영욱
         // initialRoute: '/home',
         //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
@@ -156,7 +161,7 @@ Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
     return const Text("Error!!");
   } else if(snapshot.hasData) {
     // return LoginOpeningScreen();
-    return LoginOpeningScreen();
+    return TestScreen();
     // return StoreDetailScreen();
   } else {
     return IntroScreen();
