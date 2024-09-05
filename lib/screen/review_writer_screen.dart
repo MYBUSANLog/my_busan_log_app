@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../app_util/img_util.dart';
 import '../model/review_model.dart';
 import '../vo/review.dart';
 
@@ -22,6 +23,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
   int _selectedRating = 0;
   final ImagePicker _picker = ImagePicker();
   File? _reviewImage;
+  List<Uint8List> previewImgBytesList = [];
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -113,6 +115,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                 removeImage: _removeImage,
                 contentController: _contentController,
                 onFieldChanged: _onFieldChanged,
+                previewImgBytesList: previewImgBytesList,
               ),
             ],
           ),
@@ -151,6 +154,7 @@ class ReviewWriterCard extends StatelessWidget {
   final VoidCallback removeImage;
   final TextEditingController contentController;
   final VoidCallback onFieldChanged;
+  final List<Uint8List> previewImgBytesList;
 
   const ReviewWriterCard({
     super.key,
@@ -161,6 +165,7 @@ class ReviewWriterCard extends StatelessWidget {
     required this.removeImage,
     required this.contentController,
     required this.onFieldChanged,
+    required this.previewImgBytesList,
   });
 
   @override
@@ -256,7 +261,27 @@ class ReviewWriterCard extends StatelessWidget {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: pickImage,
+                  onTap: () async {
+                    final picker = ImagePicker();
+                    List<XFile> imgFiles = await picker.pickMultiImage();
+                    if(imgFiles.isNotEmpty) {
+                      List<Uint8List>? imageBytesList = [];
+                      for(var imgFile in imgFiles) {
+                        try {
+                          Uint8List bytes =
+                              await ImgUtil.convertResizedUint8List(
+                              xFile: imgFile);
+                          print("선택한 이미지의 데이터 크기: ${bytes.lengthInBytes} bytes");
+                          imageBytesList.add(bytes);
+                        } catch (e) {
+                          print(
+                              "이미지 데이터 크기 오류 발생! 선택한 이미지의 데이터 크기: ${await imgFile.length()} bytes");
+                          print("오류: $e");
+                        }
+                      }
+                      previewImgBytesList.addAll(imageBytesList);
+                    }
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
@@ -289,37 +314,16 @@ class ReviewWriterCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20),
-                reviewImage == null
-                    ? Container()
-                    : Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        reviewImage!,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      top: 5,
-                      right: 5,
-                      child: GestureDetector(
-                        onTap: removeImage,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black54,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                previewImgBytesList.length==0
+                    ? Text('이미지 선택')
+                    : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: previewImgBytesList.map((bytes) => ImgBox(
+                      bytes: bytes,
+                      onRemove: () => previewImgBytesList.remove(bytes),
+                    )).toList(),
+                  ),
                 ),
                 SizedBox(height: 20),
                 Container(
@@ -424,6 +428,54 @@ class ReviewWriterCard extends StatelessWidget {
                 SizedBox(height: 3),
               ],
             ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ImgBox extends StatelessWidget {
+
+  Uint8List bytes;
+  Function onRemove;
+
+  ImgBox({
+    required this.bytes,
+    required this.onRemove
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 100,
+      child: Stack(
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(
+                bytes,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              )
+          ),
+          Positioned(
+              top:0,
+              right: 5,
+              child: GestureDetector(
+                  onTap: (){
+                    onRemove();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black54,
+                    ),
+                    child: Icon(Icons.close,color: Colors.white, size: 16,),
+                  )
+              )
           )
         ],
       ),

@@ -23,7 +23,7 @@ class _ReceiptScreenState extends State<ReceiptScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    int u_idx = Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx;
+    int u_idx = Provider.of<UserModel>(context, listen: false).loggedInUser!.u_idx;
     Provider.of<OrderModel>(context, listen: false).setItems(u_idx);
   }
 

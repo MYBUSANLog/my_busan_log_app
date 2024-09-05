@@ -5,7 +5,6 @@ import 'package:busan_trip/model/store_model.dart';
 import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/accouncement_list_screen.dart';
 import 'package:busan_trip/screen/bookmark_list_screen.dart';
-import 'package:busan_trip/screen/item_detail_screen.dart';
 import 'package:busan_trip/screen/heart_list_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
@@ -13,30 +12,21 @@ import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
-import 'package:busan_trip/screen/item_review_list_screen.dart';
-import 'package:busan_trip/screen/review_writer_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/screen/searchingpage.dart';
 import 'package:busan_trip/screen/sign_up.dart'; //회원가입 추가
 import 'package:busan_trip/screen/sign_up2.dart';
 import 'package:busan_trip/screen/sign_up3.dart';
-import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:busan_trip/screen/test_screen.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:busan_trip/screen/chatbot.dart';
-import 'package:busan_trip/screen/receipt_screen.dart';
-import 'package:busan_trip/screen/pay_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart'; //구글로그인
-
-import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_order;
-import '../vo/order.dart' as od;
 import 'firebase_options.dart';
 import 'model/order_model.dart';
 
@@ -52,15 +42,16 @@ void main() async {
   await NaverMapSdk.instance.initialize(
     clientId: 'qzi0n4lbj9',
   );
+  KakaoSdk.init(
+    nativeAppKey: '3cbc4103340e6be3c6247d5228d55534',
+    javaScriptAppKey: 'e09856d7367e723cf282ead8d304029a',
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
 
-  KakaoSdk.init(
-    nativeAppKey: '3cbc4103340e6be3c6247d5228d55534',
-    // javaScriptAppKey: 'e09856d7367e723cf282ead8d304029a',
-  );
+
 
   await initializeDateFormatting('ko_KR', null);
 

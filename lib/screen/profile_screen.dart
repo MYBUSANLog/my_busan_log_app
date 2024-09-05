@@ -1,3 +1,4 @@
+import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/my_review_list_screen.dart';
 import 'package:busan_trip/screen/receipt_screen.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:busan_trip/vo/order.dart' as od;
@@ -128,14 +130,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _logoutEmail() async {
     try {
+      // SharedPreferences 인스턴스 가져오기
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
-      await FirebaseAuth.instance.signOut(); // Firebase 로그아웃
 
-      print('이메일 로그아웃 성공');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => LoginOpeningScreen(),
-      ));
+      //로그인 정보 불러오기
+      String loginProvider = Provider.of<UserModel>(context,listen: false).loggedInUser.login_provider;
+
+      //sns 로그아웃 처리
+      if(loginProvider=='google'){
+        // Firebase 로그아웃
+        await FirebaseAuth.instance.signOut();
+        print('이메일 로그아웃 성공');
+
+      }else if(loginProvider=='kakao'){
+
+
+      }else if(loginProvider=='naver'){
+
+      }
+
+
+      // 로그인 상태와 로그인 기록 삭제
+      await prefs.setInt("login_u_idx", 0);
+
+
+      // 로그아웃 후 로그인 화면으로 이동
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginOpeningScreen()),
+      );
     } catch (error) {
       print('이메일 로그아웃 실패 $error');
     }
@@ -269,61 +291,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(height: 13), // 아래로 패딩 추가
                       // if (_loginProvider == 'kakao')
-                        ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                          title: Text(
-                            '카카오 로그아웃',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                        title: Text(
+                          '카카오 로그아웃',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
-                          onTap: _logoutKakao,
                         ),
+                        onTap: _logoutKakao,
+                      ),
                       // if (_loginProvider == 'google')
-                        ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                          title: Text(
-                            '구글 로그아웃',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                        title: Text(
+                          '구글 로그아웃',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
-                          // onTap: logout,
                         ),
+                        // onTap: logout,
+                      ),
                       // if (_loginProvider == 'naver')
-                        ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                          title: Text(
-                            '네이버 로그아웃',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                        title: Text(
+                          '네이버 로그아웃',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
-                          // onTap: logout,
                         ),
+                        // onTap: logout,
+                      ),
                       // if (_loginProvider == 'basic')
-                        ListTile(
-                          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                          leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                          title: Text(
-                            '이메일 로그아웃',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                        title: Text(
+                          '이메일 로그아웃',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
-                          onTap: _logoutEmail,
                         ),
+                        onTap: _logoutEmail,
+                      ),
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),

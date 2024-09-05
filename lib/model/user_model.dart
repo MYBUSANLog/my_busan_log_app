@@ -7,6 +7,13 @@ class UserModel extends ChangeNotifier {
   User loggedInUser = User();
   User joinUser = User();
 
+
+  //자동 로그인시 자기 자신 세팅
+  void setLoginUser(User user){
+    loggedInUser=user;
+    notifyListeners();
+  }
+
   void setEmail(String email) {
     loggedInUser.u_email=email;
     notifyListeners();

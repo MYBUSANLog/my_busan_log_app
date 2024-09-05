@@ -16,7 +16,7 @@ class TestScreen extends StatefulWidget {
 class _TestScreenState extends State<TestScreen> {
 
   final storage = FirebaseStorage.instance;
-  List<Uint8List>? previewImgBytesList = null;  // null로 초기화
+  List<Uint8List> previewImgBytesList = [];  // null로 초기화
   List<String> uploadedImageUrls = [];  // 업로드된 이미지의 URL을 저장할 리스트
 
   @override
@@ -48,14 +48,19 @@ class _TestScreenState extends State<TestScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              previewImgBytesList == null
+              previewImgBytesList.length==0
                   ? Text('이미지 선택')
                   : SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: previewImgBytesList!.map((bytes) => Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Image.memory(bytes, width: 150),
+                        children: previewImgBytesList.map((bytes) => ImgBox(
+                          bytes: bytes,
+                          onRemove: (){
+
+                            setState(() {
+                              previewImgBytesList.remove(bytes);
+                            });
+                          },
                         )).toList(),
                       ),
                     ),
@@ -63,7 +68,7 @@ class _TestScreenState extends State<TestScreen> {
                   onPressed: () async {
                     final picker = ImagePicker();
                     List<XFile> imgFiles = await picker.pickMultiImage();
-                    if(imgFiles != null) {
+                    if(imgFiles.isNotEmpty) {
                       List<Uint8List>? imageBytesList = [];
                       for(var imgFile in imgFiles) {
                         try {
@@ -79,7 +84,7 @@ class _TestScreenState extends State<TestScreen> {
                         }
                       }
                       setState(() {
-                        previewImgBytesList = imageBytesList;
+                        previewImgBytesList.addAll(imageBytesList);
                       });
                     }
 
@@ -90,12 +95,12 @@ class _TestScreenState extends State<TestScreen> {
                   onPressed: () async{
                     // Firebase Storage 업로드
 
-                    if(previewImgBytesList == null) {
+                    if(previewImgBytesList.length==0) {
                       print('이미지를 선택해주세요');
                       return;
                     }
 
-                    for (var bytes in previewImgBytesList!) {
+                    for (var bytes in previewImgBytesList) {
                       final storageRef = FirebaseStorage.instance.ref();
                       final ref = storageRef.child('/my_busan_log/review/img_${DateTime.now()}');
 
@@ -112,6 +117,55 @@ class _TestScreenState extends State<TestScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+
+class ImgBox extends StatelessWidget {
+
+  Uint8List bytes;
+  Function onRemove;
+
+  ImgBox({
+    required this.bytes,
+    required this.onRemove
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 100,
+      child: Stack(
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(
+                bytes,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              )
+          ),
+          Positioned(
+              top:0,
+              right: 5,
+              child: GestureDetector(
+                onTap: (){
+                  onRemove();
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black54,
+                  ),
+                  child: Icon(Icons.close,color: Colors.white, size: 16,),
+                )
+              )
+          )
+        ],
       ),
     );
   }

@@ -5,6 +5,26 @@ import 'package:http/http.dart' as http;
 class UserHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/user';
 
+  static Future<User?> findUser(int u_idx) async {
+    final url = Uri.parse('$apiUrl/findbyidx?u_idx=$u_idx'); // u_idx를 URL에 추가
+    print('$apiUrl/findbyidx?u_idx=$u_idx');
+
+    final response = await http.get(url); // GET 요청 보내기
+
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      // 응답이 성공일 경우 JSON을 User 객체로 변환
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      return User.fromJson(json);
+    } else {
+      // 에러 처리
+      print('Failed to load user: ${response.statusCode}');
+      return null;
+    }
+
+  }
+
 
   // 회원가입
   static Future<User> registerUser(User user) async {

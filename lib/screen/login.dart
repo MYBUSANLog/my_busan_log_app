@@ -38,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+
   Future<void> _login(BuildContext context) async {
     setState(() {
       _isLoading = true;
@@ -53,8 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if(result) {
+      int u_idx = Provider.of<UserModel>(context,listen: false).loggedInUser!.u_idx;
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
+      await prefs.setInt('login_u_idx', u_idx);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('로그인에 성공했습니다!'),
@@ -149,19 +151,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: _isLoading
                           ? SizedBox(
-                            width: 17,
-                            height: 17,
-                            child: CircularProgressIndicator(
-                                color: Colors.white, strokeWidth: 2,
-                              ),
-                          )
+                        width: 17,
+                        height: 17,
+                        child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2,
+                        ),
+                      )
                           : Text(
-                            '로그인',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
+                        '로그인',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20),
