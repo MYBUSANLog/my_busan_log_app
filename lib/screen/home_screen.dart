@@ -2,12 +2,8 @@ import 'package:busan_trip/screen/activity_list_screen.dart';
 import 'package:busan_trip/screen/exhibition_list_screen.dart';
 import 'package:busan_trip/screen/hotel_list_screen.dart';
 import 'package:busan_trip/screen/item_detail_screen.dart';
-import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
-import 'package:busan_trip/screen/restaurant_map.dart';
-import 'package:busan_trip/screen/search_result_list.dart';
 import 'package:busan_trip/screen/search_screen.dart';
-import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:busan_trip/screen/themepark_list_screen.dart';
 import 'package:busan_trip/screen/tour_list_screen.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -18,12 +14,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../model/item_model.dart';
-import '../model/store_model.dart';
 import '../vo/item.dart';
-import '../vo/option.dart';
 
 class HomeScreen extends StatefulWidget {
 
