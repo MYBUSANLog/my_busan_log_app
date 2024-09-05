@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../vo/order.dart';
@@ -112,9 +113,12 @@ class TicketWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 16),
                     Container(
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(4), bottomRight: Radius.circular(4)),
+                        color: Colors.white,
+                      ),
                       child: Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 14),
@@ -156,7 +160,7 @@ class TicketWidget extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    '0000-0000-0000-0000',
+                                                    '${order.order_num}',
                                                     style: TextStyle(
                                                       fontFamily: 'NotoSansKR',
                                                       fontWeight: FontWeight.w400,
@@ -201,7 +205,7 @@ class TicketWidget extends StatelessWidget {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        '2024-09-25 00:00',
+                                                        '${_formatCreatedDate(order.created_date)}',
                                                         style: TextStyle(
                                                           fontFamily: 'NotoSansKR',
                                                           fontWeight: FontWeight.w400,
@@ -240,7 +244,7 @@ class TicketWidget extends StatelessWidget {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        '신용카드',
+                                                        '${order.payment_method}',
                                                         style: TextStyle(
                                                           fontFamily: 'NotoSansKR',
                                                           fontWeight: FontWeight.w400,
@@ -281,7 +285,7 @@ class TicketWidget extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    '25,000원',
+                                                    '${NumberFormat('#,###').format(order.total_price)}원',
                                                     style: TextStyle(
                                                       fontFamily: 'NotoSansKR',
                                                       fontWeight: FontWeight.w400,
@@ -337,7 +341,7 @@ class TicketWidget extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    '2024-09-30',
+                                                    '${order.use_day}',
                                                     style: TextStyle(
                                                       fontFamily: 'NotoSansKR',
                                                       fontWeight: FontWeight.w400,
@@ -377,7 +381,7 @@ class TicketWidget extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    '[QR바로입장] 부산 롯데월드 어드벤처',
+                                                    '${order.i_name}',
                                                     style: TextStyle(
                                                       fontFamily: 'NotoSansKR',
                                                       fontWeight: FontWeight.w400,
@@ -551,7 +555,7 @@ class TicketWidget extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    '홍길동',
+                                                    '${order.o_name}',
                                                     style: TextStyle(
                                                       fontFamily: 'NotoSansKR',
                                                       fontWeight: FontWeight.w400,
@@ -591,7 +595,7 @@ class TicketWidget extends StatelessWidget {
                                               children: [
                                                 Expanded(
                                                   child: Text(
-                                                    'kimnahyun1124@gmail.com',
+                                                    '${order.o_email}',
                                                     style: TextStyle(
                                                       fontFamily: 'NotoSansKR',
                                                       fontWeight: FontWeight.w400,
@@ -636,7 +640,7 @@ class TicketWidget extends StatelessWidget {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        '000-0000-0000',
+                                                        '${order.o_p_number}',
                                                         style: TextStyle(
                                                           fontFamily: 'NotoSansKR',
                                                           fontWeight: FontWeight.w400,
@@ -676,7 +680,7 @@ class TicketWidget extends StatelessWidget {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        '2000-00-00',
+                                                        '${order.o_birth}',
                                                         style: TextStyle(
                                                           fontFamily: 'NotoSansKR',
                                                           fontWeight: FontWeight.w400,
@@ -695,6 +699,7 @@ class TicketWidget extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+                                    SizedBox(height: 16.4),
                                   ],
                                 ),
                               ],

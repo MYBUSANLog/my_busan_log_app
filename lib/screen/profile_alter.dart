@@ -1,56 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:busan_trip/model/profile_alter_model.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../app_util/img_util.dart';
+import '../model/user_model.dart';
+import '../vo/user.dart';
 
 class ProfileAlterScreen extends StatefulWidget {
+  User user;
+
+  ProfileAlterScreen({Key? key, required this.user}) : super(key: key);
+
   @override
   _ProfileAlterScreenState createState() => _ProfileAlterScreenState();
 }
 
 class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
-  final ProfileAlterModel profile = ProfileAlterModel(
-   /* profileImage: 'https://example.com/your_profile_image.jpg',*/
-    profileImage: 'assets/images/default_profile.jpg',  // 여기에서 로컬 이미지 경로를 사용합니다.
-    age: 25,
-    name: 'John Doe',
-    nickname: 'Johnny',
-    phoneNumber: '010-1234-5678',
-    address: '123 Main St, Seoul, Korea',
-    email: 'john.doe@example.com',
-    birthdate: '1995-05-15',
-  );
 
+  late TextEditingController emailController;
   late TextEditingController nameController;
   late TextEditingController nicknameController;
-  late TextEditingController ageController;
+  late TextEditingController birthdateController;
   late TextEditingController phoneNumberController;
   late TextEditingController addressController;
-  late TextEditingController emailController;
-  late TextEditingController birthdateController;
+  Uint8List? previewImgBytes;
+
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: profile.name);
-    nicknameController = TextEditingController(text: profile.nickname);
-    ageController = TextEditingController(text: profile.age.toString());
-    phoneNumberController = TextEditingController(text: profile.phoneNumber);
-    addressController = TextEditingController(text: profile.address);
-    emailController = TextEditingController(text: profile.email);
-    birthdateController = TextEditingController(text: profile.birthdate);
-  }
-
-  Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        profile.setProfileImage(pickedFile.path);
-      });
-    }
+    emailController = TextEditingController(text: widget.user.u_email);
+    nameController = TextEditingController(text: widget.user.u_name);
+    nicknameController = TextEditingController(text: widget.user.u_nick);
+    birthdateController = TextEditingController(text: widget.user.u_birth);
+    phoneNumberController = TextEditingController(text: widget.user.u_p_number);
+    addressController = TextEditingController(text: widget.user.u_address);
   }
 
   @override
   Widget build(BuildContext context) {
+    final userModel = Provider.of<UserModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('프로필 변경', style: TextStyle(
@@ -72,13 +65,44 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage(profile.profileImage),  // 수정된 부분
+                    backgroundImage: userModel.loggedInUser.u_img_url != null
+                        ? NetworkImage(userModel.loggedInUser.u_img_url!)
+                        : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
                     child: GestureDetector(
-                      onTap: _pickImage,
+                      onTap: () async {
+                        setState(() {
+                          isLoading = true; // 로딩 시작
+                        });
+
+                        final picker = ImagePicker();
+                        XFile? imgFile = await picker.pickImage(source: ImageSource.gallery);
+                        if(imgFile != null) {
+                          try {
+                            Uint8List bytes =
+                            await ImgUtil.convertResizedUint8List(
+                                xFile: imgFile);
+                            print("선택한 이미지의 데이터 크기: ${bytes.lengthInBytes} bytes");
+                            setState(() {
+                              previewImgBytes = bytes;
+                              isLoading = false; // 로딩 끝
+                            });
+                          } catch (e) {
+                            print("이미지 데이터 크기 오류 발생! 선택한 이미지의 데이터 크기: ${await imgFile.length()} bytes");
+                            print("오류: $e");
+                            setState(() {
+                              isLoading = false; // 오류 발생 시 로딩 끝
+                            });
+                          }
+                        } else {
+                          setState(() {
+                            isLoading = false; // 사진 선택 안 했을 때 로딩 끝
+                          });
+                        }
+                      },
                       child: CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.white,
@@ -90,13 +114,12 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
               ),
             ),
             SizedBox(height: 20),
+            buildProfileItem('이메일', emailController, TextInputType.emailAddress),
             buildProfileItem('이름', nameController),
             buildProfileItem('닉네임', nicknameController),
-            buildProfileItem('나이', ageController, TextInputType.number),
+            buildProfileItem('생년월일', birthdateController),
             buildProfileItem('전화번호', phoneNumberController, TextInputType.phone),
             buildProfileItem('주소', addressController),
-            buildProfileItem('이메일', emailController, TextInputType.emailAddress),
-            buildProfileItem('생년월일', birthdateController),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {

@@ -1,6 +1,7 @@
 import 'package:busan_trip/model/user_model.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/my_review_list_screen.dart';
+import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/receipt_screen.dart';
 import 'package:busan_trip/screen/review_writer_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,8 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:busan_trip/vo/order.dart' as od;
 
 class ProfileScreen extends StatefulWidget {
-
-  ProfileScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -229,6 +228,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userModel = Provider.of<UserModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
@@ -262,7 +263,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(height: 20),
                       CircleAvatar(
                         radius: 50,
-                        backgroundImage: AssetImage('assets/images/default_profile.jpg'), // AssetImage 사용
+                        backgroundImage: userModel.loggedInUser.u_img_url != null
+                            ? NetworkImage(userModel.loggedInUser.u_img_url!)
+                            : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: IconButton(
@@ -271,7 +274,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.black,
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/profile_alter'); // 경로가 설정된 라우트로 이동
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder:  (context) => ProfileAlterScreen(user: user)),
+                              );
                             },
                           ),
                         ),

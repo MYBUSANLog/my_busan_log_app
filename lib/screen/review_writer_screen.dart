@@ -8,10 +8,13 @@ import 'package:provider/provider.dart';
 
 import '../app_util/img_util.dart';
 import '../model/review_model.dart';
+import '../vo/order.dart';
 import '../vo/review.dart';
 
 class ReviewWriterScreen extends StatefulWidget {
-  const ReviewWriterScreen({super.key});
+  final Order order;
+
+  const ReviewWriterScreen({Key? key, required this.order}) : super(key: key);
 
   @override
   State<ReviewWriterScreen> createState() => _ReviewWriterScreenState();
@@ -21,13 +24,11 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
   TextEditingController _contentController = TextEditingController();
   bool _isContentEntered = false;
   int _selectedRating = 0;
-  final ImagePicker _picker = ImagePicker();
   final storage = FirebaseStorage.instance;
   List<Uint8List> previewImgBytesList = [];
   List<String> uploadedImageUrls = [];
 
   bool isLoading = false; // 로딩 상태 관리
-  int uploadProgress = 0; // 업로드 진행 상태 관리
 
   // 별점 선택 함수
   void onRatingSelected(int rating) {
@@ -47,10 +48,31 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
     return _selectedRating > 0 && _isContentEntered && previewImgBytesList.isNotEmpty;
   }
 
-  void _validateAndNavigate() {
+  void _validateAndNavigate() async {
     if (_isAllFieldsEntered()) {
+      setState(() {
+        isLoading = true; // 로딩 시작
+      });
+
+      for (var bytes in previewImgBytesList) {
+        final storageRef = FirebaseStorage.instance.ref();
+        final ref = storageRef.child('/my_busan_log/review/img_${DateTime.now()}');
+
+        UploadTask task = ref.putData(bytes);
+        TaskSnapshot taskSnapshot = await task;
+
+        String downloadURL = await taskSnapshot.ref.getDownloadURL();
+        uploadedImageUrls.add(downloadURL);
+      }
+      print('업로드된 이미지 URLs: $uploadedImageUrls');
+
+      setState(() {
+        isLoading = false; // 로딩 끝
+      });
+
       Review review = Review(
         r_score: _selectedRating.toDouble(),
+        r_img_url: uploadedImageUrls.join(','),
         r_content: _contentController.text,
       );
 
@@ -112,7 +134,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  'https://d6bztw1vgnv55.cloudfront.net/1504819/offer_photos/132159/990717_original_1724998310.jpg?width=480&height=360',
+                                  '${widget.order.i_image}',
                                   width: 80,
                                   height: 80,
                                   fit: BoxFit.cover,
@@ -124,7 +146,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '롯데월드 어드벤처 부산',
+                                      '${widget.order.s_name}',
                                       style: TextStyle(
                                         fontFamily: 'NotoSansKR',
                                         fontWeight: FontWeight.w500,
@@ -135,7 +157,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                                     ),
                                     SizedBox(height: 10),
                                     Text(
-                                      '[QR바로입장] 부산 롯데월드 어드벤처',
+                                      '${widget.order.i_name}',
                                       style: TextStyle(
                                         fontFamily: 'NotoSansKR',
                                         fontWeight: FontWeight.w500,
@@ -193,6 +215,10 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () async {
+                                  setState(() {
+                                    isLoading = true; // 로딩 시작
+                                  });
+
                                   final picker = ImagePicker();
                                   List<XFile> imgFiles = await picker.pickMultiImage();
                                   if(imgFiles.isNotEmpty) {
@@ -212,6 +238,11 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                                     }
                                     setState(() {
                                       previewImgBytesList.addAll(imageBytesList);
+                                      isLoading = false; // 로딩 끝
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isLoading = false; // 사진 선택 안 했을 때 로딩 끝
                                     });
                                   }
                                 },
@@ -400,15 +431,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 20),
-                      Text(
-                        '사진 처리 중... ($uploadProgress/${previewImgBytesList.length})',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
+                      CircularProgressIndicator(color: Color(0xff0e4194)),
                     ],
                   ),
                 ],

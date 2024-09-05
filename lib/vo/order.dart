@@ -3,6 +3,7 @@ class Order {
   int s_idx;
   int u_idx;
   int i_idx;
+  String s_name;
   String i_name;
   String i_image;
   String order_num;
@@ -21,6 +22,7 @@ class Order {
     this.s_idx=0,
     this.u_idx=0,
     this.i_idx=0,
+    this.s_name='',
     this.i_name='',
     this.i_image='',
     this.order_num='',
@@ -41,6 +43,7 @@ class Order {
       s_idx: json['s_idx']??0,
       u_idx: json['u_idx']??0,
       i_idx: json['i_idx']??0,
+      s_name: json['s_name']??'',
       i_name: json['i_name']??'',
       order_num: json['order_num']??'',
       o_name: json['o_name']??'',
