@@ -5,9 +5,9 @@ import '../vo/order.dart';
 class OrderModel extends ChangeNotifier {
   List<Order> orders = [];
 
-  Future<void> setItems() async {
+  Future<void> setItems(int u_idx) async {
     try {
-      orders = await OrderHttp.fetchAll();
+      orders = await OrderHttp.fetchAll(u_idx);
       print("Orders loaded: $orders"); // Debugging
     } catch (e) {
       print('Error loading orders: $e');

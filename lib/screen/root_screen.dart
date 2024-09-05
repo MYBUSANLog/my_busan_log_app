@@ -9,9 +9,8 @@ import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_ord
 import '../vo/order.dart' as od;
 
 class RootScreen extends StatefulWidget {
-  final od.Order order;
 
-  const RootScreen({Key? key, required this.order}) : super(key: key);
+  const RootScreen({Key? key}) : super(key: key);
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -31,7 +30,7 @@ class _RootScreenState extends State<RootScreen> {
       AiRecommendScreen(),
       HomeScreen(),
       NotificationScreen(),
-      ProfileScreen(order: widget.order), // widget.order를 사용
+      ProfileScreen(), // widget.order를 사용
     ];
   }
 

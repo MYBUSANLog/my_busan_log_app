@@ -16,9 +16,7 @@ import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart' as kakao_ord
 import '../vo/order.dart' as od;
 
 class LoginOpeningScreen extends StatefulWidget {
-
-  final od.Order order;
-  const LoginOpeningScreen({Key? key, required this.order}) : super(key: key);
+  const LoginOpeningScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginOpeningScreen> createState() => _LoginOpeningScreenState();
@@ -51,17 +49,17 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       });
     });
 
-    // _checkLoginStatus(); // 앱 시작 시 로그인 상태 확인
+    _checkLoginStatus(); // 앱 시작 시 로그인 상태 확인
   }
 
-  // void _checkLoginStatus() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  //
-  //   if (isLoggedIn) {
-  //     navigateToMainPage(); // 로그인되어 있으면 메인 페이지로 이동
-  //   }
-  // }
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      Navigator.pushReplacementNamed(context, '/root_screen');
+    }
+  }
 
   @override
   void dispose() {
@@ -71,129 +69,11 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
   void navigateToMainPage() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => RootScreen(order: widget.order),
+      builder: (context) => RootScreen(),
     ));
   }
 
-
-
-  // void signInWithKakao() async {
-  //   setState(() {
-  //     _isLoadingKakao = true; // 로딩 시작
-  //   });
-  //
-  //   try {
-  //     kko.User? kakaoUser = await kko.UserApi.instance.me();
-  //     String? email = kakaoUser.kakaoAccount?.email ?? '';
-  //     String? birthday = kakaoUser.kakaoAccount?.birthday;
-  //     String formattedBirthday = birthday != null && birthday.length == 4
-  //         ? "${birthday.substring(0, 2)}-${birthday.substring(2, 4)}"
-  //         : '';
-  //
-  //     String? phoneNumber = kakaoUser.kakaoAccount?.phoneNumber;
-  //     String formattedNumber = phoneNumber != null && phoneNumber.length >= 4
-  //         ? '0' + phoneNumber.substring(0, 4)
-  //         : '';
-  //
-  //     // 유저 정보를 바탕으로 User 객체를 생성
-  //     u.User user = u.User(
-  //       u_email: email,
-  //       u_name: kakaoUser.kakaoAccount?.name ?? '',
-  //       u_img_url: kakaoUser.kakaoAccount?.profile?.profileImageUrl ?? '',
-  //       u_nick: kakaoUser.kakaoAccount?.profile?.nickname ?? '',
-  //       u_birth: "${kakaoUser.kakaoAccount?.birthyear ?? ''}-${formattedBirthday}",
-  //       u_p_number: formattedNumber,
-  //       u_address: '',
-  //       trip_preference: 3,
-  //       business_license: '',
-  //       login_provider: 'kakao',
-  //       // 다른 필드들도 필요한 대로 초기화
-  //     );
-  //
-  //     // UserModel 프로바이더를 사용하여 데이터베이스에 유저가 존재하는지 확인
-  //     UserModel userModel = Provider.of<UserModel>(context, listen: false);
-  //     bool userExists = await userModel.checkUserExists(email: email);
-  //
-  //     if (userExists) {
-  //       // 유저가 이미 존재하면 로그인 함수 호출
-  //       await userModel.kakaoLoginUser(user: user);
-  //     } else {
-  //       // 유저가 존재하지 않으면 등록 함수 호출
-  //       await userModel.kakaoRegisterUser();
-  //     }
-  //
-  //     if (await isKakaoTalkInstalled()) {
-  //       try {
-  //         await kko.UserApi.instance.loginWithKakaoTalk().then((value) async {
-  //           final prefs = await SharedPreferences.getInstance();
-  //           await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
-  //           await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
-  //
-  //           print('카카오톡으로 로그인 성공');
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(
-  //               content: Text('카카오톡 로그인에 성공했습니다.'),
-  //             ),
-  //           );
-  //           navigateToMainPage(); // 로그인 성공 시 메인 페이지로 이동
-  //         });
-  //       } catch (error) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(
-  //             content: Text('카카오톡 로그인에 실패했습니다.'),
-  //           ),
-  //         );
-  //         print('카카오톡으로 로그인 실패 $error');
-  //         if (error is PlatformException && error.code == 'CANCELED') {
-  //           return;
-  //         }
-  //         try {
-  //           await kko.UserApi.instance.loginWithKakaoAccount().then((value) {
-  //             print('카카오톡으로 로그인 성공');
-  //             ScaffoldMessenger.of(context).showSnackBar(
-  //               SnackBar(
-  //                 content: Text('카카오톡 로그인에 성공했습니다.'),
-  //               ),
-  //             );
-  //             navigateToMainPage(); // 로그인 성공 시 메인 페이지로 이동
-  //           });
-  //         } catch (error) {
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(
-  //               content: Text('카카오계정으로 로그인에 실패했습니다.'),
-  //             ),
-  //           );
-  //           print('카카오계정으로 로그인 실패 $error');
-  //         }
-  //       }
-  //     } else {
-  //       try {
-  //         await kko.UserApi.instance.loginWithKakaoAccount().then((value) {
-  //           ScaffoldMessenger.of(context).showSnackBar(
-  //             SnackBar(
-  //               content: Text('카카오계정 로그인에 성공했습니다.'),
-  //             ),
-  //           );
-  //           print('카카오계정으로 로그인 성공');
-  //           navigateToMainPage(); // 로그인 성공 시 메인 페이지로 이동
-  //         });
-  //       } catch (error) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(
-  //             content: Text('카카오계정 로그인에 실패했습니다.'),
-  //           ),
-  //         );
-  //         print('카카오계정으로 로그인 실패 $error');
-  //       }
-  //     }
-  //   } finally {
-  //     setState(() {
-  //       _isLoadingKakao = false; // 로딩 종료
-  //     });
-  //   }
-  // }
-
-  Future<void> signInWithKakao() async {
+  void signInWithKakao() async {
     setState(() {
       _isLoadingKakao = true; // 로딩 시작
     });
@@ -271,7 +151,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       // 로그인 성공 시, 팝업 닫기 및 메인 페이지로 이동
       // Navigator.of(context).pop();  // 팝업 닫기
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => RootScreen(order: widget.order)),
+        MaterialPageRoute(builder: (context) => RootScreen()),
       );
 
     } catch (error) {

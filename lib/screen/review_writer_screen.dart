@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
-import '../vo/item.dart';
-import 'item_detail_screen.dart';
+import '../app_util/img_util.dart';
+import '../model/review_model.dart';
+import '../vo/review.dart';
 
 class ReviewWriterScreen extends StatefulWidget {
 
@@ -13,9 +18,59 @@ class ReviewWriterScreen extends StatefulWidget {
 }
 
 class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
+  TextEditingController _contentController = TextEditingController();
+  bool _isContentEntered = false;
+  int _selectedRating = 0;
+  final ImagePicker _picker = ImagePicker();
+  File? _reviewImage;
+  List<Uint8List> previewImgBytesList = [];
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        // List<File> _reviewImages = [];
+        _reviewImage = File(image.path);
+      });
+    }
+  }
+
+  void _removeImage() {
+    setState(() {
+      _reviewImage = null;
+    });
+  }
+
+  void _onFieldChanged() {
+    setState(() {
+      _isContentEntered = _contentController.text.isNotEmpty;
+    });
+  }
+
+  bool _isAllFieldsEntered() {
+    return _selectedRating > 0 && _isContentEntered;
+  }
+
+  void _validateAndNavigate() {
+    if (_isAllFieldsEntered()) {
+      Review review = Review(
+        r_score: _selectedRating.toDouble(),
+        r_content: _contentController.text,
+      );
+
+      Provider.of<ReviewModel>(context, listen: false).writeReview = review;
+      Provider.of<ReviewModel>(context, listen: false).saveReview();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('리뷰 작성이 완료되었습니다'),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -31,8 +86,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
             bottom: BorderSide(
               color: Colors.grey,
               width: 1,
-            )
-        ),
+            )),
         elevation: 0,
         title: Text(
           '리뷰쓰기',
@@ -49,7 +103,20 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ReviewWriterCard(),
+              ReviewWriterCard(
+                selectedRating: _selectedRating,
+                onRatingSelected: (rating) {
+                  setState(() {
+                    _selectedRating = rating;
+                  });
+                },
+                reviewImage: _reviewImage,
+                pickImage: _pickImage,
+                removeImage: _removeImage,
+                contentController: _contentController,
+                onFieldChanged: _onFieldChanged,
+                previewImgBytesList: previewImgBytesList,
+              ),
             ],
           ),
         ),
@@ -58,14 +125,11 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         color: Colors.white,
         child: ElevatedButton(
-          onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder:  (context) => BookingCalendarScreen(item: widget.item)),
-            // );
-          },
+          onPressed: _isAllFieldsEntered() ? _validateAndNavigate : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xff0e4194),
+            backgroundColor: _isAllFieldsEntered()
+                ? const Color(0xff0e4194)
+                : Colors.grey,
             padding: EdgeInsets.symmetric(vertical: 15),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -83,8 +147,26 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
 }
 
 class ReviewWriterCard extends StatelessWidget {
+  final int selectedRating;
+  final Function(int) onRatingSelected;
+  final File? reviewImage;
+  final VoidCallback pickImage;
+  final VoidCallback removeImage;
+  final TextEditingController contentController;
+  final VoidCallback onFieldChanged;
+  final List<Uint8List> previewImgBytesList;
 
-  const ReviewWriterCard({super.key});
+  const ReviewWriterCard({
+    super.key,
+    required this.selectedRating,
+    required this.onRatingSelected,
+    required this.reviewImage,
+    required this.pickImage,
+    required this.removeImage,
+    required this.contentController,
+    required this.onFieldChanged,
+    required this.previewImgBytesList,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -155,34 +237,21 @@ class ReviewWriterCard extends StatelessWidget {
                 SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      size: 50,
-                      color: Colors.amber,
-                    ),
-                    Icon(
-                      Icons.star_rounded,
-                      size: 50,
-                      color: Colors.amber,
-                    ),
-                    Icon(
-                      Icons.star_rounded,
-                      size: 50,
-                      color: Colors.amber,
-                    ),
-                    Icon(
-                      Icons.star_rounded,
-                      size: 50,
-                      color: Colors.amber,
-                    ),
-                    Icon(
-                      Icons.star_rounded,
-                      size: 50,
-                      color: Colors.grey[300],
-                    ),
-                  ],
-                )
+                  children: List.generate(5, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        onRatingSelected(index + 1);
+                      },
+                      child: Icon(
+                        Icons.star_rounded,
+                        size: 50,
+                        color: index < selectedRating
+                            ? Colors.amber
+                            : Colors.grey[300],
+                      ),
+                    );
+                  }),
+                ),
               ],
             ),
           ),
@@ -191,104 +260,77 @@ class ReviewWriterCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 18, horizontal: 14),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Color(0xff0e4194))
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.camera_alt,
-                          size: 24,
-                          color: Color(0xff0e4194),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          '사진 첨부하기',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            height: 1.0,
+                GestureDetector(
+                  onTap: () async {
+                    final picker = ImagePicker();
+                    List<XFile> imgFiles = await picker.pickMultiImage();
+                    if(imgFiles.isNotEmpty) {
+                      List<Uint8List>? imageBytesList = [];
+                      for(var imgFile in imgFiles) {
+                        try {
+                          Uint8List bytes =
+                              await ImgUtil.convertResizedUint8List(
+                              xFile: imgFile);
+                          print("선택한 이미지의 데이터 크기: ${bytes.lengthInBytes} bytes");
+                          imageBytesList.add(bytes);
+                        } catch (e) {
+                          print(
+                              "이미지 데이터 크기 오류 발생! 선택한 이미지의 데이터 크기: ${await imgFile.length()} bytes");
+                          print("오류: $e");
+                        }
+                      }
+                      previewImgBytesList.addAll(imageBytesList);
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Color(0xff0e4194))
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            size: 24,
                             color: Color(0xff0e4194),
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 10),
+                          Text(
+                            '사진 첨부하기',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              height: 1.0,
+                              color: Color(0xff0e4194),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
-                Row(
-                  children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2022/09/03/eSxb/2pyua0mpU5.jpg?width=760&height=760&operation=crop',
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                            top: 5,
-                            right: 5,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[800],
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.cancel_outlined,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            )
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 10),
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2022/11/07/aJmJ/MSzT3eUkGe.png?width=760&height=760&operation=crop',
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                            top: 5,
-                            right: 5,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[800],
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.cancel_outlined,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                            )
-                        ),
-                      ],
-                    ),
-                  ],
+                previewImgBytesList.length==0
+                    ? Text('이미지 선택')
+                    : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: previewImgBytesList.map((bytes) => ImgBox(
+                      bytes: bytes,
+                      onRemove: () => previewImgBytesList.remove(bytes),
+                    )).toList(),
+                  ),
                 ),
                 SizedBox(height: 20),
                 Container(
                   height: 200.0,
                   child: TextField(
-                    // controller: controller,
-                    onChanged: (text) {},
+                    controller: contentController,
+                    onChanged: (value) => onFieldChanged(),
                     decoration: InputDecoration(
                       hintText: '상품에 대한 자세한 리뷰를 남겨주세요.',
                       hintStyle: TextStyle(color: Colors.grey),
@@ -328,26 +370,26 @@ class ReviewWriterCard extends StatelessWidget {
                     Text(
                       '·  ',
                       style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 15,
-                        height: 1.0,
-                        color: Colors.grey[800]
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15,
+                          height: 1.0,
+                          color: Colors.grey[800]
                       ),
                     ),
                     Expanded(
                       child: Text(
-                        '작성한 리뷰는 모든 사용자들에게 공개되는 게시물입니다. 작성자의 개인정보에 대한 내용이 포함되지 않도록 주의해주세요.',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                          height: 1.2,
-                          color: Colors.grey[600]
-                        ),
-                        softWrap: true,
-                        maxLines: 2,
-                        overflow: TextOverflow.visible
+                          '작성한 리뷰는 모든 사용자들에게 공개되는 게시물입니다. 작성자의 개인정보에 대한 내용이 포함되지 않도록 주의해주세요.',
+                          style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              height: 1.2,
+                              color: Colors.grey[600]
+                          ),
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.visible
                       ),
                     ),
                   ],
@@ -359,32 +401,81 @@ class ReviewWriterCard extends StatelessWidget {
                     Text(
                       '·  ',
                       style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 15,
-                        height: 1.0,
-                        color: Colors.grey[800]
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15,
+                          height: 1.0,
+                          color: Colors.grey[800]
                       ),
                     ),
                     Expanded(
                       child: Text(
-                        '상품 및 상점을 향한 과도한 욕설 및 타인을 향한 비방글이 작성되면 작성된 게시물은 삭제될 예정이니, 이 점을 주의해주세요.',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                          height: 1.2,
-                          color: Colors.grey[600]
-                        ),
-                        softWrap: true,
-                        maxLines: 2,
-                        overflow: TextOverflow.visible
+                          '상품 및 상점을 향한 과도한 욕설 및 타인을 향한 비방글이 작성되면 작성된 게시물은 삭제될 예정이니, 이 점을 주의해주세요.',
+                          style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              height: 1.2,
+                              color: Colors.grey[600]
+                          ),
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.visible
                       ),
                     )
                   ],
-                )
+                ),
+                SizedBox(height: 3),
               ],
             ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ImgBox extends StatelessWidget {
+
+  Uint8List bytes;
+  Function onRemove;
+
+  ImgBox({
+    required this.bytes,
+    required this.onRemove
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 100,
+      child: Stack(
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.memory(
+                bytes,
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              )
+          ),
+          Positioned(
+              top:0,
+              right: 5,
+              child: GestureDetector(
+                  onTap: (){
+                    onRemove();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black54,
+                    ),
+                    child: Icon(Icons.close,color: Colors.white, size: 16,),
+                  )
+              )
           )
         ],
       ),
