@@ -10,7 +10,7 @@ class Review {
   String r_img_url;
   String r_content;
   String created_date;
-  List<File> images;
+  List<String> images;
 
   Review({
     this.r_idx=0,
@@ -36,7 +36,7 @@ class Review {
       r_img_url: json['r_img_url']??'',
       r_content: json['r_content']??'',
       created_date: json['created_date']??'',
-      images: json['images'] != null ? List<File>.from(json['images']) : [],
+      images: json['images'] != null ? List<String>.from(json['images']) : [],
     );
   }
 }

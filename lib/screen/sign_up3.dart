@@ -10,7 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../app_util/img_util.dart';
 import '../model/join_model.dart';
+import '../model/user_model.dart';
 import '../vo/user.dart';
 
 class SignUp3 extends StatefulWidget {
@@ -28,6 +30,7 @@ class _SignUp3State extends State<SignUp3> {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
   Map<String, int> radioMap={'호캉스':0, '엑티비티':1, '쇼핑':2, '상관없음':3};
+  Uint8List? previewImgBytes;
 
   bool _isNameEntered = false;
   bool _isNicknameEntered = false;
@@ -43,6 +46,8 @@ class _SignUp3State extends State<SignUp3> {
   final ImagePicker _picker = ImagePicker();
 
   String? _selectedTripPreference;
+
+  bool isLoading = false;
 
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -141,6 +146,7 @@ class _SignUp3State extends State<SignUp3> {
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+    final userModel = Provider.of<UserModel>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -160,46 +166,67 @@ class _SignUp3State extends State<SignUp3> {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32),
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 14),
           child: Column(
             children: [
               SizedBox(height: 20),
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: _profileImage != null
-                          ? FileImage(_profileImage!)
-                          : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
-                    ),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage('assets/images/default_profile.jpg'),
                   ),
                   Positioned(
-                    bottom: -5,
-                    right: -5,
+                    bottom: 0,
+                    right: 0,
                     child: GestureDetector(
-                      onTap: _pickImage,
+                      onTap: () async {
+                        setState(() {
+                          isLoading = true; // 로딩 시작
+                        });
+
+                        final picker = ImagePicker();
+                        XFile? imgFile = await picker.pickImage(source: ImageSource.gallery);
+                        if(imgFile != null) {
+                          try {
+                            Uint8List bytes =
+                            await ImgUtil.convertResizedUint8List(
+                                xFile: imgFile);
+                            print("선택한 이미지의 데이터 크기: ${bytes.lengthInBytes} bytes");
+                            setState(() {
+                              previewImgBytes = bytes;
+                              isLoading = false; // 로딩 끝
+                            });
+                          } catch (e) {
+                            print("이미지 데이터 크기 오류 발생! 선택한 이미지의 데이터 크기: ${await imgFile.length()} bytes");
+                            print("오류: $e");
+                            setState(() {
+                              isLoading = false; // 오류 발생 시 로딩 끝
+                            });
+                          }
+                        } else {
+                          setState(() {
+                            isLoading = false; // 사진 선택 안 했을 때 로딩 끝
+                          });
+                        }
+                      },
                       child: Container(
-                        width: 35,
-                        height: 35,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
+                              color: Colors.black.withOpacity(0.2), // Shadow color
+                              spreadRadius: 2, // Spread radius
+                              blurRadius: 5,   // Blur radius
+                              offset: Offset(0, 3), // Shadow position
                             ),
                           ],
                         ),
-                        child: Icon(
-                          Icons.edit,
-                          color: Color(0xff0e4194),
-                          size: 24,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.edit, color: Color(0xff0e4194), size: 25),
                         ),
                       ),
                     ),
@@ -299,13 +326,13 @@ class _SignUp3State extends State<SignUp3> {
                   focusedBorder: UnderlineInputBorder (
                     borderSide: BorderSide(
                       color: isEntered ? Colors.green : Colors.grey,
-                      width: 2.0,
+                      width: 1.0,
                     ),
                   ),  // 포커스 시 border 제거
                   enabledBorder: UnderlineInputBorder (
                     borderSide: BorderSide(
                       color: isEntered ? Colors.green : Colors.grey,
-                      width: 2.0,
+                      width: 1.0,
                     ),
                   ),  // 활성화 시 border 제거
                   suffixIcon: _isBirthdayEntered
@@ -406,13 +433,13 @@ class _SignUp3State extends State<SignUp3> {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: isEntered ? Colors.green : Colors.grey,
-                width: 2.0,
+                width: 1.0,
               ),
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: isEntered ? Colors.green : Colors.grey,
-                width: 2.0,
+                width: 1.0,
               ),
             ),
             suffixIcon: isEntered
@@ -443,13 +470,13 @@ class _SignUp3State extends State<SignUp3> {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: isEntered ? Colors.green : Colors.grey,
-                width: 2.0,
+                width: 1.0,
               ),
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: isEntered ? Colors.green : Colors.grey,
-                width: 2.0,
+                width: 1.0,
               ),
             ),
             suffixIcon: isEntered
@@ -478,13 +505,13 @@ class _SignUp3State extends State<SignUp3> {
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: isEntered ? Colors.green : Colors.grey,
-                  width: 2.0,
+                  width: 1.0,
                 ),
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: isEntered ? Colors.green : Colors.grey,
-                  width: 2.0,
+                  width: 1.0,
                 ),
               ),
               suffixIcon: isEntered

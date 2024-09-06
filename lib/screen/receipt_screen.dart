@@ -136,7 +136,7 @@ class ReceiptCard extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.network(
-                        'https://d6bztw1vgnv55.cloudfront.net/1504819/offer_photos/132159/990717_original_1724998310.jpg?width=480&height=360',
+                        '${order.i_image}',
                         width: 80,
                         height: 80,
                         fit: BoxFit.cover,
@@ -158,7 +158,7 @@ class ReceiptCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            '가나다라',
+                            '${order.i_name}',
                             style: TextStyle(
                               fontFamily: 'NotoSansKR',
                               fontWeight: FontWeight.w600,
@@ -199,7 +199,7 @@ class ReceiptCard extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder:  (context) => ReviewWriterScreen()),
+                      MaterialPageRoute(builder:  (context) => ReviewWriterScreen(order: order)),
                     );
                   },
                   child: Container(
