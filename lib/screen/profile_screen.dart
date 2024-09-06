@@ -8,12 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:busan_trip/vo/order.dart' as od;
 
 class ProfileScreen extends StatefulWidget {
 
@@ -23,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  Offset _fabOffset = Offset(330, 650); // 초기 위치 설정
+  Offset _fabOffset = Offset(340, 740); // 초기 위치 설정
   String _loginProvider = ''; // 현재 로그인 제공자
 
   @override
@@ -127,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
 
-  void _logoutEmail() async {
+  void _logout() async {
     try {
       // SharedPreferences 인스턴스 가져오기
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -137,14 +136,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       //sns 로그아웃 처리
       if(loginProvider=='google'){
-        // Firebase 로그아웃
-        await FirebaseAuth.instance.signOut();
-        print('이메일 로그아웃 성공');
+
+        try {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+
+          await GoogleSignIn().signOut();
+          print('구글 로그아웃 성공');
+        } catch (error) {
+          print('구글 로그아웃 실패 $error');
+        }
 
       }else if(loginProvider=='kakao'){
 
+        try {
+          // SharedPreferences에서 로그인 상태 해제
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+
+          // 카카오 로그아웃 처리
+          await kko.UserApi.instance.logout();
+          print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
+
+          // Firebase 로그아웃 처리
+          await FirebaseAuth.instance.signOut();
+          print('Firebase 로그아웃 성공');
+
+          // 로그아웃 후 로그인 화면으로 이동
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => LoginOpeningScreen(),
+            ),
+          );
+        } catch (error) {
+          print('로그아웃 실패 $error');
+          // 에러 처리: 필요시 추가적인 에러 핸들링 로직을 추가할 수 있습니다.
+        }
 
       }else if(loginProvider=='naver'){
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+
+        try {
+          await FlutterNaverLogin.logOut();
+          print('Naver logout successful');
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => LoginOpeningScreen(),
+          ));
+        } catch (error) {
+          print('Naver logout failed: $error');
+          // You might want to handle the error here, like showing a message to the user
+        }
 
       }
 
@@ -231,21 +274,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userModel = Provider.of<UserModel>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // 뒤로가기 버튼 제거
-        title: Text(
-          '프로필',
-          style: TextStyle(
-            fontFamily: 'NotoSansKR',
-            fontWeight: FontWeight.w500,
-            fontSize: 23,
-            color: Colors.black,
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0, // 스크롤 시 AppBar 색상 변경 방지
-      ),
       body: Stack(
         children: [
           SingleChildScrollView( // SingleChildScrollView 설정(나현)
@@ -257,30 +285,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   color: Colors.white,
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: userModel.loggedInUser.u_img_url != null
-                            ? NetworkImage(userModel.loggedInUser.u_img_url!)
-                            : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder:  (context) => ProfileAlterScreen(user: user)),
-                              );
-                            },
+                      SizedBox(height: 60),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          '프로필',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 30,
+                            color: Colors.black,
                           ),
                         ),
+                      ),
+                      SizedBox(height: 20),
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: userModel.loggedInUser.u_img_url != null
+                                ? NetworkImage(userModel.loggedInUser.u_img_url!)
+                                : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder:  (context) => ProfileAlterScreen()),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2), // Shadow color
+                                      spreadRadius: 2, // Spread radius
+                                      blurRadius: 5,   // Blur radius
+                                      offset: Offset(0, 3), // Shadow position
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Colors.white,
+                                  child: Icon(Icons.edit, color: Color(0xff0e4194), size: 25),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20),
                       Align(
@@ -296,63 +356,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       SizedBox(height: 13), // 아래로 패딩 추가
-                      // if (_loginProvider == 'kakao')
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                        title: Text(
-                          '카카오 로그아웃',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: _logoutKakao,
-                      ),
-                      // if (_loginProvider == 'google')
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                        title: Text(
-                          '구글 로그아웃',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        // onTap: logout,
-                      ),
-                      // if (_loginProvider == 'naver')
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                        title: Text(
-                          '네이버 로그아웃',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        // onTap: logout,
-                      ),
-                      // if (_loginProvider == 'basic')
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                        title: Text(
-                          '이메일 로그아웃',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: _logoutEmail,
-                      ),
-                      Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.payment, color: Color(0xff0e4194)),
@@ -485,6 +488,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () {
                           // 환경 설정 화면으로 이동
                         },
+                      ),
+                      Divider(color: Colors.grey, thickness: 1.0),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
+                        title: Text(
+                          '로그아웃',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: _logout,
                       ),
                       Divider(color: Colors.grey, thickness: 1.0),
                     ],

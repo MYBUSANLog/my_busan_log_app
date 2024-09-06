@@ -134,7 +134,7 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  '${widget.order.i_image}',
+                                  '',
                                   width: 80,
                                   height: 80,
                                   fit: BoxFit.cover,
