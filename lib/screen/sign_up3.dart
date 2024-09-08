@@ -166,7 +166,7 @@ class _SignUp3State extends State<SignUp3> {
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 14),
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           child: Column(
             children: [
               SizedBox(height: 20),

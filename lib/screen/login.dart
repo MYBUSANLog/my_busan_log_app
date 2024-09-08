@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _pwController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -100,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
                   SizedBox(height: 30),
@@ -117,12 +118,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20),
                   TextField(
                     controller: _pwController,
-                    obscureText: true,
+                    obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: '비밀번호',
                       labelStyle: TextStyle(color: Color(0xff0e4194)),
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.visibility_off, color: Color(0xff0e4194)),
+                      suffixIcon: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        child: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Color(0xff0e4194),
+                        ),
+                      ),
                     ),
                     cursorColor: Color(0xff0e4194),
                   ),

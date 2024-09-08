@@ -150,10 +150,10 @@ class ReceiptCard extends StatelessWidget {
                           Text(
                             '${_formatCreatedDate(order.created_date)} 결제',
                             style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                              color: Colors.grey[500]
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: Colors.grey[500]
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -214,10 +214,10 @@ class ReceiptCard extends StatelessWidget {
                       child: Text(
                         '리뷰쓰기',
                         style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16,
-                          color: Color(0xff0e4194)
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: Color(0xff0e4194)
                         ),
                       ),
                     ),
@@ -231,4 +231,3 @@ class ReceiptCard extends StatelessWidget {
     );
   }
 }
-

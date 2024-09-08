@@ -15,7 +15,6 @@ class UserHttp {
       'u_address': user.u_address.toString(),
       'trip_preference': user.trip_preference.toString(),
       'business_license': ''.toString(),
-      'u_pw': user.u_pw.toString(),
     });
     var response = await http.post(uri);
 

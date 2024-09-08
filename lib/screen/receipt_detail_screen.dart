@@ -23,7 +23,7 @@ class _ReceiptDetailScreenState extends State<ReceiptDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<OrderModel>(context, listen: false).fetchOrderDetails(widget.order.o_idx);
+    Provider.of<OrderModel>(context, listen: false).setOptions(widget.order.o_idx);
   }
 
   @override
@@ -126,488 +126,52 @@ class TicketWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 14),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '결제 정보',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17,
-                              height: 2.0,
-                            ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '결제 정보',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            height: 2.0,
                           ),
-                          Divider(color: Colors.grey[500], thickness: 1.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 5),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '주문번호',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${order.order_num}',
-                                              style: TextStyle(
-                                                fontFamily: 'NotoSansKR',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                height: 1.2,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3, // Adjust the number of lines as needed
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width / 3.0,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '결제 일시',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          width: 150, // Ensures the container takes the full width
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '${_formatCreatedDate(order.created_date)}',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width / 3.3,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '결제 수단',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '${order.payment_method}',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '총 결제 금액',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${NumberFormat('#,###').format(order.total_price)}원',
-                                              style: TextStyle(
-                                                fontFamily: 'NotoSansKR',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                height: 1.2,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3, // Adjust the number of lines as needed
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          Text(
-                            '구매 정보',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17,
-                              height: 2.0,
-                            ),
-                          ),
-                          Divider(color: Colors.grey[500], thickness: 1.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 5),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '이용 일자',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${order.use_day}',
-                                              style: TextStyle(
-                                                fontFamily: 'NotoSansKR',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                height: 1.2,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3, // Adjust the number of lines as needed
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '상품명',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${order.i_name}',
-                                              style: TextStyle(
-                                                fontFamily: 'NotoSansKR',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                height: 1.2,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3, // Adjust the number of lines as needed
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '선택 옵션',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Consumer<OrderModel>(
-                                      builder: (context, orderModel, child) {
-                                        return Column(
-                                          children: orderModel.orderDetails.map((orderOption) {
-                                            return SelectOptionList(orderOption: orderOption);
-                                          }).toList(),
-                                        );
-                                      },
-                                    ),
-                                    SizedBox(height: 5),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 40),
-                          Text(
-                            '구매자 정보',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17,
-                              height: 2.0,
-                            ),
-                          ),
-                          Divider(color: Colors.grey[500], thickness: 1.0,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 5),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 3.0,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '이름',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                      width: 150, // Ensures the container takes the full width
-                                      child: Row(
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              '${order.o_name}',
-                                              style: TextStyle(
-                                                fontFamily: 'NotoSansKR',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                height: 1.2,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3, // Adjust the number of lines as needed
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '이메일',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 17,
-                                        color: Colors.grey,
-                                        height: 1.2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${order.o_email}',
-                                              style: TextStyle(
-                                                fontFamily: 'NotoSansKR',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 17,
-                                                height: 1.2,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3, // Adjust the number of lines as needed
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Row(
+                        ),
+                        Divider(color: Colors.grey[500], thickness: 1.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5),
+                            Container(
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width / 3.0,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '전화번호',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          width: 150, // Ensures the container takes the full width
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '${order.o_p_number}',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                  Text(
+                                    '주문번호',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
                                     ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
+                                  SizedBox(height: 5),
                                   Container(
-                                    width: MediaQuery.of(context).size.width / 3.0,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          '생년월일',
-                                          style: TextStyle(
-                                            fontFamily: 'NotoSansKR',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 17,
-                                            color: Colors.grey,
-                                            height: 1.2,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 5),
-                                        Container(
-                                          width: 150, // Ensures the container takes the full width
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '${order.o_birth}',
-                                                  style: TextStyle(
-                                                    fontFamily: 'NotoSansKR',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 17,
-                                                    height: 1.2,
-                                                  ),
-                                                  overflow: TextOverflow.ellipsis,
-                                                  maxLines: 3, // Adjust the number of lines as needed
-                                                ),
-                                              ),
-                                            ],
+                                        Expanded(
+                                          child: Text(
+                                            '${order.order_num}',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3, // Adjust the number of lines as needed
                                           ),
                                         ),
                                       ],
@@ -615,10 +179,458 @@ class TicketWidget extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 16.4),
-                            ],
+                            ),
+                            SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3.0,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '결제 일시',
+                                        style: TextStyle(
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 17,
+                                          color: Colors.grey,
+                                          height: 1.2,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 5),
+                                      Container(
+                                        width: 150, // Ensures the container takes the full width
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '${_formatCreatedDate(order.created_date)}',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3, // Adjust the number of lines as needed
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3.3,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '결제 수단',
+                                        style: TextStyle(
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 17,
+                                          color: Colors.grey,
+                                          height: 1.2,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 5),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '${order.payment_method}',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3, // Adjust the number of lines as needed
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 15),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '총 결제 금액',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '${NumberFormat('#,###').format(order.total_price)}원',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3, // Adjust the number of lines as needed
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 40),
+                        Text(
+                          '구매 정보',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            height: 2.0,
                           ),
-                        ],
+                        ),
+                        Divider(color: Colors.grey[500], thickness: 1.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '이용 일자',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '${order.use_day}',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3, // Adjust the number of lines as needed
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '상품명',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end, // Aligns content to the right
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '${order.i_name}',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3, // Adjust the number of lines as needed
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '선택 옵션',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Column(
+                                    children: order.orderOptions.isNotEmpty
+                                        ? order.orderOptions.map((option) {
+                                      return SelectOptionList(orderOption: option);
+                                    }).toList()
+                                        : [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          '선택한 옵션이 없습니다.',
+                                          style: TextStyle(
+                                            fontFamily: 'NotoSansKR',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 17,
+                                            color: Colors.grey,
+                                            height: 1.2,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 40),
+                        Text(
+                          '구매자 정보',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            height: 2.0,
+                          ),
+                        ),
+                        Divider(color: Colors.grey[500], thickness: 1.0,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5),
+                            Container(
+                              width: MediaQuery.of(context).size.width / 3.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '이름',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    width: 150, // Ensures the container takes the full width
+                                    child: Row(
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            '${order.o_name}',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3, // Adjust the number of lines as needed
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '이메일',
+                                    style: TextStyle(
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                      height: 1.2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            '${order.o_email}',
+                                            style: TextStyle(
+                                              fontFamily: 'NotoSansKR',
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 17,
+                                              height: 1.2,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 3, // Adjust the number of lines as needed
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3.0,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '전화번호',
+                                        style: TextStyle(
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 17,
+                                          color: Colors.grey,
+                                          height: 1.2,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 5),
+                                      Container(
+                                        width: 150, // Ensures the container takes the full width
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '${order.o_p_number}',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3, // Adjust the number of lines as needed
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 3.0,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '생년월일',
+                                        style: TextStyle(
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 17,
+                                          color: Colors.grey,
+                                          height: 1.2,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: 5),
+                                      Container(
+                                        width: 150, // Ensures the container takes the full width
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '${order.o_birth}',
+                                                style: TextStyle(
+                                                  fontFamily: 'NotoSansKR',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 17,
+                                                  height: 1.2,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 3, // Adjust the number of lines as needed
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 16.4),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -723,4 +735,3 @@ class SelectOptionList extends StatelessWidget {
     );
   }
 }
-

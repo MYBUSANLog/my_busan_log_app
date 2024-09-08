@@ -1,4 +1,5 @@
 
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -34,8 +35,11 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   late TextEditingController phoneController;
   late TextEditingController addressController;
   late TextEditingController passwordController;
+  String? _selectedTripPreference;
+  Map<String, int> radioMap={'호캉스':1, '엑티비티':2, '쇼핑':3, '상관없음':4};
   final storage = FirebaseStorage.instance;
   Uint8List? previewImgBytes;
+  String? uploadedImageUrl;
 
   bool _isImageUpdated = false;
   bool _isFieldUpdated = false;
@@ -69,6 +73,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
       'u_address': loginUser.u_address,
       'u_img_url': loginUser.u_img_url,
     };
+    _selectedTripPreference = _mapTripPreferenceToValue(loginUser.trip_preference);
 
     emailController.addListener(_onFieldChanged);
     nameController.addListener(_onFieldChanged);
@@ -78,6 +83,16 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     addressController.addListener(_onFieldChanged);
   }
 
+  String _mapTripPreferenceToValue(int preference) {
+    switch (preference) {
+      case 1: return '호캉스';
+      case 2: return '액티비티';
+      case 3: return '쇼핑';
+      case 4: return '상관없음';
+      default: return ''; // default value
+    }
+  }
+
   void _onFieldChanged() {
     setState(() {
       _isFieldUpdated = userProfileMap['u_email'] != emailController.text ||
@@ -85,10 +100,122 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
           userProfileMap['u_nick'] != nicknameController.text ||
           userProfileMap['u_birth'] != birthdayController.text ||
           userProfileMap['u_p_number'] != phoneController.text ||
-          userProfileMap['u_address'] != addressController.text;
+          userProfileMap['u_address'] != addressController.text ||
+          _selectedTripPreference != _mapTripPreferenceToValue(Provider.of<UserModel>(context, listen: false).loggedInUser.trip_preference);
       _isImageUpdated = previewImgBytes != null;
     });
   }
+
+  void _onTripPreferenceChanged(String? value) {
+    setState(() {
+      _selectedTripPreference = value;
+      _isFieldUpdated = true;
+    });
+  }
+
+  void _showPasswordConfirmationDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('비밀번호 확인'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: '비밀번호',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('확인'),
+              onPressed: () async {
+                User loginUser = Provider.of<UserModel>(context, listen: false).loggedInUser;
+                if (passwordController.text == loginUser.u_pw) {
+                  _validateAndNavigate();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                } else {
+                  // Password is incorrect, show an error message
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('오류'),
+                        content: Text('비밀번호가 일치하지 않습니다.'),
+                        actions: [
+                          TextButton(
+                            child: Text('확인'),
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _validateAndNavigate() async {
+    if (_isFieldUpdated || _isImageUpdated) {
+      // 비동기 작업으로 이미지 업로드를 처리
+      if (_isImageUpdated && previewImgBytes != null) {
+        // 이미지 URL을 가져오기 위해 Firebase에 업로드
+        try {
+          final storageRef = FirebaseStorage.instance.ref();
+          final ref = storageRef.child('/my_busan_log/profile_images/img_${DateTime.now().toIso8601String()}');
+
+          UploadTask uploadTask = ref.putData(previewImgBytes!);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          uploadedImageUrl = await taskSnapshot.ref.getDownloadURL();
+        } catch (e) {
+          print("이미지 업로드 중 오류 발생: $e");
+          // 이미지 업로드 오류 처리
+        }
+      }
+
+      User user = User(
+        u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
+        u_email: emailController.text,
+        u_name: nameController.text,
+        u_nick: nicknameController.text,
+        u_birth: birthdayController.text,
+        u_p_number: phoneController.text,
+        u_address: addressController.text,
+        trip_preference: radioMap[_selectedTripPreference]!,
+        u_img_url: uploadedImageUrl ?? Provider.of<UserModel>(context, listen: false).loggedInUser.u_img_url,
+      );
+
+      Provider.of<UserModel>(context, listen: false).updateUser = user;
+      await Provider.of<UserModel>(context, listen: false).updateSaveUser();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('프로필 수정이 완료되었습니다'),
+        ),
+      );
+    }
+  }
+
 
   void _formatPhoneNumber() {
     String text = phoneController.text;
@@ -328,7 +455,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      '비밀번호 확인',
+                      '여행 선호도',
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
                         fontWeight: FontWeight.w400,
@@ -338,7 +465,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  buildProfileItem('비밀번호 확인', phoneController, _isFieldUpdated, TextInputType.phone),
+                  _buildTravelPreferenceSection(),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -376,7 +504,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: (_isFieldUpdated || _isImageUpdated) ? () {
-
+                  _showPasswordConfirmationDialog();
                 } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: (_isFieldUpdated || _isImageUpdated) ? Color(0xff0e4194) : Colors.grey,
@@ -515,6 +643,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     return serverFormatter.format(date);
   }
 
+  // buildProfileItem, _buildCustomTextFieldWithButton, _buildTravelPreferenceSection 는 잠시 주석처리
+
   Widget buildProfileItem(String labelText, TextEditingController controller, bool isEntered, [TextInputType? inputType, bool enabled = true]) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -632,6 +762,54 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTravelPreferenceSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
+              title: Text('호캉스'),
+              leading: Radio<String>(
+                value: '호캉스',
+                groupValue: _selectedTripPreference,
+                onChanged: _onTripPreferenceChanged,
+              ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
+              title: Text('액티비티'),
+              leading: Radio<String>(
+                value: '액티비티',
+                groupValue: _selectedTripPreference,
+                onChanged: _onTripPreferenceChanged,
+              ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
+              title: Text('쇼핑'),
+              leading: Radio<String>(
+                value: '쇼핑',
+                groupValue: _selectedTripPreference,
+                onChanged: _onTripPreferenceChanged,
+              ),
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 0),
+              title: Text('상관없음'),
+              leading: Radio<String>(
+                value: '상관없음',
+                groupValue: _selectedTripPreference,
+                onChanged: _onTripPreferenceChanged,
+              ),
+            ),
+          ],
         ),
       ],
     );
