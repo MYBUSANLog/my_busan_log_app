@@ -6,6 +6,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../model/order_model.dart';
 import '../vo/order.dart';
+import '../vo/orderoption.dart';
 
 class ReceiptDetailScreen extends StatefulWidget {
   final Order order;
@@ -22,7 +23,7 @@ class _ReceiptDetailScreenState extends State<ReceiptDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<OrderModel>(context, listen: false).setOptions(widget.order.o_idx);
+    Provider.of<OrderModel>(context, listen: false).fetchOrderDetails(widget.order.o_idx);
   }
 
   @override
@@ -420,8 +421,8 @@ class TicketWidget extends StatelessWidget {
                                     Consumer<OrderModel>(
                                       builder: (context, orderModel, child) {
                                         return Column(
-                                          children: orderModel.orderdetails.map((order) {
-                                            return SelectOptionList(order: order);
+                                          children: orderModel.orderDetails.map((orderOption) {
+                                            return SelectOptionList(orderOption: orderOption);
                                           }).toList(),
                                         );
                                       },
@@ -666,8 +667,8 @@ class TicketWidget extends StatelessWidget {
 
 class SelectOptionList extends StatelessWidget {
 
-  Order order;
-  SelectOptionList({Key? key, required this.order}) : super(key: key);
+  OrderOption orderOption;
+  SelectOptionList({Key? key, required this.orderOption}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -683,7 +684,7 @@ class SelectOptionList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'op_name ',
+                    '${orderOption.op_name} ',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w500,
@@ -693,7 +694,7 @@ class SelectOptionList extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    'X ${order.op_quantity}',
+                    'X ${orderOption.op_quantity}',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w400,
@@ -704,7 +705,7 @@ class SelectOptionList extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    'op_price * op_quantity원',
+                    '${orderOption.op_price * orderOption.op_quantity}원',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w600,

@@ -1,3 +1,5 @@
+import 'package:busan_trip/vo/orderoption.dart';
+
 class Order {
   int o_idx;
   int s_idx;
@@ -9,6 +11,7 @@ class Order {
   String order_num;
   String op_name;
   int op_quantity;
+  int op_price;
   String o_name;
   String o_email;
   String o_birth;
@@ -18,6 +21,7 @@ class Order {
   int total_price;
   String status;
   String created_date;
+  List<OrderOption> orderOptions;
 
   Order({
     this.o_idx=0,
@@ -30,6 +34,7 @@ class Order {
     this.order_num='',
     this.op_name='',
     this.op_quantity=0,
+    this.op_price=0,
     this.o_name='',
     this.o_email='',
     this.o_birth='',
@@ -39,9 +44,12 @@ class Order {
     this.total_price=0,
     this.status='',
     this.created_date='',
+    required this.orderOptions,
   });
 
   factory Order.fromJson(Map<String, dynamic> json){
+    var list = json['orderOptions'] as List;
+    List<OrderOption> orderOptionsList = list.map((i) => OrderOption.fromJson(i)).toList();
     return Order(
       o_idx: json['o_idx']??0,
       s_idx: json['s_idx']??0,
@@ -53,6 +61,7 @@ class Order {
       order_num: json['order_num']??'',
       op_name: json['op_name']??'',
       op_quantity: json['op_quantity']??0,
+      op_price: json['op_price']??0,
       o_name: json['o_name']??'',
       o_email: json['o_email']??'',
       o_birth: json['o_birth']??'',
@@ -62,6 +71,7 @@ class Order {
       total_price: json['total_price']??0,
       status: json['status']??'',
       created_date: json['created_date']??'',
+      orderOptions: orderOptionsList,
     );
   }
 }

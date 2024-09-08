@@ -31,7 +31,7 @@ class OrderHttp {
     try {
       var response = await http.get(Uri.parse('${apiUrl}/findOrderOption?o_idx=${o_idx}'));
       if (response.statusCode == 200) {
-        var mapList = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+        var mapList = jsonDecode(utf8.decode(response.bodyBytes)[0]) as List;
         List<Order> list = [];
         for (var map in mapList) {
           Order item = Order.fromJson(map);
@@ -45,6 +45,16 @@ class OrderHttp {
     } catch (e) {
       print('Error: $e');
       return [];
+    }
+  }
+
+  static Future<Order> fetchOrderOptions(int o_idx) async {
+    final response = await http.get(Uri.parse('${apiUrl}/findOrderOption?o_idx=$o_idx'));
+
+    if (response.statusCode == 200) {
+      return Order.fromJson(jsonDecode(response.body)[0]);
+    } else {
+      throw Exception('Failed to load order');
     }
   }
 }
