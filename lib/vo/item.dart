@@ -12,7 +12,7 @@ class Item {
   int i_stock; // 상품 재고수량
   int i_sales_quantity; // 상품 판매수량
   int ui_rank;
-  String s_img_url; // 상점 이미지
+  String s_img; // 상점 이미지
   String s_name; // 상점 이름
   int i_wishes; // 누적 상품 좋아요 수
   double averageScore; // 상품 평점
@@ -32,7 +32,7 @@ class Item {
     this.i_stock=0,
     this.i_sales_quantity=0,
     required this.ui_rank,
-    this.s_img_url='',
+    this.s_img='',
     this.s_name='',
     this.i_wishes=0,
     this.averageScore=0.0,
@@ -54,7 +54,7 @@ class Item {
       i_stock: json['i_stock'],
       i_sales_quantity: json['i_sales_quantity'],
       ui_rank: 0,
-      s_img_url: json['s_img_url']??'',
+      s_img: json['s_img']??'',
       s_name: json['s_name']??'',
       i_wishes: json['i_wishes']??0,
       averageScore: json['average_score'] ?? 0.0,

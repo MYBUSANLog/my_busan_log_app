@@ -4,14 +4,21 @@ import 'package:bootpay/model/item.dart' as bp;
 import 'package:bootpay/model/payload.dart';
 import 'package:bootpay/model/user.dart';
 import 'package:busan_trip/screen/item_detail_screen2.dart';
+import 'package:busan_trip/screen/order_success_screen.dart';
 import 'package:busan_trip/vo/item.dart';
 import 'package:busan_trip/vo/option.dart';
+import 'package:busan_trip/vo/store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../app_http/order_http.dart';
+import '../model/store_model.dart';
+import '../model/user_model.dart';
+import '../vo/order.dart';
 import 'item_detail_screen.dart';
 
 class PayScreen extends StatefulWidget {
@@ -64,6 +71,10 @@ class _PayScreenState extends State<PayScreen> {
       onClose: () {
         print('------- onClose');
         Bootpay().dismiss(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
+        );
       },
       onIssued: (String data) {
         print('------- onIssued: $data');
@@ -74,6 +85,27 @@ class _PayScreenState extends State<PayScreen> {
       },
       onDone: (String data) {
         print('------- onDone: $data');
+        Order order = Order(
+          u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
+          // s_idx: Provider.of<StoreModel>(context, listen: false).getStoreById.s_idx,
+          i_idx: widget.item.i_idx,
+          o_name: _nameController.text,
+          o_email: _emailController.text,
+          o_p_number: _phoneController.text,
+          total_price: totalAmount.toInt(),
+          status: '결제완료',
+        );
+
+        // 주문 저장
+        OrderHttp.saveOrder(order).then((result) {
+          print(result); // 저장 결과 출력
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
+          );
+        }).catchError((error) {
+          print('주문 저장 중 오류 발생: $error');
+        });
       },
     );
   }
@@ -106,6 +138,7 @@ class _PayScreenState extends State<PayScreen> {
     User user = User();
     user.username = _nameController.text;
     user.email = _emailController.text;
+    user.birth = _birthdayController.text;
     // user.area = "서울";
     user.phone = _phoneController.text;
     // user.addr = '서울시 동작구 상도로 222';
@@ -750,6 +783,7 @@ class FavoriteCard extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final String imageUrl = item.i_image;
+    final String storeName = item.s_name;
     final String itemName = item.i_name;
 
     return Container(
@@ -763,6 +797,7 @@ class FavoriteCard extends StatelessWidget {
               );
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -776,26 +811,36 @@ class FavoriteCard extends StatelessWidget {
                 SizedBox(width: 15,),
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            itemName,
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                              height: 1.0,
-                            ),
-                            softWrap: true,
-                            maxLines: 3,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ],
+                      Text(
+                        storeName,
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          height: 1.0,
+                          color: Colors.grey[500]
+                        ),
+                        softWrap: true,
+                        maxLines: 3,
+                        overflow: TextOverflow.visible,
                       ),
-                      SizedBox(height: 25),
+                      SizedBox(height: 10),
+                      Text(
+                        itemName,
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          height: 1.0,
+                        ),
+                        softWrap: true,
+                        maxLines: 3,
+                        overflow: TextOverflow.visible,
+                      ),
+
                     ],
                   ),
                 ),

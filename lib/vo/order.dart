@@ -65,4 +65,20 @@ class Order {
       created_date: json['created_date']??'',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      's_idx': s_idx,
+      'u_idx': u_idx,
+      'i_idx': i_idx,
+      'o_name': o_name,
+      'o_email': o_email,
+      'o_birth': o_birth,
+      'o_p_number': o_p_number,
+      'use_day': use_day,
+      'payment_method': payment_method,
+      'total_price': total_price,
+      'status': status,
+    };
+  }
 }

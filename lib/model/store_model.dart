@@ -10,15 +10,15 @@ class StoreModel extends ChangeNotifier {
   final Map<int, Store> _storeMap = {};
   Map<int, Store> get storeMap => _storeMap;
 
-  Store? getStoreById(int sIdx) {
-    return _storeMap[sIdx];
+  Store? getStoreById(int s_idx) {
+    return _storeMap[s_idx];
   }
 
-  Future<void> fetchStoreById(int sIdx) async {
-    if (!_storeMap.containsKey(sIdx)) {
-      Store? store = await StoreHttp.fetchStoreById(sIdx);
+  Future<void> fetchStoreById(int s_idx) async {
+    if (!_storeMap.containsKey(s_idx)) {
+      Store? store = await StoreHttp.fetchStoreById(s_idx);
       if (store != null) {
-        _storeMap[sIdx] = store;
+        _storeMap[s_idx] = store;
         notifyListeners();
       }
     }

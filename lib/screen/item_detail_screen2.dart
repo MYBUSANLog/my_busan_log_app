@@ -364,10 +364,10 @@ class _DetailContentState extends State<DetailContent> {
                     //   context,
                     //   MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
                     // );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
+                    // );
                   },
                   child: Row(
                     children: [
