@@ -47,4 +47,35 @@ class OrderHttp {
       return [];
     }
   }
+
+  static Future<String> saveOrder(Order order) async {
+    // Order order = [
+    //   's_idx': order.s_idx.toString(),
+    //   'u_idx': order.u_idx.toString(),
+    //   'i_idx': order.i_idx.toString(),
+    //   'o_name': order.o_name.toString(),
+    //   'o_email': order.o_email.toString(),
+    //   'o_birth': order.o_birth.toString(),
+    //   'o_p_number': order.o_p_number.toString(),
+    //   'use_day': order.use_day.toString(),
+    //   'payment_method': order.payment_method.toString(),
+    //   'total_price': order.total_price.toString(),
+    //   'status': '결제완료'.toString(),
+    // ];
+    var url = Uri.parse('$apiUrl/save');
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(order.toJson()),
+    );
+
+    print(response.statusCode); // 응답 상태 코드 출력
+    print(response.body); // 응답 본문 출력
+
+    if (response.statusCode == 200) {
+      return '주문이 성공적으로 저장되었습니다.';
+    } else {
+      throw Exception('주문 저장 실패: ${response.body}');
+    }
+  }
 }

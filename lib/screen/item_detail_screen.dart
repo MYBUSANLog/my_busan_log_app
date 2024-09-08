@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../vo/item.dart';
+import '../vo/store.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   final Item item; // Item 객체를 받도록 수정
@@ -242,8 +243,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 avgScore: widget.item.averageScore,
                 reviews: widget.item.review_count,
                 price: widget.item.i_price,
-                // shop_img_url: widget.item.s_img_url,
-                // shop_name: widget.item.s_name,
+                shop_img_url: widget.item.s_img,
+                shop_name: widget.item.s_name,
                 address: widget.item.i_address,
                 opr_house: widget.item.operation_house,
                 cld_days: widget.item.closed_days,
@@ -264,8 +265,8 @@ class DetailContent extends StatefulWidget {
   final double avgScore;
   final int reviews;
   final int price;
-  // final String shop_img_url (상점 이미지)
-  // final String shop_name; (상점 이름)
+  final String shop_img_url;
+  final String shop_name;
   final String address;
   final String opr_house;
   final String cld_days;
@@ -279,8 +280,8 @@ class DetailContent extends StatefulWidget {
     required this.avgScore,
     required this.reviews,
     required this.price,
-    // required this.shop_img_url,
-    // required this.shop_name,
+    required this.shop_img_url,
+    required this.shop_name,
     required this.address,
     required this.opr_house,
     required this.cld_days,
@@ -457,10 +458,10 @@ class _DetailContentState extends State<DetailContent> {
                 SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => StoreDetailScreen()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => StoreDetailScreen()),
+                    // );
                   },
                   child: Row(
                     children: [
@@ -477,7 +478,7 @@ class _DetailContentState extends State<DetailContent> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(50),
                           child: Image.network(
-                            'https://scontent-ssn1-1.xx.fbcdn.net/v/t39.30808-6/332953938_1879697915719235_6365380102897356357_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=hes9gGl4of4Q7kNvgEKagxf&_nc_ht=scontent-ssn1-1.xx&oh=00_AYCezD298ihgq6Pr_APxLWaALs16AHtZB15Fv8yV9lio2g&oe=66D508B1',
+                            '${widget.shop_img_url}',
                             width: 35,
                             height: 35,
                             fit: BoxFit.cover,
@@ -486,7 +487,7 @@ class _DetailContentState extends State<DetailContent> {
                       ),
                       SizedBox(width: 10),
                       Text(
-                        '롯데월드 어드벤처 부산',
+                        '${widget.shop_name}',
                         style: TextStyle(
                           fontFamily: 'NotoSansKR',
                           fontWeight: FontWeight.w600,
