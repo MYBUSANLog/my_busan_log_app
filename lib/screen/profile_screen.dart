@@ -285,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   color: Colors.white,
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 14),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: [
                       SizedBox(height: 60),

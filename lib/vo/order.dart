@@ -9,9 +9,7 @@ class Order {
   String i_name;
   String i_image;
   String order_num;
-  String op_name;
-  int op_quantity;
-  int op_price;
+  List<OrderOption> orderOptions;
   String o_name;
   String o_email;
   String o_birth;
@@ -21,7 +19,6 @@ class Order {
   int total_price;
   String status;
   String created_date;
-  List<OrderOption> orderOptions;
 
   Order({
     this.o_idx=0,
@@ -32,9 +29,7 @@ class Order {
     this.i_name='',
     this.i_image='',
     this.order_num='',
-    this.op_name='',
-    this.op_quantity=0,
-    this.op_price=0,
+    List<OrderOption>? orderOptions,
     this.o_name='',
     this.o_email='',
     this.o_birth='',
@@ -44,12 +39,9 @@ class Order {
     this.total_price=0,
     this.status='',
     this.created_date='',
-    required this.orderOptions,
-  });
+  }) : orderOptions = orderOptions ?? [];
 
   factory Order.fromJson(Map<String, dynamic> json){
-    var list = json['orderOptions'] as List;
-    List<OrderOption> orderOptionsList = list.map((i) => OrderOption.fromJson(i)).toList();
     return Order(
       o_idx: json['o_idx']??0,
       s_idx: json['s_idx']??0,
@@ -59,9 +51,9 @@ class Order {
       i_name: json['i_name']??'',
       i_image: json['i_image']??'',
       order_num: json['order_num']??'',
-      op_name: json['op_name']??'',
-      op_quantity: json['op_quantity']??0,
-      op_price: json['op_price']??0,
+      orderOptions: (json['orderOptions'] as List<dynamic>?)
+          ?.map((item) => OrderOption.fromJson(item))
+          .toList() ?? [],
       o_name: json['o_name']??'',
       o_email: json['o_email']??'',
       o_birth: json['o_birth']??'',
@@ -71,7 +63,6 @@ class Order {
       total_price: json['total_price']??0,
       status: json['status']??'',
       created_date: json['created_date']??'',
-      orderOptions: orderOptionsList,
     );
   }
 }

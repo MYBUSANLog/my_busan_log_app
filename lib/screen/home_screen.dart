@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             height: double.infinity,
             color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 14),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
                 SizedBox(height: 60),
