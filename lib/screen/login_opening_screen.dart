@@ -41,7 +41,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   void initState() {
     super.initState();
 
-    kko_user.KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534'); // 네이티브 앱 키 설정
+    kko.KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534'); // 네이티브 앱 키 설정
 
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       setState(() {
@@ -80,9 +80,9 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
     try {
       // 카카오톡이 설치되어 있는지 확인 후, 카카오톡으로 로그인 시도
-      if (await kko_user.isKakaoTalkInstalled()) {
+      if (await kko.isKakaoTalkInstalled()) {
         try {
-          await kko_user.UserApi.instance.loginWithKakaoTalk();
+          await kko.UserApi.instance.loginWithKakaoTalk();
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
           await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
@@ -90,7 +90,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         } catch (error) {
           print('카카오톡으로 로그인 실패 $error');
           // 카카오톡 로그인 실패 시, 카카오 계정으로 로그인 시도
-          await kko_user.UserApi.instance.loginWithKakaoAccount();
+          await kko.UserApi.instance.loginWithKakaoAccount();
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
           await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
@@ -98,7 +98,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         }
       } else {
         // 카카오톡이 설치되어 있지 않은 경우, 카카오 계정으로 로그인 시도
-        await kko_user.UserApi.instance.loginWithKakaoAccount();
+        await kko.UserApi.instance.loginWithKakaoAccount();
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
         await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
@@ -106,7 +106,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       }
 
       // 로그인 후 사용자 정보 가져오기
-      kko_user.User? kakaoUser = await kko_user.UserApi.instance.me();
+      kko.User? kakaoUser = await kko.UserApi.instance.me();
       String? email = kakaoUser.kakaoAccount?.email ?? '';
       String? birthday = kakaoUser.kakaoAccount?.birthday;
       String formattedBirthday = birthday != null && birthday.length == 4

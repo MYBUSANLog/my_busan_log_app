@@ -173,7 +173,7 @@ class UserHttp {
     print(response.body);
 
     if (response.statusCode == 200 && response.body.isNotEmpty) {
-      return User.fromJson(jsonDecode(response.body));
+      return User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } else {
       return User();
     }

@@ -39,6 +39,7 @@ class User {
       u_birth: json['u_birth'],
       u_p_number: json['u_p_number'],
       u_address: json['u_address'],
+      trip_preference: json['trip_preference']
     );
   }
 

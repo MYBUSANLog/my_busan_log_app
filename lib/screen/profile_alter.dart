@@ -18,7 +18,6 @@ import '../vo/user.dart';
 import 'daumpostcodesearchexample.dart';
 
 class ProfileAlterScreen extends StatefulWidget {
-  // User user;
 
   ProfileAlterScreen({Key? key}) : super(key: key);
 
@@ -35,11 +34,12 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   late TextEditingController phoneController;
   late TextEditingController addressController;
   late TextEditingController passwordController;
-  String? _selectedTripPreference;
-  Map<String, int> radioMap={'호캉스':1, '엑티비티':2, '쇼핑':3, '상관없음':4};
+  // Map<String, int> radioMap={'호캉스':1, '액티비티':2, '쇼핑':3, '상관없음':4};
   final storage = FirebaseStorage.instance;
   Uint8List? previewImgBytes;
   String? uploadedImageUrl;
+
+  late int _selectedTripPreference;
 
   bool _isImageUpdated = false;
   bool _isFieldUpdated = false;
@@ -56,6 +56,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   void initState() {
     super.initState();
     User loginUser = Provider.of<UserModel>(context, listen: false).loggedInUser;
+    print(loginUser.u_email);
+    print(loginUser.trip_preference);
     emailController = TextEditingController(text: loginUser.u_email);
     nameController = TextEditingController(text: loginUser.u_name);
     nicknameController = TextEditingController(text: loginUser.u_nick);
@@ -73,7 +75,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
       'u_address': loginUser.u_address,
       'u_img_url': loginUser.u_img_url,
     };
-    _selectedTripPreference = _mapTripPreferenceToValue(loginUser.trip_preference);
+    _selectedTripPreference = loginUser.trip_preference;
 
     emailController.addListener(_onFieldChanged);
     nameController.addListener(_onFieldChanged);
@@ -83,15 +85,13 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     addressController.addListener(_onFieldChanged);
   }
 
-  String _mapTripPreferenceToValue(int preference) {
-    switch (preference) {
-      case 1: return '호캉스';
-      case 2: return '액티비티';
-      case 3: return '쇼핑';
-      case 4: return '상관없음';
-      default: return ''; // default value
-    }
+
+
+  int getTripPreferenceFromLoginUser() {
+    User loginUser = Provider.of<UserModel>(context, listen: false).loggedInUser;
+    return loginUser.trip_preference;
   }
+
 
   void _onFieldChanged() {
     setState(() {
@@ -101,15 +101,17 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
           userProfileMap['u_birth'] != birthdayController.text ||
           userProfileMap['u_p_number'] != phoneController.text ||
           userProfileMap['u_address'] != addressController.text ||
-          _selectedTripPreference != _mapTripPreferenceToValue(Provider.of<UserModel>(context, listen: false).loggedInUser.trip_preference);
+          _selectedTripPreference != getTripPreferenceFromLoginUser;
       _isImageUpdated = previewImgBytes != null;
     });
   }
 
-  void _onTripPreferenceChanged(String? value) {
+  void _onTripPreferenceChanged(int? value) {
     setState(() {
-      _selectedTripPreference = value;
-      _isFieldUpdated = true;
+      if (value != null) {
+        _selectedTripPreference = value;
+        _isFieldUpdated = true;
+      }
     });
   }
 
@@ -201,7 +203,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
         u_birth: birthdayController.text,
         u_p_number: phoneController.text,
         u_address: addressController.text,
-        trip_preference: radioMap[_selectedTripPreference]!,
+        trip_preference: _selectedTripPreference,
         u_img_url: uploadedImageUrl ?? Provider.of<UserModel>(context, listen: false).loggedInUser.u_img_url,
       );
 
@@ -643,7 +645,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     return serverFormatter.format(date);
   }
 
-  // buildProfileItem, _buildCustomTextFieldWithButton, _buildTravelPreferenceSection 는 잠시 주석처리
+  // buildProfileItem, _buildCustomTextFieldWithButton 는 잠시 주석처리
 
   Widget buildProfileItem(String labelText, TextEditingController controller, bool isEntered, [TextInputType? inputType, bool enabled = true]) {
     return Column(
@@ -776,8 +778,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 0),
               title: Text('호캉스'),
-              leading: Radio<String>(
-                value: '호캉스',
+              leading: Radio<int>(
+                value: 1,
                 groupValue: _selectedTripPreference,
                 onChanged: _onTripPreferenceChanged,
               ),
@@ -785,8 +787,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 0),
               title: Text('액티비티'),
-              leading: Radio<String>(
-                value: '액티비티',
+              leading: Radio<int>(
+                value: 2,
                 groupValue: _selectedTripPreference,
                 onChanged: _onTripPreferenceChanged,
               ),
@@ -794,8 +796,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 0),
               title: Text('쇼핑'),
-              leading: Radio<String>(
-                value: '쇼핑',
+              leading: Radio<int>(
+                value: 3,
                 groupValue: _selectedTripPreference,
                 onChanged: _onTripPreferenceChanged,
               ),
@@ -803,12 +805,21 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 0),
               title: Text('상관없음'),
-              leading: Radio<String>(
-                value: '상관없음',
+              leading: Radio<int>(
+                value: 4,
                 groupValue: _selectedTripPreference,
                 onChanged: _onTripPreferenceChanged,
               ),
             ),
+            // DropdownButton<int>(
+            //   value: _selectedTripPreference,
+            //   items: _tripPreferences,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       _selectedTripPreference = value!;
+            //     });
+            //   },
+            // ),
           ],
         ),
       ],
