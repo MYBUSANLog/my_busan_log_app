@@ -57,6 +57,14 @@ class UserModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updatePw() async {
+
+  }
+
+  Future<void> unjoinUser() async {
+
+  }
+
   Future<void> updateSaveUser() async {
     try {
       User registeredUser = await UserHttp.updateUser(updateUser);

@@ -24,7 +24,7 @@
             android:value="qzi0n4lbj9" />
 
         <activity
-            android:name="com.kakao.sdk.flutter.AuthCodeHandlerActivity"
+            android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
             android:exported="true">
             <intent-filter android:label="flutter_web_auth">
                 <action android:name="android.intent.action.VIEW" />

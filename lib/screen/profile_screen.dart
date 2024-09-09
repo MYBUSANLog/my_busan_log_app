@@ -4,6 +4,7 @@ import 'package:busan_trip/screen/my_review_list_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:busan_trip/screen/receipt_screen.dart';
 import 'package:busan_trip/screen/review_writer_screen.dart';
+import 'package:busan_trip/screen/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -151,16 +152,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         try {
           // SharedPreferences에서 로그인 상태 해제
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
+
+          await prefs.setInt("login_u_idx", 0);
 
           // 카카오 로그아웃 처리
           await kko.UserApi.instance.logout();
           print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
 
-          // Firebase 로그아웃 처리
-          await FirebaseAuth.instance.signOut();
-          print('Firebase 로그아웃 성공');
+          // // Firebase 로그아웃 처리
+          // await FirebaseAuth.instance.signOut();
+          // print('Firebase 로그아웃 성공');
 
           // 로그아웃 후 로그인 화면으로 이동
           Navigator.of(context).pushReplacement(
@@ -342,36 +345,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '설정',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 13), // 아래로 패딩 추가
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.payment, color: Color(0xff0e4194)),
-                        title: Text(
-                          '결제',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, '/pay');
-                        },
-                      ),
-                      Divider(color: Colors.grey, thickness: 1.0),
+                      SizedBox(height: 30),
+                      // ListTile(
+                      //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                      //   leading: Icon(Icons.payment, color: Color(0xff0e4194)),
+                      //   title: Text(
+                      //     '결제',
+                      //     style: TextStyle(
+                      //       fontFamily: 'NotoSansKR',
+                      //       fontSize: 16,
+                      //       color: Colors.black,
+                      //     ),
+                      //   ),
+                      //   onTap: () {
+                      //     Navigator.pushNamed(context, '/pay');
+                      //   },
+                      // ),
+                      // Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.receipt, color: Color(0xff0e4194)),
@@ -460,22 +450,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.support_agent, color: Color(0xff0e4194)),
-                        title: Text(
-                          '고객센터',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: () {
-                          // 고객센터 화면으로 이동
-                        },
-                      ),
-                      Divider(color: Colors.grey, thickness: 1.0),
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.settings, color: Color(0xff0e4194)),
                         title: Text(
                           '환경 설정',
@@ -486,24 +460,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         onTap: () {
-                          // 환경 설정 화면으로 이동
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:  (context) => SettingsScreen()),
+                          );
                         },
                       ),
-                      Divider(color: Colors.grey, thickness: 1.0),
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.logout, color: Color(0xff0e4194)),
-                        title: Text(
-                          '로그아웃',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: _logout,
-                      ),
-                      Divider(color: Colors.grey, thickness: 1.0),
+                      SizedBox(height: 30),
                     ],
                   ),
                 ),
