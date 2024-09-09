@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../app_util/img_util.dart';
@@ -71,8 +72,12 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
       });
 
       Review review = Review(
+        o_idx: widget.order.o_idx,
+        u_idx: widget.order.u_idx,
+        i_idx: widget.order.i_idx,
         r_score: _selectedRating.toDouble(),
-        r_img_url: uploadedImageUrls.join(','),
+        img_url: uploadedImageUrls,
+        r_title: '',
         r_content: _contentController.text,
       );
 
@@ -85,6 +90,20 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
       );
       Navigator.of(context).pop();
     }
+  }
+
+  String _formatCreatedDate(String date) {
+    final parts = date.split(' ');
+
+    if (parts.length >= 2) {
+      final timeParts = parts[1].split(':');
+      if (timeParts.length >= 2) {
+        return '${parts[0]} ${timeParts[0]}:${timeParts[1]}';
+      }
+      return '${parts[0]} ${parts[1]}';
+    }
+
+    return date;
   }
 
   @override
@@ -146,22 +165,23 @@ class _ReviewWriterScreenState extends State<ReviewWriterScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${widget.order.s_name}',
-                                      style: TextStyle(
-                                        fontFamily: 'NotoSansKR',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14,
-                                        height: 1.0,
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
                                       '${widget.order.i_name}',
                                       style: TextStyle(
                                         fontFamily: 'NotoSansKR',
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 17,
+                                        fontSize: 20,
+                                        height: 1.0,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      '구매일자: ${_formatCreatedDate(widget.order.created_date)}',
+                                      style: TextStyle(
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Colors.grey[500],
                                         height: 1.0,
                                       ),
                                       overflow: TextOverflow.ellipsis,

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as kko;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko_user;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../vo/user.dart' as u;
@@ -41,7 +41,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   void initState() {
     super.initState();
 
-    KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534'); // 네이티브 앱 키 설정
+    kko_user.KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534'); // 네이티브 앱 키 설정
 
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       setState(() {
@@ -80,9 +80,9 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
     try {
       // 카카오톡이 설치되어 있는지 확인 후, 카카오톡으로 로그인 시도
-      if (await kko.isKakaoTalkInstalled()) {
+      if (await kko_user.isKakaoTalkInstalled()) {
         try {
-          await kko.UserApi.instance.loginWithKakaoTalk();
+          await kko_user.UserApi.instance.loginWithKakaoTalk();
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
           await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
@@ -90,7 +90,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         } catch (error) {
           print('카카오톡으로 로그인 실패 $error');
           // 카카오톡 로그인 실패 시, 카카오 계정으로 로그인 시도
-          await kko.UserApi.instance.loginWithKakaoAccount();
+          await kko_user.UserApi.instance.loginWithKakaoAccount();
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
           await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
@@ -98,7 +98,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         }
       } else {
         // 카카오톡이 설치되어 있지 않은 경우, 카카오 계정으로 로그인 시도
-        await kko.UserApi.instance.loginWithKakaoAccount();
+        await kko_user.UserApi.instance.loginWithKakaoAccount();
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true); // 로그인 상태 저장
         await prefs.setString('loginMethod', 'kakao'); // 로그인 방법 저장
@@ -106,7 +106,7 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
       }
 
       // 로그인 후 사용자 정보 가져오기
-      kko.User? kakaoUser = await kko.UserApi.instance.me();
+      kko_user.User? kakaoUser = await kko_user.UserApi.instance.me();
       String? email = kakaoUser.kakaoAccount?.email ?? '';
       String? birthday = kakaoUser.kakaoAccount?.birthday;
       String formattedBirthday = birthday != null && birthday.length == 4

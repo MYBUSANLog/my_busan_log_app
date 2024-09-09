@@ -194,22 +194,41 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.symmetric(vertical: 5),
                 child: Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: messageController,
                         decoration: InputDecoration(
-                          hintText: '메시지를 입력하세요...',
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                          labelStyle: TextStyle(color: Colors.black),
+                          hintText: "챗봇에게 물어볼 질문번호를 입력해주세요",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ),
                           ),
                         ),
                       ),
                     ),
+                    SizedBox(width: 5),
                     IconButton(
-                      icon: Icon(Icons.send, color: Colors.blue[800]),
+                      icon: Icon(Icons.send, color: Color(0xff0e4194)),
                       onPressed: () {
                         sendMessage(messageController.text);
                       },
