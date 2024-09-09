@@ -298,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           '프로필',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w700,
                             fontSize: 30,
                             color: Colors.black,
                           ),

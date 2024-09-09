@@ -29,6 +29,12 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
               color: Colors.grey,
               width: 1,
             )),
+        leading: Visibility(
+          visible: false,
+          child: Icon(
+            Icons.arrow_back,
+          ),
+        ),
       ),
       body: Container(
         color: Colors.white,
@@ -46,8 +52,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                 '결제가 완료되었습니다.',
                 style: TextStyle(
                   fontFamily: 'NotoSansKR',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 26,
                   color: Colors.black,
                 ),
               ),
@@ -71,7 +77,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
                         fontWeight: FontWeight.w400,
-                        fontSize: 20,
+                        fontSize: 16,
                         color: Colors.white,
                       ),
                     ),

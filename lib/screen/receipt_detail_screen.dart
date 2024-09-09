@@ -126,7 +126,7 @@ class TicketWidget extends StatelessWidget {
                           child: QrImageView(
                             data: order.order_num, // QR 코드에 포함될 주문 ID
                             version: QrVersions.auto,
-                            size: 200.0, // QR 코드의 크기 설정
+                            size: 110.0, // QR 코드의 크기 설정
                             gapless: false, // QR 코드의 배경을 투명하게 설정
                           ),
                         ),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart' as bp;
@@ -85,13 +87,21 @@ class _PayScreenState extends State<PayScreen> {
       },
       onDone: (String data) {
         print('------- onDone: $data');
+        var responseData = jsonDecode(data);
+
+        // 'status' 값을 'payment_method'로 설정
+        String paymentMethod = responseData['status'].toString();
+
         Order order = Order(
           u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
-          // s_idx: Provider.of<StoreModel>(context, listen: false).getStoreById.s_idx,
+          s_idx: widget.item.s_idx,
           i_idx: widget.item.i_idx,
           o_name: _nameController.text,
           o_email: _emailController.text,
+          o_birth: _birthdayController.text,
           o_p_number: _phoneController.text,
+          use_day: widget.selectedDate,
+          payment_method: paymentMethod,  // 결제 상태를 저장
           total_price: totalAmount.toInt(),
           status: '결제완료',
         );
@@ -104,7 +114,9 @@ class _PayScreenState extends State<PayScreen> {
             MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
           );
         }).catchError((error) {
+          // 에러 발생 시 order 정보를 출력
           print('주문 저장 중 오류 발생: $error');
+          print('에러 발생 시 주문 정보: ${order.toString()}');
         });
       },
     );
@@ -139,9 +151,7 @@ class _PayScreenState extends State<PayScreen> {
     user.username = _nameController.text;
     user.email = _emailController.text;
     user.birth = _birthdayController.text;
-    // user.area = "서울";
     user.phone = _phoneController.text;
-    // user.addr = '서울시 동작구 상도로 222';
 
     Extra extra = Extra();
     extra.appScheme = 'bootpayFlutterExample';

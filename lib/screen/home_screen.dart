@@ -142,83 +142,101 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 20,),
                 sliderWidget(),
                 SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HotelListScreen()),
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.hotel, size: 35),
-                            Text('호텔', style: TextStyle(fontSize: 13)),
-                          ],
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HotelListScreen()),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          // Icon(Icons.hotel, size: 35),
+                          Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fhotel.png?alt=media&token=43194f84-1d3c-4187-bdfc-7cfa0bcb5167',
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                          Text('호텔', style: TextStyle(fontSize: 13)),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ThemeparkListScreen()),
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.attractions_outlined, size: 35),
-                            Text('테마파크', style: TextStyle(fontSize: 13)),
-                          ],
-                        ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ThemeparkListScreen()),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fthemepark.png?alt=media&token=361518e5-fb23-4efc-93b2-81edd5a2825a',
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                          Text('테마파크', style: TextStyle(fontSize: 13)),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ExhibitionListScreen()),
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.vrpano_outlined, size: 35),
-                            Text('전시회', style: TextStyle(fontSize: 13)),
-                          ],
-                        ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ExhibitionListScreen()),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fexhibition.png?alt=media&token=c61a8140-6f34-4d7f-b109-556b633428c7',
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                          Text('전시회', style: TextStyle(fontSize: 13)),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ActivityListScreen()),
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.kitesurfing_outlined, size: 35),
-                            Text('액티비티', style: TextStyle(fontSize: 13)),
-                          ],
-                        ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ActivityListScreen()),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Factivity.png?alt=media&token=2abcc830-ca87-4135-b583-91d2b6b98eb6',
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                          Text('액티비티', style: TextStyle(fontSize: 13)),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => TourListScreen()),
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Icon(Icons.beach_access_outlined, size: 35),
-                            Text('관광지', style: TextStyle(fontSize: 13)),
-                          ],
-                        ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TourListScreen()),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Ftour.png?alt=media&token=8bceef40-2606-444e-80c7-ce48c8f6cccf',
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                          Text('관광지', style: TextStyle(fontSize: 13)),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 30,),
                 Row(
@@ -348,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ).toList(),
         options: CarouselOptions(
-          height: 240,
+          height: 200,
           viewportFraction: 1.0,
           autoPlay: true,
           autoPlayInterval: const Duration(seconds: 4),
