@@ -1,3 +1,4 @@
+import 'package:busan_trip/vo/orderoption.dart';
 import 'package:flutter/material.dart';
 import '../app_http/order_http.dart';
 import '../vo/order.dart';
@@ -5,7 +6,7 @@ import '../vo/order.dart';
 class OrderModel extends ChangeNotifier {
   List<Order> orders = [];
   List<Order> orderdetails = [];
-
+  List<OrderOption> myOrderOptions = [];
   Future<void> setItems(int u_idx) async {
     try {
       orders = await OrderHttp.fetchAll(u_idx);
@@ -27,4 +28,12 @@ class OrderModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+
+  void setMyOrderOptions(int orderIdx) async{
+    myOrderOptions = await OrderHttp.fetchOrderOptionsByOrder(orderIdx);
+    notifyListeners();
+  }
+
+
 }

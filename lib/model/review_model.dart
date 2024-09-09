@@ -5,6 +5,18 @@ import '../vo/review.dart';
 
 class ReviewModel extends ChangeNotifier {
   Review writeReview = Review();
+  List<Review> myReviews = [];
+
+  Future<void> setMyReviews(int u_idx) async {
+    try {
+      myReviews = await ReviewHttp.fetchMyReviewAll(u_idx);
+      print("Orders loaded: $myReviews"); // Debugging
+    } catch (e) {
+      print('Error loading orders: $e');
+      myReviews = []; // Handle error by setting empty list
+    }
+    notifyListeners();
+  }
 
   Future<void> saveReview() async {
     try {

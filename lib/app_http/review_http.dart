@@ -6,6 +6,27 @@ import 'package:http/http.dart' as http;
 class ReviewHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/review';
 
+  static Future<List<Review>> fetchMyReviewAll(int u_idx) async {
+    try {
+      var response = await http.get(Uri.parse('${apiUrl}/findByUIdx?u_idx=${u_idx}'));
+      if (response.statusCode == 200) {
+        var mapList = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+        List<Review> list = [];
+        for (var map in mapList) {
+          Review review = Review.fromJson(map);
+          list.add(review);
+        }
+        print(list); // For debugging
+        return list;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return [];
+    }
+  }
+
   static Future<Review> writeReview(Review review) async {
     print('1234');
     print({
@@ -15,7 +36,7 @@ class ReviewHttp {
       's_idx': review.s_idx.toString(),
       'r_score': review.r_score.toString(),
       'r_title': review.r_title.toString(),
-      'r_img_url': review.r_img_url.toString(),
+      'img_url': review.img_url.toString(),
       'r_content': review.r_content.toString(),
     });
 
@@ -26,7 +47,7 @@ class ReviewHttp {
       's_idx': review.s_idx.toString(),
       'r_score': review.r_score.toString(),
       'r_title': review.r_title.toString(),
-      'r_img_url': review.r_img_url.toString(),
+      'img_url': review.img_url.toString(),
       'r_content': review.r_content.toString(),
     });
     var response = await http.post(uri);

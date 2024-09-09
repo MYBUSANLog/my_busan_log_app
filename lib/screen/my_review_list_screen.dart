@@ -1,4 +1,8 @@
+import 'package:busan_trip/model/review_model.dart';
+import 'package:busan_trip/vo/review.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class MyReviewListScreen extends StatefulWidget {
   const MyReviewListScreen({super.key});
@@ -8,6 +12,9 @@ class MyReviewListScreen extends StatefulWidget {
 }
 
 class _MyReviewListScreenState extends State<MyReviewListScreen> {
+
+  List<Uint8List> previewImgBytesList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +44,14 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                MyReviewListCard(),
+                Consumer<ReviewModel>(builder: (context, reviewModel, child) {
+                  return Column(
+                    children: reviewModel.myReviews.asMap().entries.map((entry) {
+                      Review review = entry.value;
+                      return MyReviewListCard(review: review);
+                    }).toList(),
+                  );
+                }),
               ],
             ),
           ),
@@ -47,8 +61,9 @@ class _MyReviewListScreenState extends State<MyReviewListScreen> {
 }
 
 class MyReviewListCard extends StatelessWidget {
+  Review review;
 
-  const MyReviewListCard({super.key});
+  MyReviewListCard({Key? key, required this.review}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +99,7 @@ class MyReviewListCard extends StatelessWidget {
                     Container(
                       width: 250,
                       child: Text(
-                        '[QR바로입장] 부산 롯데월드 어드벤처',
+                        '${review.i_name}',
                         style: TextStyle(
                           fontFamily: 'NotoSansKR',
                           fontWeight: FontWeight.w600,
@@ -137,7 +152,7 @@ class MyReviewListCard extends StatelessWidget {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      '2024-09-03',
+                      '${review.created_date}',
                       style: TextStyle(
                         fontFamily: 'NotoSansKR',
                         fontWeight: FontWeight.w400,
@@ -150,7 +165,7 @@ class MyReviewListCard extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  '마이리얼트립 카톡계정으로 큐알 오는게 아니라 다른 계정으로 큐알 오니까 잘 보고 들어가세요!! 전 바보같이 10분동안 찾다가 문의해서 겨우 들어갔습니다..ㅠㅠ 재미 있었구 퍼레이드가 예뻤어요 최고최고 동화속에 들어간 것만 같았어요. 놀이기구 타려고 줄 꽤 기다린 것 같아요 결국 하나밖에 못 탔는데 그래도 괜찮았어용 사진찍을곳 엄청 많아요 퍼레이드 구경, 사진찍기 위주로 가시는 분은 오후권/놀이기구 탑승 위주는 종일권 추천드려요 :)) (퍼레이드는 역시 저녁이 최고였어요 대신 4시 반에 첫번째 퍼레이드 있으니 오후권 입장하실 따 스포 조심하시길..',
+                  '${review.r_content}',
                   style: TextStyle(
                     fontFamily: 'NotoSansKR',
                     fontWeight: FontWeight.w500,
@@ -171,22 +186,13 @@ class MyReviewListCard extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.network(
-                            'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2022/09/03/eSxb/2pyua0mpU5.jpg?width=760&height=760&operation=crop',
+                            '${review.img_url}',
                             width: 200,
                             height: 200,
                             fit: BoxFit.cover,
                           ),
                         ),
                         SizedBox(width: 10),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            'https://dry7pvlp22cox.cloudfront.net/mrt-images-prod/2022/11/07/aJmJ/MSzT3eUkGe.png?width=760&height=760&operation=crop',
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
                       ],
                     ),
                   ),

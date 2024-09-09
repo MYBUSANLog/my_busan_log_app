@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'package:busan_trip/app_http/order_http.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -19,15 +21,29 @@ class ReceiptDetailScreen extends StatefulWidget {
 
 class _ReceiptDetailScreenState extends State<ReceiptDetailScreen> {
 
+
+
+  void init() async{
+    Provider.of<OrderModel>(context, listen: false).setOptions(widget.order.o_idx);
+    Provider.of<OrderModel>(context, listen: false).setMyOrderOptions(widget.order.o_idx);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<OrderModel>(context, listen: false).setOptions(widget.order.o_idx);
+    init();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.grey[100],
+    ));
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -418,13 +434,11 @@ class TicketWidget extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   SizedBox(height: 5),
-                                  Column(
-                                    children: order.orderOptions.isNotEmpty
-                                        ? order.orderOptions.map((option) {
-                                      return SelectOptionList(orderOption: option);
-                                    }).toList()
-                                        : [
-                                      Padding(
+
+                                  Consumer<OrderModel>(builder: (context, model, child){
+
+                                    if(model.myOrderOptions.isEmpty){
+                                     return Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
                                           '선택한 옵션이 없습니다.',
@@ -436,9 +450,43 @@ class TicketWidget extends StatelessWidget {
                                             height: 1.2,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                      );
+                                    }else{
+                                      return Column(
+                                        children: model.myOrderOptions.map((e)=>SelectOptionList(orderOption: e,)).toList(),
+
+                                      );
+                                    }
+
+
+
+                                  }),
+
+
+                                  // Column(
+                                  //   children: order.orderOptions.isNotEmpty
+                                  //       ? order.orderOptions.map((option) {
+                                  //     return SelectOptionList(orderOption: option);
+                                  //   }).toList()
+                                  //       : [
+                                  //     Padding(
+                                  //       padding: const EdgeInsets.all(8.0),
+                                  //       child: Text(
+                                  //         '선택한 옵션이 없습니다.',
+                                  //         style: TextStyle(
+                                  //           fontFamily: 'NotoSansKR',
+                                  //           fontWeight: FontWeight.w400,
+                                  //           fontSize: 17,
+                                  //           color: Colors.grey,
+                                  //           height: 1.2,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  //
+
+
                                   SizedBox(height: 5),
                                 ],
                               ),
@@ -627,7 +675,28 @@ class TicketWidget extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 16.4),
+                            SizedBox(height: 40),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.red, width: 2.0),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white,
+                              ),
+                              child: Text(
+                                '주문취소',
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17,
+                                  color: Colors.red,
+                                  height: 1.2,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -717,7 +786,7 @@ class SelectOptionList extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    '${orderOption.op_price * orderOption.op_quantity}원',
+                    '${NumberFormat("#,###").format(orderOption.op_price * orderOption.op_quantity)}원',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w600,

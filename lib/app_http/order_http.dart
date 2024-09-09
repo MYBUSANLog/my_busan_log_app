@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:busan_trip/vo/orderoption.dart';
+
 import '../vo/order.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,8 +29,32 @@ class OrderHttp {
     }
   }
 
+
+  static Future<List<OrderOption>> fetchOrderOptionsByOrder(int o_idx) async {
+    try {
+      print('${apiUrl}/findOrderOption?o_idx=${o_idx}');
+      var response = await http.get(Uri.parse('${apiUrl}/findOrderOption?o_idx=${o_idx}'));
+      if (response.statusCode == 200) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes));
+        List<OrderOption> list = [];
+        for (var map in json['orderOptions']) {
+          OrderOption orderOptions = OrderOption.fromJson(map);
+          list.add(orderOptions);
+        }
+        print(list); // For debugging
+        return list;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return [];
+    }
+  }
+
   static Future<List<Order>> fetchDetail(int o_idx) async {
     try {
+      print('${apiUrl}/findOrderOption?o_idx=${o_idx}');
       var response = await http.get(Uri.parse('${apiUrl}/findOrderOption?o_idx=${o_idx}'));
       if (response.statusCode == 200) {
         var mapList = jsonDecode(utf8.decode(response.bodyBytes)) as List;
