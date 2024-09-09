@@ -33,7 +33,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
   late TextEditingController birthdayController;
   late TextEditingController phoneController;
   late TextEditingController addressController;
-  late TextEditingController passwordController;
   // Map<String, int> radioMap={'호캉스':1, '액티비티':2, '쇼핑':3, '상관없음':4};
   final storage = FirebaseStorage.instance;
   Uint8List? previewImgBytes;
@@ -64,7 +63,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     birthdayController = TextEditingController(text: loginUser.u_birth);
     phoneController = TextEditingController(text: loginUser.u_p_number);
     addressController = TextEditingController(text: loginUser.u_address);
-    passwordController = TextEditingController();
 
     userProfileMap = {
       'u_email': loginUser.u_email,
@@ -115,68 +113,6 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
     });
   }
 
-  void _showPasswordConfirmationDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // Prevent dismissing by tapping outside
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('비밀번호 확인'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: '비밀번호',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('취소'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('확인'),
-              onPressed: () async {
-                User loginUser = Provider.of<UserModel>(context, listen: false).loggedInUser;
-                if (passwordController.text == loginUser.u_pw) {
-                  _validateAndNavigate();
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                } else {
-                  // Password is incorrect, show an error message
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('오류'),
-                        content: Text('비밀번호가 일치하지 않습니다.'),
-                        actions: [
-                          TextButton(
-                            child: Text('확인'),
-                            onPressed: () async {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _validateAndNavigate() async {
     if (_isFieldUpdated || _isImageUpdated) {
       // 비동기 작업으로 이미지 업로드를 처리
@@ -209,6 +145,8 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
 
       Provider.of<UserModel>(context, listen: false).updateUser = user;
       await Provider.of<UserModel>(context, listen: false).updateSaveUser();
+
+      Navigator.of(context).pop();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -506,7 +444,7 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
             Expanded(
               child: ElevatedButton(
                 onPressed: (_isFieldUpdated || _isImageUpdated) ? () {
-                  _showPasswordConfirmationDialog();
+                  _validateAndNavigate();
                 } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: (_isFieldUpdated || _isImageUpdated) ? Color(0xff0e4194) : Colors.grey,

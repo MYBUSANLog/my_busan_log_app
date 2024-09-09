@@ -48,17 +48,6 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         _currentImageIndex = (_currentImageIndex + 1) % _backgroundImages.length;
       });
     });
-
-    _checkLoginStatus(); // 앱 시작 시 로그인 상태 확인
-  }
-
-  Future<void> _checkLoginStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
-    if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, '/root_screen');
-    }
   }
 
   @override
