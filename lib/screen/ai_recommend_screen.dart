@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:flutter/material.dart';
 
 class AiRecommendScreen extends StatefulWidget {
@@ -20,7 +19,7 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
 
   final TextStyle notoSansStyle = TextStyle(fontFamily: 'NotoSansKR',);
   final PageController _pageController = PageController();
-  final CarouselController _controller = CarouselController();
+  //final CarouselController _controller = CarouselController();
   final List<String> imgList = [
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuS22glNZwAX2uBzHpdoinyWJ4yR6sy5MdUQ&s',
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFQnvMpdsDIb0WdFnB1zJMBcuv_6u7K7X0MQ&s',
@@ -71,7 +70,7 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
             flexibleSpace: FlexibleSpaceBar(
               background:
               Stack(children: [
-                ClipRRect(
+               /* ClipRRect(
                   child: CarouselSlider(
                     carouselController: _controller,
                     items: imgList.map(
@@ -104,7 +103,7 @@ class _AiRecommendScreenState extends State<AiRecommendScreen> {
                       },
                     ),
                   ),
-                ),
+                ),*/
                 Positioned(
                   left: 0,
                   right: 0,
