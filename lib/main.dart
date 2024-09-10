@@ -11,6 +11,7 @@ import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
+import 'package:busan_trip/screen/nearby_screen4.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
@@ -106,15 +107,16 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //인트로스크린 수진 추가
-        home: FutureBuilder(
-          future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
-          builder: (context, snapshot) {
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                child: _splashLoadingWidget(snapshot)
-            );
-          },
-        ),
+        home: NearbyScreen4(),
+        // FutureBuilder(
+        //   future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
+        //   builder: (context, snapshot) {
+        //     return AnimatedSwitcher(
+        //         duration: const Duration(milliseconds: 1000),
+        //         child: _splashLoadingWidget(snapshot)
+        //     );
+        //   },
+        // ),
         //RootScreen(), //위에 주석하고 아래 추가 영욱
         // initialRoute: '/home',
         //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)

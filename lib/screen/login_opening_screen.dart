@@ -127,11 +127,12 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
 
       // UserModel 프로바이더를 사용하여 데이터베이스에 유저가 존재하는지 확인
       UserModel userModel = Provider.of<UserModel>(context, listen: false);
-      bool userExists = await userModel.checkUserExists(email: email);
+      var userExists = await userModel.kakaoLoginUser(user: user);
 
       if (userExists) {
-        // 유저가 이미 존재하면 로그인 함수 호출
-        await userModel.kakaoLoginUser(user: user);
+        int u_idx = Provider.of<UserModel>(context,listen: false).loggedInUser!.u_idx;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('login_u_idx', u_idx);
       } else {
         // 유저가 존재하지 않으면 등록 함수 호출
         await userModel.kakaoRegisterUser(user);

@@ -20,6 +20,8 @@ class Order {
   String status;
   String created_date;
 
+  dynamic orderOptionsMapList;
+
   Order({
     this.o_idx=0,
     this.s_idx=0,
@@ -39,6 +41,7 @@ class Order {
     this.total_price=0,
     this.status='',
     this.created_date='',
+    this.orderOptionsMapList=null
   }) : orderOptions = orderOptions ?? [];
 
   factory Order.fromJson(Map<String, dynamic> json){
@@ -79,6 +82,7 @@ class Order {
       'payment_method': payment_method,
       'total_price': total_price,
       'status': status,
+      'orderOptions':orderOptionsMapList
     };
   }
 }
