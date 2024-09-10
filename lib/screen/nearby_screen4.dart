@@ -24,42 +24,20 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
   int totalPages = 1;
   int resultsPerPage = 20;
 
-  double? latitude;
-  double? longitude;
-
-  late NMarker currentLocationMarker;
+  late NMarker marker;
   late NLatLng target;
 
   @override
   void initState() {
     super.initState();
-    getGeoData();
     target = NLatLng(37.5665, 126.9780);
-    currentLocationMarker = NMarker(id: "currentLocation", position: target);
+    marker = NMarker(id: "test", position: target);
   }
 
-  Future<void> getGeoData() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Permissions are denied');
-      }
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-    setState(() {
-      latitude = position.latitude;
-      longitude = position.longitude;
-      target = NLatLng(latitude!, longitude!);
-      currentLocationMarker = NMarker(id: "currentLocation", position: target);
-    });
-  }
-
-  // final bounds = NLatLngBounds(
-  //   southWest: NLatLng(37.413294, 126.764166),
-  //   northEast: NLatLng(37.701749, 127.181111),
-  // );
+  final bounds = NLatLngBounds(
+    southWest: NLatLng(37.413294, 126.764166),
+    northEast: NLatLng(37.701749, 127.181111),
+  );
 
   Future<void> fetchData() async {
     try {
@@ -125,142 +103,83 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
             )),
       ),
       backgroundColor: Colors.white,
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 400,
-              child: NaverMap(
-                options: NaverMapViewOptions(
-                  initialCameraPosition: NCameraPosition(
-                      target: target,
-                      zoom: 15,
-                      bearing: 0,
-                      tilt: 0
-                  ),
-                ),
-                forceGesture: false,
-                onMapReady: (controller) {
-                  controller.addOverlay(currentLocationMarker);
-                },
-                onMapTapped: (point, latLng) {},
-                onSymbolTapped: (symbol) {},
-                onCameraChange: (position, reason) {},
-                onCameraIdle: () {},
-                onSelectedIndoorChanged: (indoor) {},
+      body: Stack(
+        children: [
+          NaverMap(
+            options: NaverMapViewOptions(
+              initialCameraPosition: NCameraPosition(
+                  target: target,
+                  zoom: 15,
+                  bearing: 0,
+                  tilt: 0
               ),
+              extent: bounds,
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 200,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xff0e4194), width: 2.0),
-                        borderRadius: BorderRadius.circular(50)
+            forceGesture: false,
+            onMapReady: (controller) {
+              controller.addOverlay(marker);
+            },
+            onMapTapped: (point, latLng) {},
+            onSymbolTapped: (symbol) {},
+            onCameraChange: (position, reason) {},
+            onCameraIdle: () {},
+            onSelectedIndoorChanged: (indoor) {},
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 20, bottom: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Color(0xff0e4194),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                    Icons.gps_fixed,
+                    size: 30,
+                    color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.5), // Shadow color
+                      spreadRadius: 3, // Spread radius
+                      blurRadius: 5,   // Blur radius
+                      offset: Offset(0, 3), // Shadow position
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: guFilter,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            guFilter = newValue ?? "";
-                          });
-                          // displayPlaces();
-                        },
-                        dropdownColor: Colors.white,
-                        items: <String>[
-                          '',
-                          '강서구',
-                          '금정구',
-                          '남구',
-                          '동구',
-                          '동래구',
-                          '부산진구',
-                          '북구',
-                          '사상구',
-                          '사하구',
-                          '서구',
-                          '수영구',
-                          '연제구',
-                          '영도구',
-                          '중구',
-                          '해운대구'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                              child: Text(value.isEmpty ? '전체' : value),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: recommendRandomPlace,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff0e4194),
-                      shape: RoundedRectangleBorder(
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Container(
+                      width: 80,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 7),
-                      child: Text(
-                        '랜덤 맛집 추천',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: places.length,
-                itemBuilder: (context, index) {
-                  final place = places[index];
-                  return ListTile(
-                    title: Text(place['MAIN_TITLE']),
-                    subtitle: Text(
-                        '${place['ADDR1']}\n${place['RPRSNTV_MENU']}'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            favorites.contains(place['UC_SEQ']) ? Icons
-                                .favorite : Icons.favorite_border,
-                          ),
-                          onPressed: () => toggleFavorite(place),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.info),
-                          onPressed: () {
-                            // Navigate to detail page
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+                    SizedBox(height: 30),
+                    Text('Text1'),
+                    SizedBox(height: 10),
+                    Text('Text2'),
+                    SizedBox(height: 30),
+                  ],
+                ),
+              )
+            ],
+          )
+        ],
+      )
     );
   }
 }
