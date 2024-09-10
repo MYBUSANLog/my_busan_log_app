@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 class NearbyScreen4 extends StatefulWidget {
@@ -14,7 +13,6 @@ class NearbyScreen4 extends StatefulWidget {
 }
 
 class _NearbyScreen4State extends State<NearbyScreen4> {
-
   List<dynamic> places = [];
   String guFilter = '';
   List<String> favorites = [];
@@ -26,12 +24,22 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
 
   late NMarker marker;
   late NLatLng target;
+  final ScrollController _scrollController = ScrollController();
+  double _currentSize = 0.3;
 
   @override
   void initState() {
     super.initState();
     target = NLatLng(37.5665, 126.9780);
     marker = NMarker(id: "test", position: target);
+
+    _scrollController.addListener(() {
+      setState(() {
+        _currentSize = _scrollController.hasClients
+            ? _scrollController.position.pixels / _scrollController.position.maxScrollExtent
+            : _currentSize;
+      });
+    });
   }
 
   final bounds = NLatLngBounds(
@@ -85,101 +93,110 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '맛집 찾기',
-          style: TextStyle(
-              fontFamily: 'NotoSansKR',
-              fontWeight: FontWeight.w500,
-              fontSize: 18),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 1,
-            )),
-      ),
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          NaverMap(
-            options: NaverMapViewOptions(
-              initialCameraPosition: NCameraPosition(
-                  target: target,
-                  zoom: 15,
-                  bearing: 0,
-                  tilt: 0
-              ),
-              extent: bounds,
-            ),
-            forceGesture: false,
-            onMapReady: (controller) {
-              controller.addOverlay(marker);
-            },
-            onMapTapped: (point, latLng) {},
-            onSymbolTapped: (symbol) {},
-            onCameraChange: (position, reason) {},
-            onCameraIdle: () {},
-            onSelectedIndoorChanged: (indoor) {},
+        appBar: AppBar(
+          title: Text(
+            '맛집 찾기',
+            style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontWeight: FontWeight.w500,
+                fontSize: 18),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: EdgeInsets.only(right: 20, bottom: 10),
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Color(0xff0e4194),
-                  borderRadius: BorderRadius.circular(10),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          shape: Border(
+              bottom: BorderSide(
+                color: Colors.grey,
+                width: 1,
+              )),
+        ),
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            NaverMap(
+              options: NaverMapViewOptions(
+                initialCameraPosition: NCameraPosition(
+                    target: target,
+                    zoom: 15,
+                    bearing: 0,
+                    tilt: 0
                 ),
-                child: Icon(
-                    Icons.gps_fixed,
-                    size: 30,
-                    color: Colors.white,
-                ),
+                extent: bounds,
               ),
-              SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5), // Shadow color
-                      spreadRadius: 3, // Spread radius
-                      blurRadius: 5,   // Blur radius
-                      offset: Offset(0, 3), // Shadow position
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Container(
-                      width: 80,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(30),
+              forceGesture: false,
+              onMapReady: (controller) {
+                controller.addOverlay(marker);
+              },
+              onMapTapped: (point, latLng) {},
+              onSymbolTapped: (symbol) {},
+              onCameraChange: (position, reason) {},
+              onCameraIdle: () {},
+              onSelectedIndoorChanged: (indoor) {},
+            ),
+            DraggableScrollableSheet(
+              initialChildSize: 0.3,
+              minChildSize: 0.3,
+              maxChildSize: 1.0,
+              builder: (context, scrollController) {
+                return AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        spreadRadius: 3,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
-                    ),
-                    SizedBox(height: 30),
-                    Text('Text1'),
-                    SizedBox(height: 10),
-                    Text('Text2'),
-                    SizedBox(height: 30),
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      )
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Visibility(
+                        visible: _currentSize < 1.0,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Container(
+                              width: 80,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: 20,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                Container(
+                                  color: Colors.red,
+                                  child: SizedBox(
+                                      height: 100, width: double.infinity),
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            )
+          ],
+        )
     );
   }
 }
