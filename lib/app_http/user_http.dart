@@ -5,8 +5,10 @@ import 'package:http/http.dart' as http;
 class UserHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/user';
 
+  //회원정보수정 수진추가
   static Future<User> updateUser(User user) async {
-    var uri = Uri.parse('$apiUrl/updateUser').replace(queryParameters: {
+    var uri = Uri.parse('$apiUrl/updateUserApp').replace(queryParameters: {
+      'u_idx': user.u_idx.toString(),
       'u_img_url': user.u_img_url.toString(),
       'u_name': user.u_name.toString(),
       'u_nick': user.u_nick.toString(),
@@ -16,14 +18,19 @@ class UserHttp {
       'trip_preference': user.trip_preference.toString(),
       'business_license': ''.toString(),
     });
+
     var response = await http.post(uri);
 
     print(response.statusCode);
     print(response.body);
+
     if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+      // 응답이 JSON 형식으로 변환될 수 있도록 수정
+      final Map<String, dynamic> json = jsonDecode(response.body);
+      User u = User.fromJson(json);
+      return u;
     } else {
-      return User();
+      throw Exception('프로필 수정 중 오류 발생: ${response.body}');
     }
   }
 

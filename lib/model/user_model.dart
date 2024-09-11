@@ -68,6 +68,7 @@ class UserModel extends ChangeNotifier {
   Future<void> updateSaveUser() async {
     try {
       User registeredUser = await UserHttp.updateUser(updateUser);
+      print(registeredUser);
       updateUser = registeredUser;
       notifyListeners();
     } catch (e) {
