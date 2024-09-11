@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 
 class NearbyScreen4 extends StatefulWidget {
   const NearbyScreen4({super.key});
@@ -24,15 +26,39 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
 
   late NMarker marker;
   late NLatLng target;
+  late NLatLng? currentPosition;
   final ScrollController _scrollController = ScrollController();
   double _currentSize = 0.3;
+
+  void _permission() async {
+    var requestStatus = await Permission.location.request();
+    var status = await Permission.location.status;
+    if (requestStatus.isPermanentlyDenied || status.isPermanentlyDenied) {
+      bool isPermissioned = await openAppSettings();
+      if(isPermissioned == true) {
+        Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        setState(() {
+          currentPosition = NLatLng(position.latitude, position.longitude);
+        });
+      }
+    } else if (status.isGranted) {
+      // 위치 정보 획득
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        currentPosition = NLatLng(position.latitude, position.longitude);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    target = NLatLng(37.5665, 126.9780);
-    marker = NMarker(id: "test", position: target);
 
+    currentPosition = NLatLng(35.17976459985454, 129.07506303273934);
+    target = NLatLng(35.17976459985454, 129.07506303273934);  // 기본값
+    _permission();
+
+    marker = NMarker(id: "test", position: target);
     _scrollController.addListener(() {
       setState(() {
         _currentSize = _scrollController.hasClients
@@ -43,8 +69,8 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
   }
 
   final bounds = NLatLngBounds(
-    southWest: NLatLng(37.413294, 126.764166),
-    northEast: NLatLng(37.701749, 127.181111),
+    southWest: NLatLng(34.8799083, 128.7384361),
+    northEast: NLatLng(35.3959361, 129.3728194),
   );
 
   Future<void> fetchData() async {
@@ -93,45 +119,65 @@ class _NearbyScreen4State extends State<NearbyScreen4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            '맛집 찾기',
-            style: TextStyle(
-                fontFamily: 'NotoSansKR',
-                fontWeight: FontWeight.w500,
-                fontSize: 18),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          shape: Border(
-              bottom: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              )),
-        ),
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            NaverMap(
-              options: NaverMapViewOptions(
-                initialCameraPosition: NCameraPosition(
-                    target: target,
-                    zoom: 15,
-                    bearing: 0,
-                    tilt: 0
+            Column(
+              children: [
+                SizedBox(height: 60),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '내 주변 맛집',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 30,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                 ),
-                extent: bounds,
-              ),
-              forceGesture: false,
-              onMapReady: (controller) {
-                controller.addOverlay(marker);
-              },
-              onMapTapped: (point, latLng) {},
-              onSymbolTapped: (symbol) {},
-              onCameraChange: (position, reason) {},
-              onCameraIdle: () {},
-              onSelectedIndoorChanged: (indoor) {},
+                SizedBox(height: 20),
+                Container(
+                  height: 420,
+                  child: NaverMap(
+                    options: NaverMapViewOptions(
+                      initialCameraPosition: NCameraPosition(
+                          target: currentPosition ?? target,
+                          zoom: 10,
+                          bearing: 0,
+                          tilt: 0
+                      ),
+                      extent: bounds,
+                    ),
+                    forceGesture: false,
+                    onMapReady: (controller) {
+                      // controller.addOverlay(marker);
+                      final marker1 = NMarker(
+                          id: '식당 1',
+                          position: const NLatLng(35.177387, 128.95245)
+                      );
+                      final marker2 = NMarker(
+                          id: '식당 2',
+                          position: const NLatLng(35.16055, 129.07988)
+                      );
+                      controller.addOverlayAll({marker1, marker2});
+                      controller.setLocationTrackingMode(NLocationTrackingMode.follow);
+
+                      final onMarkerInfoWindow = NInfoWindow.onMarker(id: marker.info.id, text: "내위치");
+                      marker.openInfoWindow(onMarkerInfoWindow);
+                    },
+                    onMapTapped: (point, latLng) {},
+                    onSymbolTapped: (symbol) {},
+                    onCameraChange: (position, reason) {},
+                    onCameraIdle: () {},
+                    onSelectedIndoorChanged: (indoor) {},
+                  ),
+                ),
+              ],
             ),
             DraggableScrollableSheet(
               initialChildSize: 0.3,

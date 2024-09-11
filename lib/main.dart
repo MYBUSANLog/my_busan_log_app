@@ -22,7 +22,7 @@ import 'package:busan_trip/screen/sign_up3.dart';
 import 'package:busan_trip/screen/test_screen.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
-import 'package:busan_trip/screen/chatbot.dart';
+import 'package:busan_trip/screen/ai_chatbot_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -126,16 +126,15 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //인트로스크린 수진 추가
-        home: NearbyScreen4(),
-        // FutureBuilder(
-        //   future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
-        //   builder: (context, snapshot) {
-        //     return AnimatedSwitcher(
-        //         duration: const Duration(milliseconds: 1000),
-        //         child: _splashLoadingWidget(snapshot)
-        //     );
-        //   },
-        // ),
+        home: FutureBuilder(
+          future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
+          builder: (context, snapshot) {
+            return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 1000),
+                child: _splashLoadingWidget(snapshot)
+            );
+          },
+        ),
         //RootScreen(), //위에 주석하고 아래 추가 영욱
         // initialRoute: '/home',
         //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
@@ -144,7 +143,6 @@ class MyApp extends StatelessWidget {
           '/notifications': (context) => NotificationsScreen(),*/
           '/home': (context) => HomeScreen(),
           // '/profile': (context) => ProfileScreen(),
-          '/chatbot': (context) => ChatbotScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
           '/root_screen':(context) => RootScreen(),
           '/notification_screen': (context) => NotificationScreen(),

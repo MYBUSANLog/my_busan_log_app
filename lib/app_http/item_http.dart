@@ -22,8 +22,24 @@ class ItemHttp {
     return list;
   }
 
-  static Future<List<Item>> fetch5Items() async {
-    var url = await http.get(Uri.parse('${apiUrl}/findItems?sortBy=oldest&start=0&count=5'));
+  static Future<List<Item>> fetch6HotItems() async {
+    var url = await http.get(Uri.parse('${apiUrl}/findItems?sortBy=oldest&start=0&count=6'));
+    var mapList = jsonDecode(utf8.decode(url.bodyBytes));
+
+    List<Item> list = [];
+
+    for(int i=0;i<mapList.length;i++){
+      var map = mapList[i];
+      Item item = Item.fromJson(map);
+      list.add(item);
+    }
+
+    print(list);
+    return list;
+  }
+
+  static Future<List<Item>> fetch6NewItems() async {
+    var url = await http.get(Uri.parse('${apiUrl}/findItems?sortBy=latest&start=0&count=6'));
     var mapList = jsonDecode(utf8.decode(url.bodyBytes));
 
     List<Item> list = [];

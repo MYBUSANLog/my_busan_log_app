@@ -27,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _selectedSegment = '인기상품 모음.zip';
   var searHistory = [];
   final CarouselController _controller = CarouselController();
   List imgList = [
@@ -55,9 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ItemModel>(context, listen: false).set5Items();
-    });
+    Provider.of<ItemModel>(context, listen: false).set6HotItems();
+    Provider.of<ItemModel>(context, listen: false).set6NewItems();
   }
 
 
@@ -96,247 +96,176 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          minHeight: MediaQuery
-              .of(context)
-              .size
-              .height, // 최소 높이를 화면 높이로 설정
+          minHeight: MediaQuery.of(context).size.height, // 최소 높이를 화면 높이로 설정
         ),
-        child: IntrinsicHeight(
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                SizedBox(height: 60),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'assets/images/006.png',
-                        width: 120,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder:  (context) => SearchScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.search_outlined,
-                            size: 35,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20,),
-                sliderWidget(),
-                SizedBox(height: 30,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HotelListScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          // Icon(Icons.hotel, size: 35),
-                          Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fhotel.png?alt=media&token=43194f84-1d3c-4187-bdfc-7cfa0bcb5167',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          Text('호텔', style: TextStyle(fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ThemeparkListScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fthemepark.png?alt=media&token=361518e5-fb23-4efc-93b2-81edd5a2825a',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          Text('테마파크', style: TextStyle(fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ExhibitionListScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fexhibition.png?alt=media&token=c61a8140-6f34-4d7f-b109-556b633428c7',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          Text('전시회', style: TextStyle(fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ActivityListScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Factivity.png?alt=media&token=2abcc830-ca87-4135-b583-91d2b6b98eb6',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          Text('액티비티', style: TextStyle(fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TourListScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Ftour.png?alt=media&token=8bceef40-2606-444e-80c7-ce48c8f6cccf',
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          Text('관광지', style: TextStyle(fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('실시간 핫플레이스',
-                      style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 23
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder:  (context) => RealtimeListScreen()),
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          Text('더보기 >',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w300,
-                              fontSize: 13,
-                              color: Colors.grey,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Divider(color: Colors.grey, thickness: 1.0,),
-                SizedBox(height: 5,),
-                Consumer<ItemModel>(builder: (context, itemModel, child) {
-                  return Column(
-                    children: itemModel.item5.asMap().entries.map((entry) {
-                      int index = entry.key;
-                      Item item = entry.value;
-                      return FavoriteCard(item: item, rank: index + 1);
-                    }).toList(),
-                  );
-                }),
-                SizedBox(height: 5,),
-                Divider(color: Colors.grey, thickness: 1.0,),
-                SizedBox(height: 30,),
-                Column(
-                  children: [
-                    Container(
-                      height: 70,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/banner.png'),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(height: 60),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/006.png',
+                          width: 120,
                           fit: BoxFit.cover,
-
                         ),
                       ),
-                    ),
-                    SizedBox(height: 5,),
-                    Container(
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SearchScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_outlined,
+                              size: 35,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  sliderWidget(),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HotelListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fhotel.png?alt=media&token=43194f84-1d3c-4187-bdfc-7cfa0bcb5167',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('호텔', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      // Other GestureDetector widgets here
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Center(
+                    child: Container(
                       width: double.infinity,
-                      alignment: Alignment.centerLeft,
-                      child: Text('ⓘ 광고 ',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          height: 1.0,
-                          color: Colors.grey,
-                        ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: CupertinoSlidingSegmentedControl<String>(
+                        backgroundColor: Colors.grey[100]!,
+                        thumbColor: Color(0xff0e4194),
+                        groupValue: _selectedSegment,
+                        onValueChanged: (String? newValue) {
+                          setState(() {
+                            _selectedSegment = newValue!;
+                          });
+                        },
+                        children: {
+                          '인기상품 모음.zip': Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              '인기상품 모음.zip',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                height: 1.0,
+                                color: _selectedSegment == '인기상품 모음.zip' ? Colors.white : Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                          '신규상품 모음.zip': Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              '신규상품 모음.zip',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                height: 1.0,
+                                color: _selectedSegment == '신규상품 모음.zip' ? Colors.white : Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                        },
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 35,),
-                Column(
-                  children: [
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    FeedCard(),
-                    SizedBox(height: 20,),
-                  ],
-                )
-              ],
+                  ),
+                  SizedBox(height: 20),
+                  if (_selectedSegment == '인기상품 모음.zip')
+                    _buildPopularItems()
+                  else if (_selectedSegment == '신규상품 모음.zip')
+                    _buildNewItems(),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-          ),
+            Divider(color: Colors.grey[200], thickness: 7.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(height: 30),
+                  Column(
+                    children: [
+                      Container(
+                        height: 70,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/banner.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'ⓘ 광고 ',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 35),
+                  Column(
+                    children: [
+                      FeedCard(),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-
 
 
   Widget sliderWidget() {
@@ -377,6 +306,55 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Widget _buildPopularItems() {
+    return Consumer<ItemModel>(
+      builder: (context, itemModel, child) {
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // 한 줄에 3개
+            childAspectRatio: 1,
+            crossAxisSpacing: 10, // 아이템 간의 수평 간격
+            mainAxisSpacing: 10, // 아이템 간의 수직 간격
+          ),
+          itemCount: itemModel.hotItem6.length,
+          itemBuilder: (context, index) {
+            Item item = itemModel.hotItem6[index];
+            return FavoriteCard(item: item);
+          },
+        );
+      },
+    );
+  }
+
+
+  Widget _buildNewItems() {
+    return Consumer<ItemModel>(
+      builder: (context, itemModel, child) {
+        return Container(
+          height: 400,
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3, // 한 줄에 3개
+              crossAxisSpacing: 10.0, // 아이템 간의 수평 간격
+              mainAxisSpacing: 10.0, // 아이템 간의 수직 간격
+              childAspectRatio: 1, // 아이템의 가로 세로 비율
+            ),
+            itemCount: itemModel.newItem6.length,
+            itemBuilder: (context, index) {
+              Item item = itemModel.newItem6[index];
+              return FavoriteCard(item: item);
+            },
+          ),
+        );
+      },
+    );
+  }
+
 }
 
 
@@ -386,9 +364,8 @@ class _HomeScreenState extends State<HomeScreen> {
 class FavoriteCard extends StatelessWidget {
   final formatter = NumberFormat('#,###');
   final Item item;
-  final int rank;
 
-  FavoriteCard({required this.item, required this.rank, super.key});
+  FavoriteCard({required this.item, super.key});
 
   String _formatAddress(String address) {
     // 주소를 공백을 기준으로 나눕니다.
@@ -410,9 +387,9 @@ class FavoriteCard extends StatelessWidget {
       case 2:
         return '테마파크';
       case 3:
-        return '전시회';
-      case 4:
         return '액티비티';
+      case 4:
+        return '전시회';
       default:
         return '기타'; // 기본값
     }
@@ -432,120 +409,55 @@ class FavoriteCard extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${rank}',
-                    style: TextStyle(
-                      fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                    ),
-                  ),
-                  SizedBox(width: 13),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       '${item.i_image}',
-                      width: 80,
-                      height: 80,
+                      width: 100,
+                      height: 100,
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Consumer<StoreModel>(
-                        //   builder: (context, storeModel, child) {
-                        //     final store = storeModel.getStoreById(item.s_idx);
-                        //     print("159195159915195915951195159195918918");
-                        //     print(store);
-                        //     print("159195159915195915951195159195918918");
-                        //     if (store == null) {
-                        //       // Fetch store data if not already fetched
-                        //       storeModel.fetchStoreById(item.s_idx);
-                        //       return Text(
-                        //         'Loading...',  // Placeholder while loading
-                        //         style: TextStyle(
-                        //           fontFamily: 'NotoSansKR',
-                        //           fontWeight: FontWeight.w400,
-                        //           fontSize: 12,
-                        //           color: Colors.grey,
-                        //           height: 1.0,
-                        //         ),
-                        //       );
-                        //     } else {
-                        //       return GestureDetector(
-                        //         onTap: () {
-                        //           Navigator.push(
-                        //             context,
-                        //             MaterialPageRoute(builder:  (context) => StoreDetailScreen()),
-                        //           );
-                        //         },
-                        //         child: Text(
-                        //           '${store.s_name}',
-                        //           style: TextStyle(
-                        //             fontFamily: 'NotoSansKR',
-                        //             fontWeight: FontWeight.w400,
-                        //             fontSize: 12,
-                        //             color: Colors.grey,
-                        //             height: 1.0,
-                        //           ),
-                        //         ),
-                        //       );
-                        //     }
-                        //   },
-                        // ),
-                        // SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                '${item.i_name}',
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 17,
-                                  height: 1.0,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Colors.black,
-                            height: 1.0,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            '${formatter.format(item.i_price)}원 ~',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
-                      ],
+                  Text(
+                    '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 8,
+                      color: Colors.black,
+                      height: 1.0,
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '${item.i_name}',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        height: 1.0,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      softWrap: true,
+                    ),
+                  ),
+                  Text(
+                    '${formatter.format(item.i_price)}원 ~',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          SizedBox(height: 10),
         ],
       ),
     );

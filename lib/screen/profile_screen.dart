@@ -346,22 +346,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                       SizedBox(height: 30),
-                      // ListTile(
-                      //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                      //   leading: Icon(Icons.payment, color: Color(0xff0e4194)),
-                      //   title: Text(
-                      //     '결제',
-                      //     style: TextStyle(
-                      //       fontFamily: 'NotoSansKR',
-                      //       fontSize: 16,
-                      //       color: Colors.black,
-                      //     ),
-                      //   ),
-                      //   onTap: () {
-                      //     Navigator.pushNamed(context, '/pay');
-                      //   },
-                      // ),
-                      // Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.receipt, color: Color(0xff0e4194)),
@@ -383,22 +367,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Divider(color: Colors.grey, thickness: 1.0),
                       ListTile(
                         contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.favorite, color: Color(0xff0e4194)),
-                        title: Text(
-                          '찜목록',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: () {
-                          // 찜목록 화면으로 이동
-                        },
-                      ),
-                      Divider(color: Colors.grey, thickness: 1.0),
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
                         leading: Icon(Icons.rate_review, color: Color(0xff0e4194)),
                         title: Text(
                           '내가 쓴 리뷰',
@@ -413,22 +381,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             MaterialPageRoute(builder:  (context) => MyReviewListScreen()),
                           );
-                        },
-                      ),
-                      Divider(color: Colors.grey, thickness: 1.0),
-                      ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                        leading: Icon(Icons.bookmark, color: Color(0xff0e4194)),
-                        title: Text(
-                          '북마크 목록',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        onTap: () {
-                          // 북마크 목록 화면으로 이동
                         },
                       ),
                       Divider(color: Colors.grey, thickness: 1.0),
@@ -473,32 +425,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          Positioned(
-            left: _fabOffset.dx,
-            top: _fabOffset.dy,
-            child: Draggable(
-              feedback: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/chatbot');
-                },
-                child: Icon(Icons.chat, color: Colors.white),
-                backgroundColor: Color(0xff0e4194),
-              ),
-              childWhenDragging: Container(),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/chatbot');
-                },
-                child: Icon(Icons.chat, color: Colors.white),
-                backgroundColor: Color(0xff0e4194),
-              ),
-              onDragEnd: (details) {
-                setState(() {
-                  _fabOffset = details.offset;
-                });
-              },
-            ),
-          ),
+          // Positioned(
+          //   left: _fabOffset.dx,
+          //   top: _fabOffset.dy,
+          //   child: Draggable(
+          //     feedback: FloatingActionButton(
+          //       onPressed: () {
+          //         Navigator.pushNamed(context, '/chatbot');
+          //       },
+          //       child: Icon(Icons.chat, color: Colors.white),
+          //       backgroundColor: Color(0xff0e4194),
+          //     ),
+          //     childWhenDragging: Container(),
+          //     child: FloatingActionButton(
+          //       onPressed: () {
+          //         Navigator.pushNamed(context, '/chatbot');
+          //       },
+          //       child: Icon(Icons.chat, color: Colors.white),
+          //       backgroundColor: Color(0xff0e4194),
+          //     ),
+          //     onDragEnd: (details) {
+          //       setState(() {
+          //         _fabOffset = details.offset;
+          //       });
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
