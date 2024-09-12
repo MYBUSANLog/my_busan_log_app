@@ -14,6 +14,8 @@ class Review {
   String r_content;
   String created_date;
   List<String> img_url;
+  String u_img_url;
+  String u_nick;
 
   Review({
     this.r_idx=0,
@@ -29,6 +31,8 @@ class Review {
     this.r_content='',
     this.created_date='',
     this.img_url = const [],
+    this.u_img_url='',
+    this.u_nick=''
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
@@ -46,6 +50,8 @@ class Review {
       r_content: json['r_content']??'',
       created_date: json['created_date']??'',
       img_url: json['img_url'] != null ? List<String>.from(json['img_url']) : [],
+      u_img_url: json['u_img_url']??'',
+      u_nick: json['u_nick']??''
     );
   }
 }

@@ -16,7 +16,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../model/item_model.dart';
+import '../model/review_model.dart';
 import '../vo/item.dart';
+import '../vo/review.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -52,12 +54,87 @@ class _HomeScreenState extends State<HomeScreen> {
     await Future.delayed(const Duration(seconds: 5));
   }
 
+  final ScrollController _listScrollController = ScrollController(); // ListView.builder용
+  final ScrollController _buttonScrollController = ScrollController(); // SingleChildScrollView용
+  List<FeedCard> feedCards = [];
+  int currentPage = 0; // 현재 페이지를 관리하는 변수
+  final int reviewsPerPage = 10; // 한 페이지당 리뷰 수
+  bool isLoading = false;
+  bool _showScrollToTopButton = false;
+
+  Future<void> _refresh() async {
+    // 새로고침할 때 실행할 로직 (API 호출 등)
+    await Future.delayed(Duration(seconds: 1)); // 예시로 1초 딜레이
+    // 데이터 갱신 로직 추가
+    setState(() {
+      Provider.of<ItemModel>(context, listen: false).set6HotItems();
+      Provider.of<ItemModel>(context, listen: false).set6NewItems();
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Provider.of<ItemModel>(context, listen: false).set6HotItems();
     Provider.of<ItemModel>(context, listen: false).set6NewItems();
+    _listScrollController.addListener(_scrollListener);
+    _loadMoreItems();
+  }
+
+  void _scrollListener() {
+    if (_listScrollController.position.pixels > 200) {
+      setState(() {
+        _showScrollToTopButton = true;
+      });
+    } else {
+      setState(() {
+        _showScrollToTopButton = false;
+      });
+    }
+
+    if (_listScrollController.position.pixels >=
+        _listScrollController.position.maxScrollExtent - 500 &&
+        !isLoading) {
+      _loadMoreItems();
+    }
+  }
+
+  Future<void> _loadMoreItems() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await Provider.of<ReviewModel>(context, listen: false).setAllReviews(start: currentPage * reviewsPerPage, count: reviewsPerPage);
+
+      setState(() {
+        currentPage++;
+      });
+    } catch (e) {
+      // 오류 처리
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _listScrollController.dispose();
+    _buttonScrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _listScrollController.animateTo(
+      0, // 맨 위로 이동
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
 
@@ -72,28 +149,43 @@ class _HomeScreenState extends State<HomeScreen> {
       systemNavigationBarColor: Colors.white,
     ));
 
-
-
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FutureBuilder<void>(
-        future: _loadingFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _buildDetailContent();
-          } else {
-            return _buildDetailContent();
-          }
-        },
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: FutureBuilder<void>(
+          future: _loadingFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildDetailContent();
+            } else {
+              return _buildDetailContent();
+            }
+          },
+        ),
       ),
+      floatingActionButton: _showScrollToTopButton
+          ? FloatingActionButton(
+        onPressed: _scrollToTop,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(  // 둥근 모서리 설정
+            borderRadius: BorderRadius.circular(50),
+            side: BorderSide(color: Colors.grey[300]!)
+        ),
+        child: Icon(
+          Icons.keyboard_arrow_up,
+          color: Colors.black,
+          size: 35,
+        ),
+      )
+          : null,
     );
   }
-
-
 
   Widget _buildDetailContent() {
 
     return SingleChildScrollView(
+      controller: _listScrollController,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minHeight: MediaQuery.of(context).size.height, // 최소 높이를 화면 높이로 설정
@@ -324,7 +416,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 35),
                   Column(
                     children: [
-                      FeedCard(),
+                      Consumer<ReviewModel>(builder: (context, itemModel, child) {
+                        return Column(
+                          children: itemModel.reviews.asMap().entries.map((entry) {
+                            Review review = entry.value;
+                            return FeedCard(review: review);
+                          }).toList(),
+                        );
+                      }),
                       SizedBox(height: 20),
                     ],
                   ),
@@ -385,7 +484,7 @@ class _HomeScreenState extends State<HomeScreen> {
           physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 0.6,
+            childAspectRatio: 0.57,
             crossAxisSpacing: 5,
             mainAxisSpacing: 5,
           ),
@@ -409,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              childAspectRatio: 0.6,
+              childAspectRatio: 0.57,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,
             ),
@@ -500,6 +599,7 @@ class FavoriteCard extends StatelessWidget {
                       color: Colors.grey,
                       height: 1.0,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     '${item.i_name}',
@@ -512,12 +612,13 @@ class FavoriteCard extends StatelessWidget {
                     maxLines: 2,
                     softWrap: true,
                   ),
+                  SizedBox(height: 2),
                   Text(
                     '${formatter.format(item.i_price)}원 ~',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                   ),
                 ],
@@ -532,7 +633,9 @@ class FavoriteCard extends StatelessWidget {
 
 
 class FeedCard extends StatefulWidget {
-  const FeedCard({super.key});
+
+  Review review;
+  FeedCard({required this.review, super.key});
 
   @override
   State<FeedCard> createState() => _FeedCardState();
@@ -558,7 +661,7 @@ class _FeedCardState extends State<FeedCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  'https://search.pstatic.net/common/?src=https%3A%2F%2Fpup-review-phinf.pstatic.net%2FMjAyNDA3MjVfNTUg%2FMDAxNzIxODkwNTkwMzU5.YEYe-tSqM0YZ4LcjruvVppEJF93Qhw2h_f3Slli_aEUg.lgD2YFS88Wy9BeCzykPo-dG70Q3j0AefL3RIDfQl5Zwg.JPEG%2F1721650628775-27.jpg.jpg%3Ftype%3Dw1500_60_sharpen',
+                  '${widget.review.r_img_url}',
                   width: double.infinity,
                   height: 200,
                   fit: BoxFit.cover,
@@ -584,7 +687,7 @@ class _FeedCardState extends State<FeedCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image.network(
-                  'https://i.pinimg.com/564x/62/00/71/620071d0751e8cd562580a83ec834f7e.jpg',
+                  '${widget.review.u_img_url}',
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,
@@ -599,7 +702,7 @@ class _FeedCardState extends State<FeedCard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '주먹밥 쿵야',
+                          '${widget.review.u_nick}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
                             fontWeight: FontWeight.w500,
@@ -616,7 +719,7 @@ class _FeedCardState extends State<FeedCard> {
                               color: Colors.amber,
                             ),
                             Text(
-                              ' 5.0',
+                              ' ${widget.review.r_score}',
                               style: TextStyle(
                                 fontFamily: 'NotoSansKR',
                                 fontWeight: FontWeight.w500,
@@ -633,7 +736,7 @@ class _FeedCardState extends State<FeedCard> {
                       children: [
                         Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
                         Text(
-                          ' 해운대 해수욕장',
+                          ' ${widget.review.i_name}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
                             fontWeight: FontWeight.w400,
