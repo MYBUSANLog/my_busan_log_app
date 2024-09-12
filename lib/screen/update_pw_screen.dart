@@ -52,13 +52,36 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
         _isNewPw1Entered;
   }
 
+  bool _isPasswordValid(String password) {
+    // Define the regex for password validation
+    final RegExp passwordRegex = RegExp(
+      r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$',
+    );
+    return passwordRegex.hasMatch(password);
+  }
+
   Future<void> _validateAndNavigate() async {
     if (newPwController.text != newPw1Controller.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.'),
+          content: Text('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.'),
         ),
       );
+      // Reset new password fields
+      newPwController.clear();
+      newPw1Controller.clear();
+      return;
+    }
+
+    if (!_isPasswordValid(newPwController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('새 비밀번호는 공백을 제외한 영문, 숫자, 특수문자 8~20자리여야 합니다.'),
+        ),
+      );
+      // Reset new password fields
+      newPwController.clear();
+      newPw1Controller.clear();
       return;
     }
 
@@ -92,7 +115,7 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('비밀번호 변경에 실패하였습니다.'),
+          content: Text('현재 비밀번호가 일치하지 않습니다.'),
         ),
       );
     }
@@ -126,12 +149,21 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildProfileItem('현재 비밀번호', passwordController, _isPasswordEntered, obscureText: true),
               SizedBox(height: 10),
-              buildProfileItem('새 비밀번호', newPwController, _isNewPwEntered, obscureText: true),
+              buildProfileItem('새 비밀번호 ', newPwController, _isNewPwEntered, obscureText: true),
               SizedBox(height: 10),
               buildProfileItem('새 비밀번호 확인', newPw1Controller, _isNewPw1Entered, obscureText: true),
+              SizedBox(height: 8),
+              Text(
+                '공백을 제외한 영문, 숫자, 특수문자 8~20자리',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              )
             ],
           ),
         ),

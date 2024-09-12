@@ -6,7 +6,35 @@ import 'package:http/http.dart' as http;
 
 class UserHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/user';
+  // 회원탈퇴 수진추가
+  static Future<bool> unjoin(int u_idx, String u_pw) async {
+    var uri = Uri.parse('$apiUrl/unjoin1').replace(queryParameters: {
+      'u_idx': u_idx.toString(),
+      'u_pw': u_pw,
+    });
 
+    final response = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final responseBody = response.body.trim();
+      if (responseBody == 'ok') { // 응답 메시지 확인
+        return true;
+      } else {
+        print('서버 응답 메시지: $responseBody');
+        return false;
+      }
+    } else {
+      print('HTTP 오류: ${response.statusCode}');
+      print('서버 응답 본문: ${response.body}');
+      return false;
+    }
+  }
   // 비밀번호 변경 메서드 수진추가
   static Future<bool> updatePw(int u_idx, String currentPassword, String newPassword) async {
     var uri = Uri.parse('$apiUrl/updatePw').replace(queryParameters: {
@@ -36,6 +64,7 @@ class UserHttp {
       return false;
     }
   }
+
   //회원정보수정 수진추가
   static Future<User> updateUser(User user) async {
     var uri = Uri.parse('$apiUrl/updateUserApp').replace(queryParameters: {
