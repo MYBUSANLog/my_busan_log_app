@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bootpay/bootpay.dart';
 import 'package:bootpay/model/extra.dart';
 import 'package:bootpay/model/item.dart' as bp;
@@ -19,6 +21,7 @@ import '../app_http/order_http.dart';
 import '../model/store_model.dart';
 import '../model/user_model.dart';
 import '../vo/order.dart';
+import '../vo/orderoption.dart';
 import 'item_detail_screen.dart';
 
 class PayScreen extends StatefulWidget {
@@ -40,73 +43,15 @@ class PayScreen extends StatefulWidget {
 
 class _PayScreenState extends State<PayScreen> {
   // 예시 애플리케이션 ID를 설정하세요.
-  final String webApplicationId = '5b8f6a4d396fa665fdc2b5e7';
-  final String androidApplicationId = '5b8f6a4d396fa665fdc2b5e8';
-  final String iosApplicationId = '5b8f6a4d396fa665fdc2b5e9';
+  final String webApplicationId = '66dfbcb3692d0516c36e4af3';
+  final String androidApplicationId = '66dfbcb3692d0516c36e4af1';
+  final String iosApplicationId = '66dfbcb3692d0516c36e4af2';
 
   // 총 결제 금액을 계산하는 메서드
   double get totalAmount {
     return widget.selectedOptions.fold(
       0.0,
           (sum, option) => sum + (option['op_price'] * option['quantity']),
-    );
-  }
-
-  void bootpayTest(BuildContext context) {
-    Payload payload = getPayload();
-    if (kIsWeb) {
-      payload.extra?.openType = "iframe";
-    }
-
-    Bootpay().requestPayment(
-      context: context,
-      payload: payload,
-      showCloseButton: false,
-      onCancel: (String data) {
-        print('------- onCancel: $data');
-      },
-      onError: (String data) {
-        print('------- onError: $data');
-      },
-      onClose: () {
-        print('------- onClose');
-        Bootpay().dismiss(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
-        );
-      },
-      onIssued: (String data) {
-        print('------- onIssued: $data');
-      },
-      onConfirm: (String data) {
-        print('------- onConfirm: $data');
-        return true;
-      },
-      onDone: (String data) {
-        print('------- onDone: $data');
-        Order order = Order(
-          u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
-          // s_idx: Provider.of<StoreModel>(context, listen: false).getStoreById.s_idx,
-          i_idx: widget.item.i_idx,
-          o_name: _nameController.text,
-          o_email: _emailController.text,
-          o_p_number: _phoneController.text,
-          total_price: totalAmount.toInt(),
-          status: '결제완료',
-        );
-
-        // 주문 저장
-        OrderHttp.saveOrder(order).then((result) {
-          print(result); // 저장 결과 출력
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
-          );
-        }).catchError((error) {
-          print('주문 저장 중 오류 발생: $error');
-        });
-      },
     );
   }
 
@@ -123,8 +68,11 @@ class _PayScreenState extends State<PayScreen> {
     payload.iosApplicationId = iosApplicationId;
 
     payload.pg = '나이스페이';
+    payload.methods = ['card', 'phone', '카카오페이', '네이버페이', '페이코'];
+    // payload.method = "네이버페이";
     payload.orderName = widget.item.i_name;
     payload.price = totalAmount;
+
     payload.orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
     payload.metadata = {
@@ -139,9 +87,7 @@ class _PayScreenState extends State<PayScreen> {
     user.username = _nameController.text;
     user.email = _emailController.text;
     user.birth = _birthdayController.text;
-    // user.area = "서울";
     user.phone = _phoneController.text;
-    // user.addr = '서울시 동작구 상도로 222';
 
     Extra extra = Extra();
     extra.appScheme = 'bootpayFlutterExample';
@@ -152,10 +98,119 @@ class _PayScreenState extends State<PayScreen> {
     return payload;
   }
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _birthdayController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  void bootpayTest(BuildContext context) async {
+    print('----------------------------------------------');
+    Payload payload = getPayload();
+    print('----------------------------------------------');
+    if (kIsWeb) {
+      payload.extra?.openType = "iframe";
+    }
+    print('----------------------------------------------');
+
+    String orderNumber = await OrderHttp.generateOrderNumber();
+
+    print("----------------------------------------");
+
+    // print('u_idx: ${Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx}');
+    // print('s_idx: ${widget.item.s_idx}');
+    // print('i_idx: ${widget.item.i_idx}');
+    // print('o_name: ${_nameController.text}');
+    // print('o_email: ${_emailController.text}');
+    // print('o_birth: ${_birthdayController.text}');
+    // print('o_p_number: ${_phoneController.text}');
+    // print('use_day: ${widget.selectedDate}');
+    // print('total_price: $totalAmount');
+    // print('selectedOptions: ${widget.selectedOptions}');
+    //
+    // widget.selectedOptions.forEach((option) {
+    //   print('op_idx: ${option['op_idx']}');
+    //   print('i_idx: ${widget.item.i_idx}');
+    //   print('op_quantity: ${option['quantity']}');
+    // });
+
+    Order ord = Order(
+      u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
+      s_idx: widget.item.s_idx,
+      i_idx: widget.item.i_idx,
+      o_name: _nameController.text,
+      o_email: _emailController.text,
+      o_birth: _birthdayController.text,
+      o_p_number: _phoneController.text,
+      use_day: widget.selectedDate,
+      payment_method: '미선택',
+      total_price: totalAmount.toInt(),
+      status: '미결제',
+      orderOptionsMapList: widget.selectedOptions.map((option) {
+        return {
+          'op_idx': option['op_idx'],
+          'i_idx': widget.item.i_idx,
+          'op_quantity': option['quantity'],
+        };
+      }).toList(),
+    );
+
+    print('Order created:');
+    print('u_idx: ${ord.u_idx}');
+    print('s_idx: ${ord.s_idx}');
+    print('i_idx: ${ord.i_idx}');
+    print('o_name: ${ord.o_name}');
+    print('o_email: ${ord.o_email}');
+    print('o_birth: ${ord.o_birth}');
+    print('o_p_number: ${ord.o_p_number}');
+    print('use_day: ${ord.use_day}');
+    print('payment_method: ${ord.payment_method}');
+    print('total_price: ${ord.total_price}');
+    print('status: ${ord.status}');
+    ord.orderOptions.forEach((option) {
+      print('Order Option - op_idx: ${option.op_idx}, i_idx: ${widget.item.i_idx}, op_quantity: ${option.op_quantity}');
+    });
+
+    var result = await OrderHttp.saveOrder(ord, orderNumber);
+    print(result);
+
+    Bootpay().requestPayment(
+      context: context,
+      payload: payload,
+      showCloseButton: false,
+      onCancel: (String data) {
+        print('------- onCancel: $data');
+      },
+      onError: (String data) {
+        print('------- onError: $data');
+      },
+      onClose: () {
+        print('------- onClose');
+        Bootpay().dismiss(context);
+      },
+      onIssued: (String data) {
+        print('------- onIssued: $data');
+      },
+      onConfirm: (String data) {
+        return false;
+      },
+      onDone: (String data) async {
+        print('------- onDone: $data');
+
+        // BootPay 측에서 받아온 결제 완료 데이터 추출
+        var response = jsonDecode(data);
+        String methodOrigin = response['data']['method_origin'];
+        String statusLocale = response['data']['status_locale'];
+
+        // 결제가 완료되면 주문 상태 업데이트
+        await OrderHttp.updateOrderStatus(orderNumber, methodOrigin, statusLocale);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
+        );
+      },
+    );
+  }
+
+  TextEditingController _nameController = TextEditingController(text: "test");
+  TextEditingController _emailController = TextEditingController(text: "test1234@gmail.com");
+  TextEditingController _birthdayController = TextEditingController(text: "2022-02-10");
+  TextEditingController _phoneController = TextEditingController(text: "010-1234-5678");
 
   bool _isNameEntered = false;
   bool _isEmailEntered = false;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:busan_trip/app_http/user_http.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
@@ -6,9 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as kko;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart' as kko_user;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../model/join_model.dart';
 import '../vo/user.dart' as u;
 import '../model/user_model.dart';
 
@@ -107,7 +110,13 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
           ? '0' + phoneNumber.substring(4, 16)
           : '';
 
+      print('---------------------------------------------------------------------');
+      print(kakaoUser);
       print(kakaoUser.kakaoAccount);
+      print('---------------------------------------------------------------------');
+
+      UserShippingAddresses userShippingAddress = await UserApi.instance.shippingAddresses();
+
 
       // 유저 정보를 바탕으로 User 객체를 생성
       u.User user = u.User(
@@ -117,24 +126,37 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
         u_nick: kakaoUser.kakaoAccount?.profile?.nickname ?? '',
         u_birth: "${kakaoUser.kakaoAccount?.birthyear ?? ''}-${formattedBirthday}",
         u_p_number: formattedNumber,
-        u_address: '',
+        u_address: '${userShippingAddress.shippingAddresses != null ? userShippingAddress.shippingAddresses![0].baseAddress : '주소 정보 없음' }',
         trip_preference: 3,
         business_license: '',
         login_provider: 'kakao',
         // 기타 필드들 초기화
       );
 
+      Provider.of<JoinModel>(context, listen: false).joinUser = user;
+      Provider.of<JoinModel>(context,listen: false).saveUser();
+
+      print('=======================================');
+      print(user.u_name);
+      print('=======================================');
+
 
       // UserModel 프로바이더를 사용하여 데이터베이스에 유저가 존재하는지 확인
       UserModel userModel = Provider.of<UserModel>(context, listen: false);
-      bool userExists = await userModel.checkUserExists(email: email);
+      print('===============111111111111======================');
+      var userExists = await userModel.kakaoLoginUser(user: user);
+
+      print('===============222222222222======================');
+      print(userExists);
+      print('=======================================');
 
       if (userExists) {
-        // 유저가 이미 존재하면 로그인 함수 호출
-        await userModel.kakaoLoginUser(user: user);
+        int u_idx = Provider.of<UserModel>(context,listen: false).loggedInUser!.u_idx;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('login_u_idx', u_idx);
       } else {
-        // 유저가 존재하지 않으면 등록 함수 호출
-        await userModel.kakaoRegisterUser(user);
+        // 유저가 존재하지 않으면 등록 함수 호출await userModel.kakaoRegisterUser(user);
+        //
       }
 
       // 로그인 성공 시, 팝업 닫기 및 메인 페이지로 이동

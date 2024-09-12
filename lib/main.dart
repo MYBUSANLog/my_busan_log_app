@@ -11,6 +11,7 @@ import 'package:busan_trip/screen/home_screen.dart';
 import 'package:busan_trip/screen/intro_screen.dart';
 import 'package:busan_trip/screen/login.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
+import 'package:busan_trip/screen/nearby_screen4.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
@@ -21,8 +22,9 @@ import 'package:busan_trip/screen/sign_up3.dart';
 import 'package:busan_trip/screen/test_screen.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
-import 'package:busan_trip/screen/chatbot.dart';
+import 'package:busan_trip/screen/ai_chatbot_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -57,6 +59,24 @@ void main() async {
   await initializeDateFormatting('ko_KR', null);
 
   runApp(MyApp());
+}
+
+Future<void> requestLocationPermission() async {
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // 사용자가 위치 권한을 거부한 경우 처리
+      return;
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // 사용자가 위치 권한을 영구적으로 거부한 경우 처리
+    return;
+  }
+
+  // 권한이 허용된 경우 처리
 }
 
 class MyApp extends StatelessWidget {
@@ -123,7 +143,6 @@ class MyApp extends StatelessWidget {
           '/notifications': (context) => NotificationsScreen(),*/
           '/home': (context) => HomeScreen(),
           // '/profile': (context) => ProfileScreen(),
-          '/chatbot': (context) => ChatbotScreen(),
           '/realtime_list_screen': (context) => RealtimeListScreen(),
           '/root_screen':(context) => RootScreen(),
           '/notification_screen': (context) => NotificationScreen(),

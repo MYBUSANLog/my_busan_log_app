@@ -157,6 +157,8 @@ class _BookingCalendarScreenState extends State<BookingCalendarScreen> {
                   List<Map<String, dynamic>> selectedOptions = optionQuantities.entries
                       .where((entry) => entry.value > 0)
                       .map((entry) => {
+                    'i_idx': Provider.of<OptionModel>(context, listen: false).options[entry.key].i_idx,
+                    'op_idx': Provider.of<OptionModel>(context, listen: false).options[entry.key].op_idx,
                     'op_name': Provider.of<OptionModel>(context, listen: false).options[entry.key].op_name, // 옵션 이름 설정
                     'op_price': Provider.of<OptionModel>(context, listen: false).options[entry.key].op_price,
                     'quantity': entry.value // 선택한 수량 설정
@@ -227,6 +229,26 @@ class buildOptionListBox extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Visibility(
+                        visible: false,
+                        child: Text(
+                          '${option.i_idx}',
+                          style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16),
+                        ),
+                      ),
+                      Visibility(
+                        visible: false,
+                        child: Text(
+                          '${option.op_idx}',
+                          style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16),
+                        ),
+                      ),
                       Text(
                         '${option.op_name}',
                         style: TextStyle(

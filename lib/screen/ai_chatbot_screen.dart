@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../model/chatbot_model.dart';
 
-class ChatbotScreen extends StatefulWidget {
+class AiChatbotScreen extends StatefulWidget {
   @override
-  _ChatbotScreenState createState() => _ChatbotScreenState();
+  _AiChatbotScreenState createState() => _AiChatbotScreenState();
 }
 
-class _ChatbotScreenState extends State<ChatbotScreen> {
+class _AiChatbotScreenState extends State<AiChatbotScreen> {
   List<ChatbotModel> messages = [];
   TextEditingController messageController = TextEditingController();
 
@@ -126,118 +126,111 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            '챗봇',
-            style: TextStyle(
-              fontFamily: 'NotoSansKR',
-              fontWeight: FontWeight.w500,
-              fontSize: 23,
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Color(0xff0e4194), // 부산을 상징하는 파란색으로 변경
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () async {
-              bool exit = await _onWillPop();
-              if (exit) {
-                Navigator.of(context).pop(); // 뒤로가기 수정
-              }
-            },
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-        ),
-        body: Container(
-          color: Colors.white, // 배경색 변경
-          padding: EdgeInsets.all(10), // 전체 패딩 추가
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages[index];
-                    return Align(
-                      alignment: message.isUser
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 5.0),
-                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
-                        decoration: BoxDecoration(
-                          color: message.isUser ? Colors.blue[600] : Colors.blue[200],
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15.0),
-                            topRight: Radius.circular(15.0),
-                            bottomLeft: Radius.circular(message.isUser ? 15.0 : 0),
-                            bottomRight: Radius.circular(message.isUser ? 0 : 15.0),
-                          ),
-                        ),
-                        child: Text(
-                          message.message,
-                          style: TextStyle(
-                            color: message.isUser ? Colors.white : Colors.black,
-                            fontSize: 16,
-                            height: 1.5,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+    return Scaffold(
+
+      body: Container(
+        color: Colors.white, // 배경색 변경
+        padding: EdgeInsets.symmetric(horizontal: 14), // 전체 패딩 추가
+        child: Column(
+          children: [
+            SizedBox(height: 60),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'AI 여행지 추천',
+                style: TextStyle(
+                  fontFamily: 'NotoSansKR',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 30,
+                  color: Colors.black,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 5),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  return Align(
+                    alignment: message.isUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 5.0),
+                      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                      decoration: BoxDecoration(
+                        color: message.isUser ? Colors.blue[600] : Colors.blue[200],
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.0),
+                          topRight: Radius.circular(15.0),
+                          bottomLeft: Radius.circular(message.isUser ? 15.0 : 0),
+                          bottomRight: Radius.circular(message.isUser ? 0 : 15.0),
+                        ),
+                      ),
+                      child: Text(
+                        message.message,
+                        style: TextStyle(
+                          color: message.isUser ? Colors.white : Colors.black,
+                          fontSize: 16,
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextField(
                         controller: messageController,
                         decoration: InputDecoration(
                           isDense: true,
-                          contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
                           labelStyle: TextStyle(color: Colors.black),
                           hintText: "챗봇에게 물어볼 질문번호를 입력해주세요",
+                          hintStyle: TextStyle(color: Colors.grey, fontFamily: 'NotoSansKR', fontWeight: FontWeight.w400),
+                          filled: true,
+                          fillColor: Colors.grey[100],
                           border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
-                              color: Colors.grey,
+                              color: Colors.grey[300]!,
                               width: 1.0,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
-                              color: Colors.grey,
+                              color: Colors.grey[300]!,
                               width: 1.0,
                             ),
                           ),
                           enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
-                              color: Colors.grey,
+                              color: Colors.grey[300]!,
                               width: 1.0,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 5),
-                    IconButton(
-                      icon: Icon(Icons.send, color: Color(0xff0e4194)),
-                      onPressed: () {
-                        sendMessage(messageController.text);
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 15),
+                  GestureDetector(
+                    onTap: () {
+                      sendMessage(messageController.text);
+                    },
+                    child: Icon(Icons.send, color: Color(0xff0e4194)),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

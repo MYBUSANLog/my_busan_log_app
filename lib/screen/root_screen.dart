@@ -1,5 +1,7 @@
+import 'package:busan_trip/screen/ai_chatbot_screen.dart';
 import 'package:busan_trip/screen/ai_recommend_screen.dart';
 import 'package:busan_trip/screen/home_screen.dart';
+import 'package:busan_trip/screen/nearby_screen4.dart';
 import 'package:busan_trip/screen/notification_screen.dart';
 import 'package:busan_trip/screen/profile_screen.dart';
 import 'package:busan_trip/screen/restaurant_map.dart';
@@ -26,8 +28,8 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     super.initState();
     screens = [
-      RestaurantMap(),
-      AiRecommendScreen(),
+      NearbyScreen4(),
+      AiChatbotScreen(),
       HomeScreen(),
       NotificationScreen(),
       ProfileScreen(), // widget.order를 사용
@@ -75,7 +77,7 @@ class _RootScreenState extends State<RootScreen> {
                   label: '맛집',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.map),
+                  icon: Icon(Icons.chat),
                   label: 'AI추천',
                 ),
                 BottomNavigationBarItem(
@@ -83,8 +85,8 @@ class _RootScreenState extends State<RootScreen> {
                   label: '홈',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
-                  label: '알림',
+                  icon: Icon(Icons.favorite),
+                  label: '마음함',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person),

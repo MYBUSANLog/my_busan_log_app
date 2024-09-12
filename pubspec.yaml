@@ -57,6 +57,7 @@ dependencies:
   kakao_flutter_sdk: ^1.9.5 # 전체 추가
   kakao_flutter_sdk_user: ^1.9.5 # 카카오 로그인 API 패키지
   kakao_flutter_sdk_share: ^1.9.5 # 카카오톡 공유 API 패키지
+  kakao_flutter_sdk_talk: ^1.9.5 # 카카오톡 채널, 카카오톡 소셜, 카카오톡 메시지 API 패키지
   flutter_naver_login: ^1.7.0
   syncfusion_flutter_datepicker: ^26.2.9
   daum_postcode_search: ^0.0.2
@@ -67,6 +68,8 @@ dependencies:
   url_launcher: ^6.3.0
   table_calendar: ^3.0.9
   qr_flutter: ^4.1.0
+  geolocator: ^12.0.0
+  permission_handler: ^11.3.1
 
 
 
