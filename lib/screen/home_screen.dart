@@ -69,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       Provider.of<ItemModel>(context, listen: false).set6HotItems();
       Provider.of<ItemModel>(context, listen: false).set6NewItems();
+      Provider.of<ReviewModel>(context, listen: false).setAllReviews(start: 0, count: 10);
     });
   }
 
@@ -477,49 +478,113 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPopularItems() {
-    return Consumer<ItemModel>(
-      builder: (context, itemModel, child) {
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 0.57,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-          ),
-          itemCount: itemModel.hotItem6.length,
-          itemBuilder: (context, index) {
-            Item item = itemModel.hotItem6[index];
-            return FavoriteCard(item: item);
+    return Column(
+      children: [
+        Consumer<ItemModel>(
+          builder: (context, itemModel, child) {
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.55,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+              ),
+              itemCount: itemModel.hotItem6.length,
+              itemBuilder: (context, index) {
+                Item item = itemModel.hotItem6[index];
+                return FavoriteCard(item: item);
+              },
+            );
           },
-        );
-      },
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RealtimeListScreen()),
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(5)
+            ),
+            child: Text(
+              '더보기',
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Colors.black,
+                height: 1.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SizedBox(height: 15),
+      ],
     );
   }
 
 
   Widget _buildNewItems() {
-    return Consumer<ItemModel>(
-      builder: (context, itemModel, child) {
-        return Container(
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.57,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5,
+    return Column(
+      children: [
+        Consumer<ItemModel>(
+          builder: (context, itemModel, child) {
+            return Container(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.55,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                itemCount: itemModel.newItem6.length,
+                itemBuilder: (context, index) {
+                  Item item = itemModel.newItem6[index];
+                  return FavoriteCard(item: item);
+                },
+              ),
+            );
+          },
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RealtimeListScreen()),
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(5)
             ),
-            itemCount: itemModel.newItem6.length,
-            itemBuilder: (context, index) {
-              Item item = itemModel.newItem6[index];
-              return FavoriteCard(item: item);
-            },
+            child: Text(
+              '더보기',
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Colors.black,
+                height: 1.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
-        );
-      },
+        ),
+        SizedBox(height: 15),
+      ],
     );
   }
 

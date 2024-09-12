@@ -7,7 +7,7 @@ class ReviewHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/review';
 
   static Future<List<Review>> fetchAllReviews(int start, int count) async {
-    var url = await http.get(Uri.parse('${apiUrl}/all?sortBy=oldest&start=$start&count=$count'));
+    var url = await http.get(Uri.parse('${apiUrl}/all?sortBy=latest&start=$start&count=$count'));
     var mapList = jsonDecode(utf8.decode(url.bodyBytes));
 
     List<Review> list = [];

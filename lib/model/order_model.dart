@@ -7,6 +7,9 @@ class OrderModel extends ChangeNotifier {
   List<Order> orders = [];
   List<Order> orderdetails = [];
   List<OrderOption> myOrderOptions = [];
+
+
+  
   Future<void> setItems(int u_idx) async {
     try {
       orders = await OrderHttp.fetchAll(u_idx);
@@ -35,5 +38,14 @@ class OrderModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  // 주문 정보를 업데이트하는 메소드
+  Future<void> updateOrder(int o_idx, Order order) async {
+    try {
+      String result = await OrderHttp.updateOrder(o_idx, order);
+      print(result); // 주문 업데이트 결과 출력
+    } catch (e) {
+      print('Error updating order: $e');
+    }
+    notifyListeners();
+  }
 }
