@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user_model.dart';
+import '../app_http/user_http.dart';
+import 'login_opening_screen.dart'; // 로그인 페이지로 이동할 때 사용
 
 class DeleteUserScreen extends StatefulWidget {
   const DeleteUserScreen({super.key});
@@ -14,13 +14,20 @@ class DeleteUserScreen extends StatefulWidget {
 }
 
 class _DeleteUserScreenState extends State<DeleteUserScreen> {
-
   TextEditingController passwordController = TextEditingController();
-
   bool _isPasswordEntered = false;
 
-  bool _isAllFieldsEntered() {
-    return _isPasswordEntered != null;
+  @override
+  void initState() {
+    super.initState();
+    passwordController.addListener(_onFieldChanged);
+  }
+
+  @override
+  void dispose() {
+    passwordController.removeListener(_onFieldChanged);
+    passwordController.dispose();
+    super.dispose();
   }
 
   void _onFieldChanged() {
@@ -29,33 +36,53 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
     });
   }
 
-  void _validateAndNavigate() async {
-    if (_isAllFieldsEntered()) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      // Provider.of<UserModel>(context, listen: false).loggedInUser = passwordController;
-      Provider.of<UserModel>(context,listen: false).unjoinUser();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('회원탈퇴가 완료되었습니다'),
-        ),
-      );
-      await prefs.setInt("login_u_idx", 0);
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    }
+  bool _isAllFieldsEntered() {
+    return _isPasswordEntered;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> _validateAndNavigate() async {
+    if (_isAllFieldsEntered()) {
+      final userProvider = Provider.of<UserModel>(context, listen: false);
+      final loggedInUser = userProvider.loggedInUser;
 
-    KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534');
+      if (loggedInUser == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('로그인 정보가 없습니다.'),
+          ),
+        );
+        return;
+      }
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-    ));
+      bool success = await UserHttp.unjoin(
+        loggedInUser.u_idx, // 로그인한 사용자 ID
+        passwordController.text,
+      );
+
+      if (success) {
+        // 탈퇴 후 로그아웃 처리
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        // 로그인 상태 초기화
+        await prefs.setInt("login_u_idx", 0);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('회원탈퇴가 완료되었습니다.'),
+          ),
+        );
+
+        // 로그인 페이지로 이동
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginOpeningScreen()), // 로그인 페이지로 이동
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('비밀번호가 일치하지 않습니다.'),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -67,18 +94,19 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 1,
-            )
+          bottom: BorderSide(
+            color: Colors.grey,
+            width: 1,
+          ),
         ),
         elevation: 0,
         title: Text(
           '회원 탈퇴',
           style: TextStyle(
-              fontFamily: 'NotoSansKR',
-              fontWeight: FontWeight.w600,
-              fontSize: 18),
+            fontFamily: 'NotoSansKR',
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
         ),
         centerTitle: true,
       ),
@@ -134,8 +162,7 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
     );
   }
 
-  Widget buildProfileItem(String HintText, TextEditingController controller, bool isEntered) {
-
+  Widget buildProfileItem(String hintText, TextEditingController controller, bool isEntered) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -144,9 +171,10 @@ class _DeleteUserScreenState extends State<DeleteUserScreen> {
           onChanged: (text) {
             _onFieldChanged();
           },
+          obscureText: true,
           decoration: InputDecoration(
             isDense: true,
-            hintText: HintText,
+            hintText: hintText,
             contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
             border: OutlineInputBorder(
               borderSide: BorderSide(

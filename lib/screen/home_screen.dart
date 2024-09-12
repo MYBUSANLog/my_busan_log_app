@@ -75,6 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: FutureBuilder<void>(
         future: _loadingFuture,
         builder: (context, snapshot) {
@@ -91,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   Widget _buildDetailContent() {
-    final SearchController controller = SearchController();
 
     return SingleChildScrollView(
       child: ConstrainedBox(
@@ -158,7 +158,78 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      // Other GestureDetector widgets here
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ThemeparkListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fthemepark.png?alt=media&token=361518e5-fb23-4efc-93b2-81edd5a2825a',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('테마파크', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ActivityListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Factivity.png?alt=media&token=2abcc830-ca87-4135-b583-91d2b6b98eb6',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('액티비티', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ExhibitionListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fexhibition.png?alt=media&token=c61a8140-6f34-4d7f-b109-556b633428c7',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('전시회', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TourListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Ftour.png?alt=media&token=8bceef40-2606-444e-80c7-ce48c8f6cccf',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('관광지', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 30),
@@ -208,15 +279,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
                   if (_selectedSegment == '인기상품 모음.zip')
                     _buildPopularItems()
                   else if (_selectedSegment == '신규상품 모음.zip')
                     _buildNewItems(),
-                  SizedBox(height: 20),
                 ],
               ),
             ),
+            SizedBox(height: 10),
             Divider(color: Colors.grey[200], thickness: 7.0),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -314,10 +384,10 @@ class _HomeScreenState extends State<HomeScreen> {
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // 한 줄에 3개
-            childAspectRatio: 1,
-            crossAxisSpacing: 10, // 아이템 간의 수평 간격
-            mainAxisSpacing: 10, // 아이템 간의 수직 간격
+            crossAxisCount: 3,
+            childAspectRatio: 0.6,
+            crossAxisSpacing: 5,
+            mainAxisSpacing: 5,
           ),
           itemCount: itemModel.hotItem6.length,
           itemBuilder: (context, index) {
@@ -334,15 +404,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<ItemModel>(
       builder: (context, itemModel, child) {
         return Container(
-          height: 400,
           child: GridView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // 한 줄에 3개
-              crossAxisSpacing: 10.0, // 아이템 간의 수평 간격
-              mainAxisSpacing: 10.0, // 아이템 간의 수직 간격
-              childAspectRatio: 1, // 아이템의 가로 세로 비율
+              crossAxisCount: 3,
+              childAspectRatio: 0.6,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
             ),
             itemCount: itemModel.newItem6.length,
             itemBuilder: (context, index) {
@@ -356,8 +425,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 }
-
-
 
 
 
@@ -397,53 +464,53 @@ class FavoriteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
+        );
+      },
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                '${item.i_image}',
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: 5),
+            Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      '${item.i_image}',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
                   Text(
                     '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w400,
-                      fontSize: 8,
-                      color: Colors.black,
+                      fontSize: 10,
+                      color: Colors.grey,
                       height: 1.0,
                     ),
                   ),
-                  Container(
-                    child: Text(
-                      '${item.i_name}',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        height: 1.0,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      softWrap: true,
+                  Text(
+                    '${item.i_name}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
                     ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    softWrap: true,
                   ),
                   Text(
                     '${formatter.format(item.i_price)}원 ~',
@@ -456,9 +523,8 @@ class FavoriteCard extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          SizedBox(height: 10),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -545,17 +611,16 @@ class _FeedCardState extends State<FeedCard> {
                         Row(
                           children: [
                             Icon(
-                              Icons.remove_red_eye,
+                              Icons.star_rounded,
                               size: 20,
-                              color: Colors.grey,
+                              color: Colors.amber,
                             ),
                             Text(
-                              ' 1576',
+                              ' 5.0',
                               style: TextStyle(
                                 fontFamily: 'NotoSansKR',
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
-                                color: Colors.grey,
                               ),
                             ),
                           ],

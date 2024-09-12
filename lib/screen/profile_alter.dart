@@ -304,11 +304,11 @@ class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
                         Text(
                           ' (변경불가)',
                           style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 10,
-                            height: 1.0,
-                            color: Colors.grey[600]
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 10,
+                              height: 1.0,
+                              color: Colors.grey[600]
                           ),
                         ),
                       ],

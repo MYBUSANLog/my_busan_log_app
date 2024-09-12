@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../model/user_model.dart';
+import 'package:provider/provider.dart'; // Ensure this path is correct
+import 'package:busan_trip/model/user_model.dart'; // Ensure this path is correct
+import 'package:busan_trip/app_http/user_http.dart';
 
 class UpdatePwScreen extends StatefulWidget {
   const UpdatePwScreen({super.key});
@@ -12,43 +11,113 @@ class UpdatePwScreen extends StatefulWidget {
 }
 
 class _UpdatePwScreenState extends State<UpdatePwScreen> {
-
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController newPwController = TextEditingController();
-  TextEditingController newPw1Controller = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController newPwController = TextEditingController();
+  final TextEditingController newPw1Controller = TextEditingController();
 
   bool _isPasswordEntered = false;
-  bool _isnewPwEntered = false;
-  bool _isnewPw1Entered = false;
+  bool _isNewPwEntered = false;
+  bool _isNewPw1Entered = false;
 
+  @override
+  void initState() {
+    super.initState();
+    passwordController.addListener(_onFieldChanged);
+    newPwController.addListener(_onFieldChanged);
+    newPw1Controller.addListener(_onFieldChanged);
+  }
 
-  bool _isAllFieldsEntered() {
-    return _isPasswordEntered &&
-        _isnewPwEntered &&
-        _isnewPw1Entered != null;
+  @override
+  void dispose() {
+    passwordController.removeListener(_onFieldChanged);
+    newPwController.removeListener(_onFieldChanged);
+    newPw1Controller.removeListener(_onFieldChanged);
+    passwordController.dispose();
+    newPwController.dispose();
+    newPw1Controller.dispose();
+    super.dispose();
   }
 
   void _onFieldChanged() {
     setState(() {
       _isPasswordEntered = passwordController.text.isNotEmpty;
-      _isnewPwEntered = newPwController.text.isNotEmpty;
-      _isnewPw1Entered = newPw1Controller.text.isNotEmpty;
+      _isNewPwEntered = newPwController.text.isNotEmpty;
+      _isNewPw1Entered = newPw1Controller.text.isNotEmpty;
     });
   }
 
-  void _validateAndNavigate() async {
-    if (_isAllFieldsEntered()) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool _isAllFieldsEntered() {
+    return _isPasswordEntered &&
+        _isNewPwEntered &&
+        _isNewPw1Entered;
+  }
 
-      // Provider.of<UserModel>(context, listen: false).loggedInUser = passwordController;
-      Provider.of<UserModel>(context,listen: false).updatePw();
+  bool _isPasswordValid(String password) {
+    // Define the regex for password validation
+    final RegExp passwordRegex = RegExp(
+      r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$',
+    );
+    return passwordRegex.hasMatch(password);
+  }
+
+  Future<void> _validateAndNavigate() async {
+    if (newPwController.text != newPw1Controller.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('비밀번호 변경이 완료되었습니다'),
+          content: Text('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.'),
         ),
       );
-      await prefs.setInt("login_u_idx", 0);
+      // Reset new password fields
+      newPwController.clear();
+      newPw1Controller.clear();
+      return;
+    }
+
+    if (!_isPasswordValid(newPwController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('새 비밀번호는 공백을 제외한 영문, 숫자, 특수문자 8~20자리여야 합니다.'),
+        ),
+      );
+      // Reset new password fields
+      newPwController.clear();
+      newPw1Controller.clear();
+      return;
+    }
+
+    // UserProvider에서 로그인한 사용자 정보 가져오기
+    final userProvider = Provider.of<UserModel>(context, listen: false);
+    final loggedInUser = userProvider.loggedInUser;
+    print(loggedInUser);
+    if (loggedInUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('로그인 정보가 없습니다.'),
+        ),
+      );
+      return;
+    }
+
+    // 비밀번호 변경 요청
+    bool success = await UserHttp.updatePw(
+        loggedInUser.u_idx, // 로그인한 사용자 ID
+        passwordController.text,
+        newPwController.text
+    );
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('비밀번호 변경이 완료되었습니다.'),
+        ),
+      );
       Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('현재 비밀번호가 일치하지 않습니다.'),
+        ),
+      );
     }
   }
 
@@ -68,7 +137,7 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
         ),
         elevation: 0,
         title: Text(
-          '환경 설정',
+          '비밀번호 변경',
           style: TextStyle(
               fontFamily: 'NotoSansKR',
               fontWeight: FontWeight.w600,
@@ -80,12 +149,21 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildProfileItem('현재 비밀번호', passwordController, false),
+              buildProfileItem('현재 비밀번호', passwordController, _isPasswordEntered, obscureText: true),
               SizedBox(height: 10),
-              buildProfileItem('새 비밀번호', newPwController, false),
+              buildProfileItem('새 비밀번호 ', newPwController, _isNewPwEntered, obscureText: true),
               SizedBox(height: 10),
-              buildProfileItem('새 비밀번호 확인', newPwController, false),
+              buildProfileItem('새 비밀번호 확인', newPw1Controller, _isNewPw1Entered, obscureText: true),
+              SizedBox(height: 8),
+              Text(
+                '공백을 제외한 영문, 숫자, 특수문자 8~20자리',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              )
             ],
           ),
         ),
@@ -120,8 +198,8 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
       ),
     );
   }
-  Widget buildProfileItem(String HintText, TextEditingController controller, bool isEntered) {
 
+  Widget buildProfileItem(String hintText, TextEditingController controller, bool isEntered, {bool obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -130,9 +208,10 @@ class _UpdatePwScreenState extends State<UpdatePwScreen> {
           onChanged: (text) {
             _onFieldChanged();
           },
+          obscureText: obscureText,
           decoration: InputDecoration(
             isDense: true,
-            hintText: HintText,
+            hintText: hintText,
             contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
             border: OutlineInputBorder(
               borderSide: BorderSide(
