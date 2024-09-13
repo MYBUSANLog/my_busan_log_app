@@ -178,6 +178,10 @@ class _PayScreenState extends State<PayScreen> {
         onClose: () {
           print('------- onClose');
           Bootpay().dismiss(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
+          );
         },
         onIssued: (String data) {
           print('------- onIssued: $data');
@@ -226,10 +230,6 @@ class _PayScreenState extends State<PayScreen> {
             // OrderModel을 통해 업데이트
             Provider.of<OrderModel>(context, listen: false).updateOrder(updatedOrder.o_idx, updatedOrder);
           }
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
-          );
         },
       );
     } else {
