@@ -249,6 +249,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 opr_house: widget.item.operation_house,
                 cld_days: widget.item.closed_days,
                 content: widget.item.i_content,
+                manual: widget.item.manual,
+                refund: widget.item.refund,
               ),
             ],
           ),
@@ -271,6 +273,8 @@ class DetailContent extends StatefulWidget {
   final String opr_house;
   final String cld_days;
   final String content;
+  final String manual;
+  final String refund;
 
   const DetailContent({
     Key? key,
@@ -286,6 +290,8 @@ class DetailContent extends StatefulWidget {
     required this.opr_house,
     required this.cld_days,
     required this.content,
+    required this.manual,
+    required this.refund,
   }) : super(key: key);
 
   @override
@@ -545,6 +551,81 @@ class _DetailContentState extends State<DetailContent> {
             ),
           ),
           SizedBox(height: 10),
+          Divider(color: Colors.grey[200], thickness: 7.0,),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '상품 안내',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Divider(color: Colors.grey[200], thickness: 1.0,),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${widget.manual}',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+          Divider(color: Colors.grey[200], thickness: 7.0,),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '취소 및 환불 규정',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w800,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Divider(color: Colors.grey[200], thickness: 1.0,),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${widget.refund}',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

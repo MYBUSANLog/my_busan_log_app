@@ -18,6 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../app_http/order_http.dart';
+import '../model/order_model.dart';
 import '../model/store_model.dart';
 import '../model/user_model.dart';
 import '../vo/order.dart';
@@ -46,6 +47,8 @@ class _PayScreenState extends State<PayScreen> {
   final String webApplicationId = '66dfbcb3692d0516c36e4af3';
   final String androidApplicationId = '66dfbcb3692d0516c36e4af1';
   final String iosApplicationId = '66dfbcb3692d0516c36e4af2';
+
+  int? savedOrderIdx;
 
   // 총 결제 금액을 계산하는 메서드
   double get totalAmount {
@@ -111,23 +114,6 @@ class _PayScreenState extends State<PayScreen> {
 
     print("----------------------------------------");
 
-    // print('u_idx: ${Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx}');
-    // print('s_idx: ${widget.item.s_idx}');
-    // print('i_idx: ${widget.item.i_idx}');
-    // print('o_name: ${_nameController.text}');
-    // print('o_email: ${_emailController.text}');
-    // print('o_birth: ${_birthdayController.text}');
-    // print('o_p_number: ${_phoneController.text}');
-    // print('use_day: ${widget.selectedDate}');
-    // print('total_price: $totalAmount');
-    // print('selectedOptions: ${widget.selectedOptions}');
-    //
-    // widget.selectedOptions.forEach((option) {
-    //   print('op_idx: ${option['op_idx']}');
-    //   print('i_idx: ${widget.item.i_idx}');
-    //   print('op_quantity: ${option['quantity']}');
-    // });
-
     Order ord = Order(
       u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
       s_idx: widget.item.s_idx,
@@ -168,43 +154,88 @@ class _PayScreenState extends State<PayScreen> {
     var result = await OrderHttp.saveOrder(ord, orderNumber);
     print(result);
 
-    Bootpay().requestPayment(
-      context: context,
-      payload: payload,
-      showCloseButton: false,
-      onCancel: (String data) {
-        print('------- onCancel: $data');
-      },
-      onError: (String data) {
-        print('------- onError: $data');
-      },
-      onClose: () {
-        print('------- onClose');
-        Bootpay().dismiss(context);
-      },
-      onIssued: (String data) {
-        print('------- onIssued: $data');
-      },
-      onConfirm: (String data) {
-        return false;
-      },
-      onDone: (String data) async {
-        print('------- onDone: $data');
+    // 저장된 주문의 ID를 가져오기 위해 fetchAll 호출
+    List<Order> orders = await OrderHttp.fetchAll(Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx);
 
-        // BootPay 측에서 받아온 결제 완료 데이터 추출
-        var response = jsonDecode(data);
-        String methodOrigin = response['data']['method_origin'];
-        String statusLocale = response['data']['status_locale'];
+    if (orders.isNotEmpty) {
+      // 가장 최근의 주문 가져오기
+      Order latestOrder = orders.last;
+      savedOrderIdx = latestOrder.o_idx;
+      String initialOrderNumber = latestOrder.order_num;
+      print('Saved Order Index: $savedOrderIdx');
+      print('Saved Order Number: $initialOrderNumber');
 
-        // 결제가 완료되면 주문 상태 업데이트
-        await OrderHttp.updateOrderStatus(orderNumber, methodOrigin, statusLocale);
+      Bootpay().requestPayment(
+        context: context,
+        payload: payload,
+        showCloseButton: false,
+        onCancel: (String data) {
+          print('------- onCancel: $data');
+        },
+        onError: (String data) {
+          print('------- onError: $data');
+        },
+        onClose: () {
+          print('------- onClose');
+          Bootpay().dismiss(context);
+        },
+        onIssued: (String data) {
+          print('------- onIssued: $data');
+        },
+        onConfirm: (String data) {
+          return false;
+        },
+        onDone: (String data) async {
+          print('------- onDone: $data');
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
-        );
-      },
-    );
+          // BootPay 측에서 받아온 결제 완료 데이터 추출
+          var response = jsonDecode(data);
+          String methodOrigin = response['data']['method_origin'];
+          String statusLocale = response['data']['status_locale'];
+
+          print(methodOrigin);
+          print(statusLocale);
+
+          if (savedOrderIdx != null) {
+            Order updatedOrder = Order(
+              o_idx: savedOrderIdx!,
+              u_idx: Provider
+                  .of<UserModel>(context, listen: false)
+                  .loggedInUser
+                  .u_idx,
+              s_idx: widget.item.s_idx,
+              i_idx: widget.item.i_idx,
+              o_name: _nameController.text,
+              o_email: _emailController.text,
+              o_birth: _birthdayController.text,
+              o_p_number: _phoneController.text,
+              use_day: widget.selectedDate,
+              payment_method: methodOrigin,
+              total_price: totalAmount.toInt(),
+              status: statusLocale,
+              orderOptionsMapList: widget.selectedOptions.map((option) {
+                return {
+                  'op_idx': option['op_idx'],
+                  'i_idx': widget.item.i_idx,
+                  'op_quantity': option['quantity'],
+                };
+              }).toList(),
+              order_num: initialOrderNumber,
+            );
+
+            // OrderModel을 통해 업데이트
+            Provider.of<OrderModel>(context, listen: false).updateOrder(updatedOrder.o_idx, updatedOrder);
+          }
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderSuccessScreen()),
+          );
+        },
+      );
+    } else {
+      print('No orders found for user');
+    }
   }
 
   TextEditingController _nameController = TextEditingController(text: "test");

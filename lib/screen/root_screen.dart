@@ -50,20 +50,9 @@ class _RootScreenState extends State<RootScreen> {
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5), // Shadow color with opacity
-                offset: Offset(0, -2), // Offset the shadow upwards (top shadow effect)
-                blurRadius: 4.0, // Blur radius for the shadow
-                spreadRadius: 0, // Spread radius of the shadow
-              ),
-            ],
+            border: Border(top: BorderSide(color: Colors.grey[100]!, width: 1.0))
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
             child: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.white,

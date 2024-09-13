@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:daum_postcode_search/data_model.dart';
 import 'package:daum_postcode_search/daum_postcode_search.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,12 +32,14 @@ class _SignUp3State extends State<SignUp3> {
   TextEditingController _addressController = TextEditingController();
   Map<String, int> radioMap={'호캉스':0, '엑티비티':1, '쇼핑':2, '상관없음':3};
   Uint8List? previewImgBytes;
+  String? uploadedImageUrl;
 
   bool _isNameEntered = false;
   bool _isNicknameEntered = false;
   bool _isPhoneEntered = false;
   bool _isAddressEntered = false;
   bool _isBirthdayEntered = false;
+  bool _isImageUpdated = false;
 
   DateTime? tempPickedDate;
   DateTime _selectedDate = DateTime.now();
@@ -49,6 +52,7 @@ class _SignUp3State extends State<SignUp3> {
 
   bool isLoading = false;
 
+
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -58,17 +62,27 @@ class _SignUp3State extends State<SignUp3> {
     }
   }
 
-  void _validateAndNavigate() {
-    if (_isAllFieldsEntered()) {
-      // Provider.of<JoinModel>(context, listen: false).setName(_nameController.text);
-      // Provider.of<JoinModel>(context, listen: false).setNickname(_nicknameController.text);
-      // Provider.of<JoinModel>(context, listen: false).setBirthday(_birthdayController.text);
-      // Provider.of<JoinModel>(context, listen: false).setPhone(_phoneController.text);
-      // Provider.of<JoinModel>(context, listen: false).setAddress(_addressController.text);
-      // if (_selectedTripPreference != null) {
-      //   Provider.of<JoinModel>(context, listen: false).setTrippreference(radioMap[_selectedTripPreference]!);
-      // }
-      // User user = Provider.of<JoinModel>(context, listen: false).joinUser;
+  void _validateAndNavigate() async {
+    String? uploadedImageUrl;
+
+    if (_isAllFieldsEntered() || _isImageUpdated) {
+
+      if (_isImageUpdated && previewImgBytes != null) {
+        // 이미지 URL을 가져오기 위해 Firebase에 업로드
+        try {
+          final storageRef = FirebaseStorage.instance.ref();
+          final ref = storageRef.child('/my_busan_log/profile_images/img_${DateTime.now().toIso8601String()}');
+
+          UploadTask uploadTask = ref.putData(previewImgBytes!);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          uploadedImageUrl = await taskSnapshot.ref.getDownloadURL();
+        } catch (e) {
+          print("이미지 업로드 중 오류 발생: $e");
+          // 이미지 업로드 오류 처리
+        }
+      }
+
+
       User user = User(
         u_email: Provider.of<JoinModel>(context, listen: false).joinUser.u_email,
         u_pw: Provider.of<JoinModel>(context, listen: false).joinUser.u_pw,
@@ -78,7 +92,8 @@ class _SignUp3State extends State<SignUp3> {
         u_p_number: _phoneController.text,
         u_address: _addressController.text,
         trip_preference: radioMap[_selectedTripPreference]!,
-        login_provider: 'basic'
+        login_provider: 'basic',
+        u_img_url: uploadedImageUrl ?? 'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Fprofile_images%2Fdefault_profile.jpg?alt=media&token=1b151b41-6368-4154-ab15-6d7ddf1735bf',
       );
 
       Provider.of<JoinModel>(context, listen: false).joinUser = user;
@@ -174,8 +189,10 @@ class _SignUp3State extends State<SignUp3> {
                 clipBehavior: Clip.none,
                 children: [
                   CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/images/default_profile.jpg'),
+                    radius: 60,
+                    backgroundImage: previewImgBytes != null
+                        ? MemoryImage(previewImgBytes!)
+                        : AssetImage('assets/images/default_profile.jpg'),
                   ),
                   Positioned(
                     bottom: 0,

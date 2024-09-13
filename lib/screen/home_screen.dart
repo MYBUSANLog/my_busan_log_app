@@ -1,766 +1,825 @@
-
-import 'dart:io';
-import 'dart:math';
-import 'dart:ui';
-
-import 'package:daum_postcode_search/data_model.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:busan_trip/screen/activity_list_screen.dart';
+import 'package:busan_trip/screen/exhibition_list_screen.dart';
+import 'package:busan_trip/screen/hotel_list_screen.dart';
+import 'package:busan_trip/screen/item_detail_screen.dart';
+import 'package:busan_trip/screen/realtime_list_screen.dart';
+import 'package:busan_trip/screen/search_screen.dart';
+import 'package:busan_trip/screen/themepark_list_screen.dart';
+import 'package:busan_trip/screen/tour_list_screen.dart';
+import 'package:carousel_slider/carousel_controller.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../app_util/img_util.dart';
-import '../model/user_model.dart';
-import '../vo/user.dart';
-import 'daumpostcodesearchexample.dart';
+import '../model/item_model.dart';
+import '../model/review_model.dart';
+import '../vo/item.dart';
+import '../vo/review.dart';
 
-class ProfileAlterScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
 
-  ProfileAlterScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
-  _ProfileAlterScreenState createState() => _ProfileAlterScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ProfileAlterScreenState extends State<ProfileAlterScreen> {
+class _HomeScreenState extends State<HomeScreen> {
+  String _selectedSegment = '인기상품 모음.zip';
+  var searHistory = [];
+  final CarouselController _controller = CarouselController();
+  List imgList = [
+    "https://plus.unsplash.com/premium_photo-1661962660197-6c2430fb49a6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1551279076-6887dee32c7e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1552873547-b88e7b2760e2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1561555804-4b9e0848fdbe?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://images.unsplash.com/photo-1683041133704-1de1c55d050c?q=80&w=1075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  ];
 
-  late TextEditingController emailController;
-  late TextEditingController nameController;
-  late TextEditingController nicknameController;
-  late TextEditingController birthdayController;
-  late TextEditingController phoneController;
-  late TextEditingController addressController;
-  // Map<String, int> radioMap={'호캉스':1, '액티비티':2, '쇼핑':3, '상관없음':4};
-  final storage = FirebaseStorage.instance;
-  Uint8List? previewImgBytes;
-  String? uploadedImageUrl;
+  bool isFavorited = false;
 
-  late int _selectedTripPreference;
+  void toggleFavorite() {
+    setState(() {
+      isFavorited = !isFavorited;
+    });
+  }
 
-  bool _isImageUpdated = false;
-  bool _isFieldUpdated = false;
-  bool updateProfile=false;
-  Map<String, dynamic> userProfileMap = {};
+  final Future<void> _loadingFuture = _simulateLoading();
 
+  static Future<void> _simulateLoading() async {
+    await Future.delayed(const Duration(seconds: 5));
+  }
+
+  final ScrollController _listScrollController = ScrollController(); // ListView.builder용
+  final ScrollController _buttonScrollController = ScrollController(); // SingleChildScrollView용
+  List<FeedCard> feedCards = [];
+  int currentPage = 0; // 현재 페이지를 관리하는 변수
+  final int reviewsPerPage = 10; // 한 페이지당 리뷰 수
   bool isLoading = false;
+  bool _showScrollToTopButton = false;
 
-  DateTime? tempPickedDate;
-  DateTime _selectedDate = DateTime.now();
-  DataModel? _daumPostcodeSearchDataModel;
+  Future<void> _refresh() async {
+    // 새로고침할 때 실행할 로직 (API 호출 등)
+    await Future.delayed(Duration(seconds: 1)); // 예시로 1초 딜레이
+    // 데이터 갱신 로직 추가
+    setState(() {
+      Provider.of<ItemModel>(context, listen: false).set6HotItems();
+      Provider.of<ItemModel>(context, listen: false).set6NewItems();
+      Provider.of<ReviewModel>(context, listen: false).setAllReviews(start: 0, count: 10);
+    });
+  }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    User loginUser = Provider.of<UserModel>(context, listen: false).loggedInUser;
-    print(loginUser.u_email);
-    print(loginUser.trip_preference);
-    emailController = TextEditingController(text: loginUser.u_email);
-    nameController = TextEditingController(text: loginUser.u_name);
-    nicknameController = TextEditingController(text: loginUser.u_nick);
-    birthdayController = TextEditingController(text: loginUser.u_birth);
-    phoneController = TextEditingController(text: loginUser.u_p_number);
-    addressController = TextEditingController(text: loginUser.u_address);
-
-    userProfileMap = {
-      'u_email': loginUser.u_email,
-      'u_name': loginUser.u_name,
-      'u_nick': loginUser.u_nick,
-      'u_birth': loginUser.u_birth,
-      'u_p_number': loginUser.u_p_number,
-      'u_address': loginUser.u_address,
-      'u_img_url': loginUser.u_img_url,
-    };
-    _selectedTripPreference = loginUser.trip_preference;
-
-    emailController.addListener(_onFieldChanged);
-    nameController.addListener(_onFieldChanged);
-    nicknameController.addListener(_onFieldChanged);
-    birthdayController.addListener(_onFieldChanged);
-    phoneController.addListener(_onFieldChanged);
-    addressController.addListener(_onFieldChanged);
+    Provider.of<ItemModel>(context, listen: false).set6HotItems();
+    Provider.of<ItemModel>(context, listen: false).set6NewItems();
+    _listScrollController.addListener(_scrollListener);
+    _loadMoreItems();
   }
 
-
-
-  int getTripPreferenceFromLoginUser() {
-    User loginUser = Provider.of<UserModel>(context, listen: false).loggedInUser;
-    return loginUser.trip_preference;
-  }
-
-
-  void _onFieldChanged() {
-    setState(() {
-      _isFieldUpdated = userProfileMap['u_email'] != emailController.text ||
-          userProfileMap['u_name'] != nameController.text ||
-          userProfileMap['u_nick'] != nicknameController.text ||
-          userProfileMap['u_birth'] != birthdayController.text ||
-          userProfileMap['u_p_number'] != phoneController.text ||
-          userProfileMap['u_address'] != addressController.text ||
-          _selectedTripPreference != getTripPreferenceFromLoginUser;
-      _isImageUpdated = previewImgBytes != null;
-    });
-  }
-
-  void _onTripPreferenceChanged(int? value) {
-    setState(() {
-      if (value != null) {
-        _selectedTripPreference = value;
-        _isFieldUpdated = true;
-      }
-    });
-  }
-
-  void _validateAndNavigate() async {
-    if (_isFieldUpdated || _isImageUpdated) {
-      // 비동기 작업으로 이미지 업로드를 처리
-      if (_isImageUpdated && previewImgBytes != null) {
-        // 이미지 URL을 가져오기 위해 Firebase에 업로드
-        try {
-          final storageRef = FirebaseStorage.instance.ref();
-          final ref = storageRef.child('/my_busan_log/profile_images/img_${DateTime.now().toIso8601String()}');
-
-          UploadTask uploadTask = ref.putData(previewImgBytes!);
-          TaskSnapshot taskSnapshot = await uploadTask;
-          uploadedImageUrl = await taskSnapshot.ref.getDownloadURL();
-        } catch (e) {
-          print("이미지 업로드 중 오류 발생: $e");
-          // 이미지 업로드 오류 처리
-        }
-      }
-
-      User user = User(
-        u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
-        u_email: emailController.text,
-        u_name: nameController.text,
-        u_nick: nicknameController.text,
-        u_birth: birthdayController.text,
-        u_p_number: phoneController.text,
-        u_address: addressController.text,
-        trip_preference: _selectedTripPreference,
-        u_img_url: uploadedImageUrl ?? Provider.of<UserModel>(context, listen: false).loggedInUser.u_img_url,
-      );
-
-      Provider.of<UserModel>(context, listen: false).updateUser = user;
-      await Provider.of<UserModel>(context, listen: false).updateSaveUser();
-
-      Navigator.of(context).pop();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('프로필 수정이 완료되었습니다'),
-        ),
-      );
-    }
-  }
-
-
-  void _formatPhoneNumber() {
-    String text = phoneController.text;
-    String formattedText = _formatPhoneNumberString(text);
-
-    if (phoneController.text != formattedText) {
-      phoneController.value = phoneController.value.copyWith(
-        text: formattedText,
-        selection: TextSelection.collapsed(offset: formattedText.length),
-        composing: TextRange.empty,
-      );
-    }
-  }
-
-  String _formatPhoneNumberString(String phoneNumber) {
-    phoneNumber = phoneNumber.replaceAll(RegExp(r'\D'), ''); // Remove non-numeric characters
-
-    if (phoneNumber.length >= 11) {
-      phoneNumber = phoneNumber.substring(0, 11); // Limit to 11 digits
-    }
-
-    if (phoneNumber.length >= 8) {
-      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7)}';
-    } else if (phoneNumber.length >= 4) {
-      return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3)}';
+  void _scrollListener() {
+    if (_listScrollController.position.pixels > 200) {
+      setState(() {
+        _showScrollToTopButton = true;
+      });
     } else {
-      return phoneNumber;
+      setState(() {
+        _showScrollToTopButton = false;
+      });
+    }
+
+    if (_listScrollController.position.pixels >=
+        _listScrollController.position.maxScrollExtent - 500 &&
+        !isLoading) {
+      _loadMoreItems();
+    }
+  }
+
+  Future<void> _loadMoreItems() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await Provider.of<ReviewModel>(context, listen: false).setAllReviews(start: currentPage * reviewsPerPage, count: reviewsPerPage);
+
+      setState(() {
+        currentPage++;
+      });
+    } catch (e) {
+      // 오류 처리
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _listScrollController.dispose();
+    _buttonScrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _listScrollController.animateTo(
+      0, // 맨 위로 이동
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+    ));
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: FutureBuilder<void>(
+          future: _loadingFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildDetailContent();
+            } else {
+              return _buildDetailContent();
+            }
+          },
+        ),
+      ),
+      floatingActionButton: _showScrollToTopButton
+          ? FloatingActionButton(
+        onPressed: _scrollToTop,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(  // 둥근 모서리 설정
+            borderRadius: BorderRadius.circular(50),
+            side: BorderSide(color: Colors.grey[300]!)
+        ),
+        child: Icon(
+          Icons.keyboard_arrow_up,
+          color: Colors.black,
+          size: 35,
+        ),
+      )
+          : null,
+    );
+  }
+
+  Widget _buildDetailContent() {
+
+    return SingleChildScrollView(
+      controller: _listScrollController,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height, // 최소 높이를 화면 높이로 설정
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(height: 60),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/006.png',
+                          width: 120,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => SearchScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_outlined,
+                              size: 35,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  sliderWidget(),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HotelListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fhotel.png?alt=media&token=43194f84-1d3c-4187-bdfc-7cfa0bcb5167',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('호텔', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ThemeparkListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fthemepark.png?alt=media&token=361518e5-fb23-4efc-93b2-81edd5a2825a',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('테마파크', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ActivityListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Factivity.png?alt=media&token=2abcc830-ca87-4135-b583-91d2b6b98eb6',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('액티비티', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ExhibitionListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Fexhibition.png?alt=media&token=c61a8140-6f34-4d7f-b109-556b633428c7',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('전시회', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => TourListScreen()),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.network(
+                              'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Ftheme_icons%2Ftour.png?alt=media&token=8bceef40-2606-444e-80c7-ce48c8f6cccf',
+                              width: 50,
+                              fit: BoxFit.cover,
+                            ),
+                            Text('관광지', style: TextStyle(fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Center(
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: CupertinoSlidingSegmentedControl<String>(
+                        backgroundColor: Colors.grey[100]!,
+                        thumbColor: Color(0xff0e4194),
+                        groupValue: _selectedSegment,
+                        onValueChanged: (String? newValue) {
+                          setState(() {
+                            _selectedSegment = newValue!;
+                          });
+                        },
+                        children: {
+                          '인기상품 모음.zip': Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              '인기상품 모음.zip',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                height: 1.0,
+                                color: _selectedSegment == '인기상품 모음.zip' ? Colors.white : Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                          '신규상품 모음.zip': Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              '신규상품 모음.zip',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                height: 1.0,
+                                color: _selectedSegment == '신규상품 모음.zip' ? Colors.white : Colors.grey[500],
+                              ),
+                            ),
+                          ),
+                        },
+                      ),
+                    ),
+                  ),
+                  if (_selectedSegment == '인기상품 모음.zip')
+                    _buildPopularItems()
+                  else if (_selectedSegment == '신규상품 모음.zip')
+                    _buildNewItems(),
+                ],
+              ),
+            ),
+            SizedBox(height: 10),
+            Divider(color: Colors.grey[200], thickness: 7.0),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  SizedBox(height: 30),
+                  Column(
+                    children: [
+                      Container(
+                        height: 70,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/banner.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'ⓘ 광고 ',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 13,
+                            height: 1.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 35),
+                  Column(
+                    children: [
+                      Consumer<ReviewModel>(builder: (context, itemModel, child) {
+                        return Column(
+                          children: itemModel.reviews.asMap().entries.map((entry) {
+                            Review review = entry.value;
+                            return FeedCard(review: review);
+                          }).toList(),
+                        );
+                      }),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget sliderWidget() {
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15), // 전체 슬라이더 모서리를 둥글게
+      child: CarouselSlider(
+        carouselController: _controller,
+        items: imgList.map(
+              (imgLink) {
+            return Builder(
+              builder: (context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15), // 이미지 컨테이너도 둥글게
+                  ),
+                  child: ClipRRect(
+                    child: Image.network(
+                      imgLink,
+                      fit: BoxFit.cover, // 이미지의 BoxFit 설정
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ).toList(),
+        options: CarouselOptions(
+          height: 200,
+          viewportFraction: 1.0,
+          autoPlay: true,
+          autoPlayInterval: const Duration(seconds: 4),
+          onPageChanged: (index, reason) {
+            setState(() {});
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPopularItems() {
+    return Column(
+      children: [
+        Consumer<ItemModel>(
+          builder: (context, itemModel, child) {
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.55,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+              ),
+              itemCount: itemModel.hotItem6.length,
+              itemBuilder: (context, index) {
+                Item item = itemModel.hotItem6[index];
+                return FavoriteCard(item: item);
+              },
+            );
+          },
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RealtimeListScreen()),
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(5)
+            ),
+            child: Text(
+              '더보기',
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Colors.black,
+                height: 1.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SizedBox(height: 15),
+      ],
+    );
+  }
+
+
+  Widget _buildNewItems() {
+    return Column(
+      children: [
+        Consumer<ItemModel>(
+          builder: (context, itemModel, child) {
+            return Container(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.55,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+                itemCount: itemModel.newItem6.length,
+                itemBuilder: (context, index) {
+                  Item item = itemModel.newItem6[index];
+                  return FavoriteCard(item: item);
+                },
+              ),
+            );
+          },
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RealtimeListScreen()),
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(5)
+            ),
+            child: Text(
+              '더보기',
+              style: TextStyle(
+                fontFamily: 'NotoSansKR',
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+                color: Colors.black,
+                height: 1.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        SizedBox(height: 15),
+      ],
+    );
+  }
+
+}
+
+
+
+class FavoriteCard extends StatelessWidget {
+  final formatter = NumberFormat('#,###');
+  final Item item;
+
+  FavoriteCard({required this.item, super.key});
+
+  String _formatAddress(String address) {
+    // 주소를 공백을 기준으로 나눕니다.
+    final parts = address.split(' ');
+
+    if (parts.length >= 3) {
+      // 부산광역시 기장군 기장읍 동부산관광로 42에서 '부산 기장군'을 추출
+      return '${parts[0]} ${parts[1]}';
+    }
+
+    // 예상된 형식이 아닌 경우 원래 주소를 반환합니다.
+    return address;
+  }
+
+  String _mapTypeToString(int type) {
+    switch (type) {
+      case 1:
+        return '호텔';
+      case 2:
+        return '테마파크';
+      case 3:
+        return '액티비티';
+      case 4:
+        return '전시회';
+      default:
+        return '기타'; // 기본값
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final userModel = Provider.of<UserModel>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 1,
-            )),
-        elevation: 0,
-        title: Text(
-          '프로필 수정',
-          style: TextStyle(
-              fontFamily: 'NotoSansKR',
-              fontWeight: FontWeight.w600,
-              fontSize: 18),
-        ),
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 14),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ItemDetailScreen(item: item)),
+        );
+      },
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                '${item.i_image}',
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: 5),
+            Container(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundImage: previewImgBytes != null
-                            ? MemoryImage(previewImgBytes!)
-                            : userModel.loggedInUser.u_img_url != null
-                            ? NetworkImage(userModel.loggedInUser.u_img_url!)
-                            : AssetImage('assets/images/default_profile.jpg') as ImageProvider,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: () async {
-                            setState(() {
-                              isLoading = true; // 로딩 시작
-                            });
-                            final picker = ImagePicker();
-                            XFile? imgFile = await picker.pickImage(source: ImageSource.gallery);
-                            if(imgFile != null) {
-                              try {
-                                Uint8List bytes =
-                                await ImgUtil.convertResizedUint8List(
-                                    xFile: imgFile);
-                                print("선택한 이미지의 데이터 크기: ${bytes.lengthInBytes} bytes");
-                                setState(() {
-                                  previewImgBytes = bytes;
-                                  isLoading = false; // 로딩 끝
-                                  _isImageUpdated = true;
-                                  updateProfile = true;
-                                });
-                              } catch (e) {
-                                print("이미지 데이터 크기 오류 발생! 선택한 이미지의 데이터 크기: ${await imgFile.length()} bytes");
-                                print("오류: $e");
-                                setState(() {
-                                  isLoading = false; // 오류 발생 시 로딩 끝
-                                });
-                              }
-                            } else {
-                              setState(() {
-                                isLoading = false; // 사진 선택 안 했을 때 로딩 끝
-                              });
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2), // Shadow color
-                                  spreadRadius: 2, // Spread radius
-                                  blurRadius: 5,   // Blur radius
-                                  offset: Offset(0, 3), // Shadow position
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.edit, color: Color(0xff0e4194), size: 25),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    '${_formatAddress(item.i_address)} · ${_mapTypeToString(item.c_type)}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 10,
+                      color: Colors.grey,
+                      height: 1.0,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 40),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
+                  Text(
+                    '${item.i_name}',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    softWrap: true,
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    '${formatter.format(item.i_price)}원 ~',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class FeedCard extends StatefulWidget {
+
+  Review review;
+  FeedCard({required this.review, super.key});
+
+  @override
+  State<FeedCard> createState() => _FeedCardState();
+}
+
+class _FeedCardState extends State<FeedCard> {
+  bool isBookmarked = false;
+
+  void toggleBookmark() {
+    setState(() {
+      isBookmarked = !isBookmarked;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 22),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  '${widget.review.r_img_url}',
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                top: 16.0,
+                right: 16.0,
+                child: GestureDetector(
+                  onTap: toggleBookmark,
+                  child: Icon(
+                    isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10,),
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.network(
+                  '${widget.review.u_img_url}',
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: 10,),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '이메일',
+                          '${widget.review.u_nick}',
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 17,
                             height: 1.0,
                           ),
                         ),
+
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star_rounded,
+                              size: 20,
+                              color: Colors.amber,
+                            ),
+                            Text(
+                              ' ${widget.review.r_score}',
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 5,),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_outlined, size: 15, color: Colors.grey,),
                         Text(
-                          ' (변경불가)',
+                          ' ${widget.review.i_name}',
                           style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
-                              height: 1.0,
-                              color: Colors.grey[600]
+                            fontFamily: 'NotoSansKR',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.grey,
+                            height: 1.0,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  buildProfileItem('이메일', emailController, _isFieldUpdated, null, false),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '이름',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  buildProfileItem('이름', nameController, _isFieldUpdated),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '닉네임',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  buildProfileItem('닉네임', nicknameController, _isFieldUpdated),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '생년월일',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  BirthdayText(false),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '전화번호',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  buildProfileItem('전화번호', phoneController, _isFieldUpdated, TextInputType.phone),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '주소',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  _buildCustomTextFieldWithButton('주소', addressController, _isFieldUpdated),
-                  SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '여행 선호도',
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        height: 1.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  _buildTravelPreferenceSection(),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ),
-          ),
-          if (isLoading)
-            Positioned.fill(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // 흐림 효과
-                  BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: Color(0xff0e4194)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: (_isFieldUpdated || _isImageUpdated) ? () {
-                  _validateAndNavigate();
-                } : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: (_isFieldUpdated || _isImageUpdated) ? Color(0xff0e4194) : Colors.grey,
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: Text(
-                  '저장',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget BirthdayText(bool isEntered) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.mediumImpact();
-        _selectDate();
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: AbsorbPointer(  // TextField 비활성화
-              child: TextField(
-                controller: birthdayController,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-                  labelStyle: TextStyle(color: Colors.black),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _selectDate() async {
-    DateTime? pickedDate = await showModalBottomSheet<DateTime>(
-      backgroundColor: ThemeData.light().scaffoldBackgroundColor,
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 300,
-          child: Column(
-            children: <Widget>[
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    CupertinoButton(
-                      child: Text('취소'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        FocusScope.of(context).unfocus();
-                      },
-                    ),
-                    CupertinoButton(
-                      child: Text('완료'),
-                      onPressed: () {
-                        Navigator.of(context).pop(tempPickedDate);
-                        FocusScope.of(context).unfocus();
-                      },
-                    ),
+                    SizedBox(height: 5,),
                   ],
                 ),
               ),
-              Divider(
-                height: 0,
-                thickness: 1,
-              ),
-              Expanded(
-                child: Container(
-                  child: CupertinoDatePicker(
-                    backgroundColor: ThemeData.light().scaffoldBackgroundColor,
-                    minimumYear: 1900,
-                    maximumYear: DateTime.now().year,
-                    initialDateTime: DateTime.now(),
-                    maximumDate: DateTime.now(),
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: (DateTime dateTime) {
-                      tempPickedDate = dateTime;
-                    },
-                  ),
-                ),
-              ),
             ],
           ),
-        );
-      },
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-        birthdayController.text = convertDateTimeDisplay(pickedDate);
-        _isFieldUpdated = true;
-      });
-    }
-  }
-
-  String convertDateTimeDisplay(DateTime date) {
-    final DateFormat serverFormatter = DateFormat('yyyy-MM-dd');
-    return serverFormatter.format(date);
-  }
-
-  // buildProfileItem, _buildCustomTextFieldWithButton 는 잠시 주석처리
-
-  Widget buildProfileItem(String labelText, TextEditingController controller, bool isEntered, [TextInputType? inputType, bool enabled = true]) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: controller,
-          onChanged: (text) {
-            _formatPhoneNumber();
-          },
-          keyboardType: inputType,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-            labelStyle: TextStyle(color: Colors.black),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1.0,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1.0,
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.grey,
-                width: 1.0,
-              ),
-            ),
-          ),
-          cursorColor: Color(0xff0e4194),
-          enabled: enabled,
-          readOnly: !enabled,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCustomTextFieldWithButton(String labelText, TextEditingController controller, bool isEntered, [TextInputType keyboardType = TextInputType.text]) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: controller,
-            onChanged: (text) {
-
-            },
-            keyboardType: keyboardType,
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
-              labelStyle: TextStyle(color: Colors.black),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-              ),
-            ),
-            cursorColor: Color(0xff0e4194),
-          ),
-        ),
-        SizedBox(width: 5), // Space between the text field and button
-        ElevatedButton(
-          onPressed: () async {
-            try {
-              DataModel model = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SearchingPage(),
-                ),
-              );
-
-              setState(() {
-                _daumPostcodeSearchDataModel = model;
-                addressController.text = _daumPostcodeSearchDataModel!.address;
-
-              });
-            } catch (error) {
-              print(error);
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xff0e4194), // Button background color
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12), // Button padding
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8), // Rounded corners
-            ),
-            elevation: 3, // Button shadow elevation
-          ),
-          child: Row(
-            children: [
-              Text(
-                "주소 검색",
-                style: TextStyle(
-                    fontFamily: 'NotoSansKR',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: Colors.white
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTravelPreferenceSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 0),
-              title: Text('호캉스'),
-              leading: Radio<int>(
-                value: 1,
-                groupValue: _selectedTripPreference,
-                onChanged: _onTripPreferenceChanged,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 0),
-              title: Text('액티비티'),
-              leading: Radio<int>(
-                value: 2,
-                groupValue: _selectedTripPreference,
-                onChanged: _onTripPreferenceChanged,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 0),
-              title: Text('쇼핑'),
-              leading: Radio<int>(
-                value: 3,
-                groupValue: _selectedTripPreference,
-                onChanged: _onTripPreferenceChanged,
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 0),
-              title: Text('상관없음'),
-              leading: Radio<int>(
-                value: 4,
-                groupValue: _selectedTripPreference,
-                onChanged: _onTripPreferenceChanged,
-              ),
-            ),
-            // DropdownButton<int>(
-            //   value: _selectedTripPreference,
-            //   items: _tripPreferences,
-            //   onChanged: (value) {
-            //     setState(() {
-            //       _selectedTripPreference = value!;
-            //     });
-            //   },
-            // ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

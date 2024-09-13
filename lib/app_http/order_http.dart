@@ -12,13 +12,15 @@ class OrderHttp {
     try {
       var response = await http.get(Uri.parse('${apiUrl}/findByUIdx?u_idx=${u_idx}'));
       if (response.statusCode == 200) {
+        // 응답을 JSON으로 디코딩
         var mapList = jsonDecode(utf8.decode(response.bodyBytes)) as List;
         List<Order> list = [];
         for (var map in mapList) {
+          // JSON을 Order 객체로 변환
           Order item = Order.fromJson(map);
           list.add(item);
         }
-        print(list); // For debugging
+        print(list); // 디버깅을 위한 출력
         return list;
       } else {
         throw Exception('Failed to load data');
@@ -95,44 +97,52 @@ class OrderHttp {
     }
   }
 
-    static Future<String> saveOrder(Order order, String orderNumber) async {
-      print(orderNumber);
-      print(jsonEncode(order.toJson()));
-      var url = Uri.parse('$apiUrl/save?order_num=$orderNumber');
-      print(jsonEncode(order.toJson()));
+  static Future<String> saveOrder(Order order, String orderNumber) async {
+    print(orderNumber);
+    print(jsonEncode(order.toJson()));
+    var url = Uri.parse('$apiUrl/save?order_num=$orderNumber');
+    print(jsonEncode(order.toJson()));
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(order.toJson()),
+    );
+
+    print(response.statusCode); // 응답 상태 코드 출력
+    print(response.body); // 응답 본문 출력
+
+    if (response.statusCode == 200) {
+      return '주문이 성공적으로 저장되었습니다.';
+    } else {
+      throw Exception('주문 저장 실패: ${response.body}');
+    }
+  }
+
+  static Future<String> updateOrder(int o_idx, Order order) async {
+    print('---------------------------------------');
+    print(order.order_num);
+
+    try {
+      var url = Uri.parse('$apiUrl/update?o_idx=$o_idx');
       var response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(order.toJson()),
       );
 
+      print(order.order_num);
+
       print(response.statusCode); // 응답 상태 코드 출력
       print(response.body); // 응답 본문 출력
 
       if (response.statusCode == 200) {
-        return '주문이 성공적으로 저장되었습니다.';
+        return '주문이 성공적으로 업데이트되었습니다.';
       } else {
-        throw Exception('주문 저장 실패: ${response.body}');
+        throw Exception('주문 업데이트 실패: ${response.body}');
       }
-    }
-
-  // 주문 상태 업데이트 메서드
-  static Future<String> updateOrderStatus(String orderNumber, String paymentMethod, String status) async {
-    var url = Uri.parse('$apiUrl/updateStatus');
-    var response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'order_num': orderNumber,
-        'payment_method': paymentMethod,
-        'status': status,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      return '주문 상태가 성공적으로 업데이트되었습니다.';
-    } else {
-      throw Exception('주문 상태 업데이트 실패: ${response.body}');
+    } catch (e) {
+      print('Error: $e');
+      return '주문 업데이트 중 오류 발생';
     }
   }
 }

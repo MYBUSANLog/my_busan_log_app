@@ -17,6 +17,8 @@ class Item {
   int i_wishes; // 누적 상품 좋아요 수
   double averageScore; // 상품 평점
   int review_count; // 누적 리뷰 갯수
+  String manual;
+  String refund;
 
   Item({
     this.i_idx=0,
@@ -37,6 +39,8 @@ class Item {
     this.i_wishes=0,
     this.averageScore=0.0,
     this.review_count=0,
+    this.manual='',
+    this.refund='',
   });
 
   factory Item.fromJson(Map<String, dynamic> json){
@@ -59,6 +63,8 @@ class Item {
       i_wishes: json['i_wishes']??0,
       averageScore: json['average_score'] ?? 0.0,
       review_count: json['review_count']??0,
+      manual: json['manual']??'',
+      refund: json['refund']??'',
     );
   }
 }
