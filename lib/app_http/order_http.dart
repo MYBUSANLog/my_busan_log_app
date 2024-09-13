@@ -119,6 +119,9 @@ class OrderHttp {
   }
 
   static Future<String> updateOrder(int o_idx, Order order) async {
+    print('---------------------------------------');
+    print(order.order_num);
+
     try {
       var url = Uri.parse('$apiUrl/update?o_idx=$o_idx');
       var response = await http.post(
@@ -126,6 +129,8 @@ class OrderHttp {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(order.toJson()),
       );
+
+      print(order.order_num);
 
       print(response.statusCode); // 응답 상태 코드 출력
       print(response.body); // 응답 본문 출력

@@ -50,7 +50,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
   }
 
   Future<void> _loadMoreItems() async {
-    if (isLoading) return; // 이미 로딩 중이면 중복 요청 방지
+    if (isLoading) return; // 이미 로딩 중이면 중복 요청 방지d
 
     setState(() {
       isLoading = true;
