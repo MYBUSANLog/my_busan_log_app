@@ -487,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: 0.55,
+                childAspectRatio: 0.48,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
               ),
@@ -499,6 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
+        SizedBox(height: 15),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -543,7 +544,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.55,
+                  childAspectRatio: 0.48,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
@@ -556,6 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         ),
+        SizedBox(height: 15),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -644,8 +646,8 @@ class FavoriteCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 '${item.i_image}',
-                width: 120,
-                height: 120,
+                width: 100,
+                height: 100,
                 fit: BoxFit.cover,
               ),
             ),

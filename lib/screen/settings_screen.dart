@@ -54,10 +54,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // SharedPreferences prefs = await SharedPreferences.getInstance();
           // await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
 
-          await prefs.setInt("login_u_idx", 0);
+
 
           // 카카오 로그아웃 처리
           await kko.UserApi.instance.logout();
+          await prefs.setInt("login_u_idx", 0);
           print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
 
           // // Firebase 로그아웃 처리

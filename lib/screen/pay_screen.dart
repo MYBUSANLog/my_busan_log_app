@@ -226,7 +226,6 @@ class _PayScreenState extends State<PayScreen> {
             // OrderModel을 통해 업데이트
             Provider.of<OrderModel>(context, listen: false).updateOrder(updatedOrder.o_idx, updatedOrder);
           }
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => OrderSuccessScreen()),

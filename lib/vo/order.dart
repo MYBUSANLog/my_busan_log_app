@@ -82,7 +82,8 @@ class Order {
       'payment_method': payment_method,
       'total_price': total_price,
       'status': status,
-      'orderOptions':orderOptionsMapList
+      'orderOptions':orderOptionsMapList,
+      'order_num': order_num,
     };
   }
 }
