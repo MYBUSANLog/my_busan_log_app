@@ -2,6 +2,7 @@ import 'package:busan_trip/screen/activity_list_screen.dart';
 import 'package:busan_trip/screen/exhibition_list_screen.dart';
 import 'package:busan_trip/screen/hotel_list_screen.dart';
 import 'package:busan_trip/screen/item_detail_screen.dart';
+import 'package:busan_trip/screen/newitem_list_screen.dart';
 import 'package:busan_trip/screen/realtime_list_screen.dart';
 import 'package:busan_trip/screen/search_screen.dart';
 import 'package:busan_trip/screen/themepark_list_screen.dart';
@@ -169,14 +170,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ? FloatingActionButton(
         onPressed: _scrollToTop,
         backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(  // 둥근 모서리 설정
+        shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
-            side: BorderSide(color: Colors.grey[300]!)
+            side: BorderSide(color: Colors.grey[300]!,),
         ),
         child: Icon(
           Icons.keyboard_arrow_up,
           color: Colors.black,
-          size: 35,
+          size: 30,
         ),
       )
           : null,
@@ -487,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: 0.48,
+                childAspectRatio: 0.53,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
               ),
@@ -544,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.48,
+                  childAspectRatio: 0.53,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
@@ -562,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RealtimeListScreen()),
+              MaterialPageRoute(builder: (context) => NewitemListScreen()),
             );
           },
           child: Container(
@@ -646,8 +647,8 @@ class FavoriteCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 '${item.i_image}',
-                width: 100,
-                height: 100,
+                width: MediaQuery.of(context).size.width / 3.4,
+                height: MediaQuery.of(context).size.width / 3.4,
                 fit: BoxFit.cover,
               ),
             ),
@@ -662,12 +663,13 @@ class FavoriteCard extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'NotoSansKR',
                       fontWeight: FontWeight.w400,
-                      fontSize: 10,
+                      fontSize: 12,
                       color: Colors.grey,
                       height: 1.0,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
+                  SizedBox(height: 3),
                   Text(
                     '${item.i_name}',
                     style: TextStyle(

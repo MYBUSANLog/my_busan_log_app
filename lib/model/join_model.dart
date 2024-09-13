@@ -55,4 +55,21 @@ class JoinModel extends ChangeNotifier {
       throw Exception('회원가입 중 오류 발생: $e');
     }
   }
+
+  // 이메일 중복 확인 메서드
+  Future<bool> checkEmailExists(String email) async {
+    try {
+      // 이메일로 사용자 정보 검색
+      User? existingUser = await UserHttp.findUserByEmail(email);
+      if (existingUser != null && existingUser.u_email.isNotEmpty) {
+        // 이메일이 존재하는 경우 true 반환
+        return true;
+      } else {
+        // 이메일이 존재하지 않는 경우 false 반환
+        return false;
+      }
+    } catch (e) {
+      throw Exception('이메일 중복 확인 중 오류 발생: $e');
+    }
+  }
 }

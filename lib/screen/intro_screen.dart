@@ -76,7 +76,7 @@ class _IntroScreenState extends State<IntroScreen> {
               borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 'assets/images/Untitled1.png',
-                width: 200,
+                width: MediaQuery.of(context).size.width / 2,
                 fit: BoxFit.cover,
               ),
             ),

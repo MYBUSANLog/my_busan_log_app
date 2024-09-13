@@ -13,14 +13,14 @@ import 'item_detail_screen.dart';
 
 
 
-class RealtimeListScreen extends StatefulWidget {
-  const RealtimeListScreen({super.key});
+class NewitemListScreen extends StatefulWidget {
+  const NewitemListScreen({super.key});
 
   @override
-  State<RealtimeListScreen> createState() => _RealtimeListScreenState();
+  State<NewitemListScreen> createState() => _NewitemListScreenState();
 }
 
-class _RealtimeListScreenState extends State<RealtimeListScreen> {
+class _NewitemListScreenState extends State<NewitemListScreen> {
   final ScrollController _listScrollController = ScrollController();
   final ScrollController _buttonScrollController = ScrollController();
   int currentPage = 0;
@@ -32,8 +32,8 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
   void initState() {
     super.initState();
     _loadingFuture = _simulateLoading();
-    
-    Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD');
+
+    Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'latest');
     Provider.of<ItemModel>(context, listen: false).clearItems();
     _listScrollController.addListener(_scrollListener);
     _loadMoreItems();
@@ -65,7 +65,7 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
     });
 
     try {
-      await Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD');
+      await Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'latest');
 
       setState(() {
         currentPage++;
@@ -103,7 +103,7 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
     await Future.delayed(Duration(seconds: 1)); // 예시로 1초 딜레이
     // 데이터 갱신 로직 추가
     setState(() {
-      Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD');
+      Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'latest');
       Provider.of<ItemModel>(context, listen: false).clearItems();
     });
   }
@@ -130,7 +130,7 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
         ),
         elevation: 0,
         title: Text(
-          '인기상품 모음.zip',
+          '신규상품 모음.zip',
           style: TextStyle(
               fontFamily: 'NotoSansKR',
               fontWeight: FontWeight.w600,
@@ -146,7 +146,7 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return _buildSkeletonLoader();
             } else {
-              return _buildRealTimeContent();
+              return _buildNewItemContent();
             }
           },
         ),
@@ -171,60 +171,60 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
 
   Widget _buildSkeletonLoader() {
     return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
-                highlightColor: Colors.grey[100]!,
-                child: Container(
-                  color: Colors.grey[300],
-                  height: 300,
-                  width: double.infinity,
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                color: Colors.grey[300],
+                height: 300,
+                width: double.infinity,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 300,
-                      width: double.infinity,
-                    ),
-                  ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 300,
-                      width: double.infinity,
-                    ),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 300,
+                    width: double.infinity,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 300,
+                    width: double.infinity,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
+      ),
     );
   }
 
 
-  Widget _buildRealTimeContent() {
+  Widget _buildNewItemContent() {
 
     final AppBar appBar = AppBar(
       titleSpacing: 0,
@@ -238,7 +238,7 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
       ),
       elevation: 0,
       title: Text(
-        '인기상품 모음.zip',
+        '신규상품 모음.zip',
         style: TextStyle(
           fontFamily: 'NotoSansKR',
           fontWeight: FontWeight.w600,
@@ -255,64 +255,64 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
           controller: _listScrollController,
           child: Column(
             children: [
-              // Container(
-              //   color: Color(0xff0e4194),
-              //   width: MediaQuery.of(context).size.width,
-              //   height: availableHeight * 0.4,
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.only(top: 30, left: 20),
-              //         child: Text(
-              //           '지금 뜨는',
-              //           style: TextStyle(
-              //             fontFamily: 'NotoSansKR',
-              //             fontWeight: FontWeight.w700,
-              //             fontSize: 28,
-              //             color: Colors.white,
-              //             height: 1.0,
-              //           ),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
-              //         child: Text(
-              //           '가장 핫한 여행상품 모음집',
-              //           style: TextStyle(
-              //             fontFamily: 'NotoSansKR',
-              //             fontWeight: FontWeight.w800,
-              //             fontSize: 28,
-              //             color: Colors.white,
-              //             height: 1.0,
-              //           ),
-              //         ),
-              //       ),
-              //       Align(
-              //         alignment: Alignment.centerRight,
-              //         child: Padding(
-              //           padding: const EdgeInsets.only(right: 10),
-              //           child: Image.asset(
-              //             'assets/images/busan_map.png',
-              //             width: MediaQuery.of(context).size.width - 100,
-              //             fit: BoxFit.cover,
-              //           ),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // ),
-              Image.network(
-                'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Fbanner%2Frealtime_list_banner.jpg?alt=media&token=0a91827b-8578-46da-8bce-5b6adc11143e',
+              Container(
+                color: Colors.green,
                 width: MediaQuery.of(context).size.width,
+                height: availableHeight * 0.4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20),
+                      child: Text(
+                        '새로 등록된',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 28,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
+                      child: Text(
+                        '따끈따끈 신상상품 모음집',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w800,
+                          fontSize: 28,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Image.asset(
+                          'assets/images/busan_map.png',
+                          width: MediaQuery.of(context).size.width - 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
+              // Image.network(
+              //   'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Fbanner%2Frealtime_list_banner.jpg?alt=media&token=0a91827b-8578-46da-8bce-5b6adc11143e',
+              //   width: MediaQuery.of(context).size.width,
+              // ),
               Consumer<ItemModel>(builder: (context, itemModel, child) {
                 return Column(
                   children: [
                     ...itemModel.items.asMap().entries.map((entry) {
                       int index = entry.key;
                       Item item = entry.value;
-                      return RealTimeList(item: item, rank: index + 1);
+                      return NewItemList(item: item, rank: index + 1);
                     }).toList(),
                     if (isLoading)
                       Padding(
@@ -329,12 +329,12 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
   }
 }
 
-class RealTimeList extends StatelessWidget {
+class NewItemList extends StatelessWidget {
   final formatter = NumberFormat('#,###');
   final Item item;
   final int rank;
 
-  RealTimeList({required this.item, required this.rank, super.key});
+  NewItemList({required this.item, required this.rank, super.key});
 
   String _formatAddress(String address) {
     final parts = address.split(' ');
