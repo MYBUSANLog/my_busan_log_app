@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
         ),
         //인트로스크린 수진 추가
         home: FutureBuilder(
-          future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
+          future: Future.delayed(const Duration(seconds: 60), () => "Intro Completed."),
           builder: (context, snapshot) {
             return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 1000),

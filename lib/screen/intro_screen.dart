@@ -5,13 +5,11 @@ import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/root_screen.dart';
 import 'package:busan_trip/vo/user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user_model.dart';
-import '../vo/order.dart' as od;
 
 class IntroScreen extends StatefulWidget {
 
@@ -21,13 +19,22 @@ class IntroScreen extends StatefulWidget {
   State<IntroScreen> createState() => _IntroScreenState();
 }
 
-class _IntroScreenState extends State<IntroScreen> {
+class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStateMixin {
+
+  late final AnimationController _lottieController;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _lottieController = AnimationController(vsync: this);
     _checkLoginStatus();
+  }
+
+  @override
+  void dispose() {  //컨트롤러 해제
+    _lottieController.dispose();
+    super.dispose();
   }
 
   void navigateToMainPage() {
@@ -57,30 +64,18 @@ class _IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xff0e4194),
-    ));
-
     return Scaffold(
-      backgroundColor: Color(0xff0e4194),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/Untitled1.png',
-                width: MediaQuery.of(context).size.width / 2,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
+        child: Lottie.asset(
+          'assets/animations/Flow_1.json',
+          controller: _lottieController,
+          onLoaded: (composition) {
+            _lottieController.duration = composition.duration;
+            _lottieController.forward(from: 0.5);
+          },
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          fit: BoxFit.fill,
         ),
       ),
     );

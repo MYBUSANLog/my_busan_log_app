@@ -409,7 +409,7 @@ class NewItemList extends StatelessWidget {
                       // 첫 번째 이미지
                       Expanded(
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10)),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                           child: Image.network(
                             '${item.i_image}',
                             width: double.infinity,
@@ -418,33 +418,33 @@ class NewItemList extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 2), // 간격
-                      Expanded(
-                        child: Column(
-                          children: [
-                            // 두 번째 이미지
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
-                              child: Image.network(
-                                '${item.i_image}',
-                                width: double.infinity,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            // 세 번째 이미지
-                            ClipRRect(
-                              child: Image.network(
-                                '${item.i_image}',
-                                width: double.infinity,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // SizedBox(width: 2), // 간격
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       // 두 번째 이미지
+                      //       ClipRRect(
+                      //         borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
+                      //         child: Image.network(
+                      //           '${item.i_image}',
+                      //           width: double.infinity,
+                      //           height: 80,
+                      //           fit: BoxFit.cover,
+                      //         ),
+                      //       ),
+                      //       SizedBox(height: 2),
+                      //       // 세 번째 이미지
+                      //       ClipRRect(
+                      //         child: Image.network(
+                      //           '${item.i_image}',
+                      //           width: double.infinity,
+                      //           height: 80,
+                      //           fit: BoxFit.cover,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   Positioned(

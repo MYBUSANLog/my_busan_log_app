@@ -29,7 +29,7 @@ class _RootScreenState extends State<RootScreen> {
     super.initState();
     screens = [
       NearbyScreen4(),
-      AiChatbotScreen(),
+      AiRecommendScreen(),
       HomeScreen(),
       NotificationScreen(),
       ProfileScreen(), // widget.order를 사용

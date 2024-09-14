@@ -225,7 +225,6 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
 
 
   Widget _buildRealTimeContent() {
-
     final AppBar appBar = AppBar(
       titleSpacing: 0,
       backgroundColor: Colors.white,
@@ -248,60 +247,12 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
       centerTitle: true,
     );
 
-    final double availableHeight = MediaQuery.of(context).size.height - appBar.preferredSize.height;
 
     return Scaffold(
         body: SingleChildScrollView(
           controller: _listScrollController,
           child: Column(
             children: [
-              // Container(
-              //   color: Color(0xff0e4194),
-              //   width: MediaQuery.of(context).size.width,
-              //   height: availableHeight * 0.4,
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.only(top: 30, left: 20),
-              //         child: Text(
-              //           '지금 뜨는',
-              //           style: TextStyle(
-              //             fontFamily: 'NotoSansKR',
-              //             fontWeight: FontWeight.w700,
-              //             fontSize: 28,
-              //             color: Colors.white,
-              //             height: 1.0,
-              //           ),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
-              //         child: Text(
-              //           '가장 핫한 여행상품 모음집',
-              //           style: TextStyle(
-              //             fontFamily: 'NotoSansKR',
-              //             fontWeight: FontWeight.w800,
-              //             fontSize: 28,
-              //             color: Colors.white,
-              //             height: 1.0,
-              //           ),
-              //         ),
-              //       ),
-              //       Align(
-              //         alignment: Alignment.centerRight,
-              //         child: Padding(
-              //           padding: const EdgeInsets.only(right: 10),
-              //           child: Image.asset(
-              //             'assets/images/busan_map.png',
-              //             width: MediaQuery.of(context).size.width - 100,
-              //             fit: BoxFit.cover,
-              //           ),
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              // ),
               Image.network(
                 'https://firebasestorage.googleapis.com/v0/b/mybusanlog-b600f.appspot.com/o/my_busan_log%2Fbanner%2Frealtime_list_banner.jpg?alt=media&token=0a91827b-8578-46da-8bce-5b6adc11143e',
                 width: MediaQuery.of(context).size.width,
@@ -385,7 +336,7 @@ class RealTimeList extends StatelessWidget {
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -409,7 +360,7 @@ class RealTimeList extends StatelessWidget {
                       // 첫 번째 이미지
                       Expanded(
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10)),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                           child: Image.network(
                             '${item.i_image}',
                             width: double.infinity,
@@ -418,33 +369,33 @@ class RealTimeList extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 2), // 간격
-                      Expanded(
-                        child: Column(
-                          children: [
-                            // 두 번째 이미지
-                            ClipRRect(
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
-                              child: Image.network(
-                                '${item.i_image}',
-                                width: double.infinity,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            // 세 번째 이미지
-                            ClipRRect(
-                              child: Image.network(
-                                '${item.i_image}',
-                                width: double.infinity,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // SizedBox(width: 2), // 간격
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       // 두 번째 이미지
+                      //       ClipRRect(
+                      //         borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
+                      //         child: Image.network(
+                      //           '${item.i_image}',
+                      //           width: double.infinity,
+                      //           height: 80,
+                      //           fit: BoxFit.cover,
+                      //         ),
+                      //       ),
+                      //       SizedBox(height: 2),
+                      //       // 세 번째 이미지
+                      //       ClipRRect(
+                      //         child: Image.network(
+                      //           '${item.i_image}',
+                      //           width: double.infinity,
+                      //           height: 80,
+                      //           fit: BoxFit.cover,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   Positioned(
