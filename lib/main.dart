@@ -126,15 +126,16 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //인트로스크린 수진 추가
-        home: FutureBuilder(
-          future: Future.delayed(const Duration(seconds: 60), () => "Intro Completed."),
-          builder: (context, snapshot) {
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                child: _splashLoadingWidget(snapshot)
-            );
-          },
-        ),
+        home: IntroScreen(),
+        // FutureBuilder(
+        //   future: Future.delayed(const Duration(seconds: 60), () => "Intro Completed."),
+        //   builder: (context, snapshot) {
+        //     return AnimatedSwitcher(
+        //         duration: const Duration(milliseconds: 1000),
+        //         child: _splashLoadingWidget(snapshot)
+        //     );
+        //   },
+        // ),
         //RootScreen(), //위에 주석하고 아래 추가 영욱
         // initialRoute: '/home',
         //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
@@ -166,17 +167,17 @@ class MyApp extends StatelessWidget {
   }
 }
 //intro screen 수진추가
-Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
-  if(snapshot.hasError) {
-    return const Text("Error!!");
-  } else if(snapshot.hasData) {
-    // return LoginOpeningScreen();
-    return LoginOpeningScreen();
-    // return StoreDetailScreen();
-  } else {
-    return IntroScreen();
-  }
-}
+// Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
+//   if(snapshot.hasError) {
+//     return const Text("Error!!");
+//   } else if(snapshot.hasData) {
+//     // return LoginOpeningScreen();
+//     return LoginOpeningScreen();
+//     // return StoreDetailScreen();
+//   } else {
+//     return IntroScreen();
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
