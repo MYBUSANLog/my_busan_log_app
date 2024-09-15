@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../vo/item.dart';
-import '../vo/store.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   final Item item; // Item 객체를 받도록 수정
@@ -251,6 +250,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 content: widget.item.i_content,
                 manual: widget.item.manual,
                 refund: widget.item.refund,
+                item: widget.item,
               ),
             ],
           ),
@@ -275,6 +275,7 @@ class DetailContent extends StatefulWidget {
   final String content;
   final String manual;
   final String refund;
+  final Item item;
 
   const DetailContent({
     Key? key,
@@ -292,6 +293,7 @@ class DetailContent extends StatefulWidget {
     required this.content,
     required this.manual,
     required this.refund,
+    required this.item,
   }) : super(key: key);
 
   @override
@@ -415,7 +417,7 @@ class _DetailContentState extends State<DetailContent> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen()),
+                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen(i_idx: widget.item.i_idx)),
                               );
                             },
                             child: Container(

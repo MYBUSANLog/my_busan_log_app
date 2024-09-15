@@ -309,10 +309,10 @@ class _DetailContentState extends State<DetailContent> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen()),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder:  (context) => ItemReviewListScreen()),
+                              // );
                             },
                             child: Container(
                               decoration: BoxDecoration(
