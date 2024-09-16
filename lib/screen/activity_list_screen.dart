@@ -2,6 +2,7 @@ import 'package:busan_trip/app_http/item_http.dart';
 import 'package:busan_trip/screen/item_detail_screen2.dart';
 import 'package:busan_trip/vo/item.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'item_detail_screen.dart';
 
@@ -398,7 +399,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                       Expanded(
                         child: Text(
                           widget.item.i_name, // 아이템 이름
-                          style: TextStyle(fontWeight: FontWeight.w300, fontSize: 17),
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                           overflow: TextOverflow.ellipsis, // 제목이 길 경우 ...으로 표시
                         ),
                       ),
@@ -408,14 +409,12 @@ class _FavoriteCardState extends State<FavoriteCard> {
                   Row(
                     children: [
                       Text(
-                        '${_formatAddress(widget.item.i_address)} · ${_mapTypeToString(widget.item.c_type)} ',
+                        '${_formatAddress(widget.item.i_address)} · ${_mapTypeToString(widget.item.c_type)}  · ',
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
-                      SizedBox(width: 5),
                       Icon(Icons.star_rounded, size: 16, color: Colors.amber), // 별 아이콘 추가
-                      SizedBox(width: 3), // 별과 평점 사이 간격
                       Text(
-                        '${widget.item.averageScore}', // 평점
+                        ' ${widget.item.averageScore}', // 평점
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
@@ -424,7 +423,7 @@ class _FavoriteCardState extends State<FavoriteCard> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Text(
-                      '${widget.item.i_price}원~',  // 아이템 가격
+                      '${NumberFormat('#,###').format(widget.item.i_price)}원~',  // 아이템 가격
                       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                     ),
                   ),

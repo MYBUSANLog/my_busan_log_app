@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:busan_trip/vo/item_free.dart';
 
-import '../vo/item.dart';
 import 'package:http/http.dart' as http;
 
 class ItemFreeHttp {
@@ -25,24 +24,20 @@ class ItemFreeHttp {
     return list;
   }
 
-  // 아이템 개수를 받아오는 함수
-  static Future<int> fetchNum() async {
-    try {
-      // 리뷰 개수를 가져오는 API 엔드포인트로 요청
-      var response = await http.get(Uri.parse('${apiUrl}/count'));
-
-      if (response.statusCode == 200) {
-        // 서버가 단일 숫자로 리뷰 개수를 반환한다고 가정
-        var reviewCount = jsonDecode(response.body); // 리뷰 개수를 파싱 (JSON으로 감싸져 있는 경우)
-        return reviewCount as int; // int로 형변환
-      } else {
-        throw Exception('Failed to load review count');
-      }
-    } catch (e) {
-      print('Error: $e');
-      return 0; // 에러가 발생하면 기본값 0 반환
-    }
-  }
+  // static Future<int> fetchNum() async {
+  //   try {
+  //     var response = await http.get(Uri.parse('${apiUrl}/count'));
+  //     if (response.statusCode == 200) {
+  //       var reviewCount = jsonDecode(response.body); // 리뷰 개수를 파싱 (JSON으로 감싸져 있는 경우)
+  //       return reviewCount as int; // int로 형변환
+  //     } else {
+  //       throw Exception('Failed to load review count');
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //     return 0; // 에러가 발생하면 기본값 0 반환
+  //   }
+  // }
 
 }
 
