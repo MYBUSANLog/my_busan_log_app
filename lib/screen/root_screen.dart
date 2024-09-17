@@ -28,7 +28,7 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     super.initState();
     screens = [
-      NearbyScreen4(),
+      RestaurantMap(),
       AiRecommendScreen(),
       HomeScreen(),
       NotificationScreen(),

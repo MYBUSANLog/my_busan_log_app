@@ -60,11 +60,25 @@ class _RestaurantMapState extends State<RestaurantMap> {
     }
   }
 
+  Future<List<NMarker>> loadMarkers() async {
+    // JSON 파일 읽기
+    final String response = await rootBundle.loadString('assets/markers.json');
+    final List<dynamic> data = json.decode(response);
+
+    // NMarker 객체 리스트로 변환
+    return data.map((marker) {
+      return NMarker(
+        id: marker['MAIN_TITLE'],
+        position: NLatLng(marker['LAT'], marker['LNG']),
+      );
+    }).toList();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    ResItemHttp.fetchAll();
+    // ResItemHttp.fetchAll();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -157,18 +171,35 @@ class _RestaurantMapState extends State<RestaurantMap> {
                   ],
                 ),
               ),
-              Expanded(
+              Container(
+                height: 420,
                 child: NaverMap(
-                  options: const NaverMapViewOptions(
-                    initialCameraPosition: _RestaurantMapState.initialPosition,
-                    locale: Locale('ko'),
-                    extent: NLatLngBounds(
-                      southWest: NLatLng(31.43, 122.37),
-                      northEast: NLatLng(44.35, 132.0),
-
+                  options: NaverMapViewOptions(
+                    initialCameraPosition: NCameraPosition(
+                        target: currentPosition ?? target,
+                        zoom: 10,
+                        bearing: 0,
+                        tilt: 0
                     ),
+                    extent: bounds,
                   ),
-                  onMapReady: _onMapCreated,
+                  forceGesture: false,
+                  onMapReady: (controller) async {
+                    // 마커 데이터 불러오기
+                    List<NMarker> markers = await loadMarkers();
+
+                    // 마커 지도에 추가
+                    controller.addOverlayAll(markers.toSet());
+                    controller.setLocationTrackingMode(NLocationTrackingMode.follow);
+
+                    final onMarkerInfoWindow = NInfoWindow.onMarker(id: markers[0].info.id, text: "내위치");
+                    markers[0].openInfoWindow(onMarkerInfoWindow);
+                  },
+                  onMapTapped: (point, latLng) {},
+                  onSymbolTapped: (symbol) {},
+                  onCameraChange: (position, reason) {},
+                  onCameraIdle: () {},
+                  onSelectedIndoorChanged: (indoor) {},
                 ),
               ),
             ],
@@ -212,24 +243,24 @@ class _RestaurantMapState extends State<RestaurantMap> {
                               ),
                             ),
                           ),
-                          Expanded(
-                              child: Consumer<ResItemModel>(
-                                builder: (context, resItemModel, child) {
-                                  return SingleChildScrollView(
-                                    child: Column(
-                                      children: resItemModel.restaurants.map((t) {
-                                        return _buildRestaurantItem(
-                                          t.res_name,
-                                          t.closed_days,
-                                          t.res_address,
-                                          t.res_images
-                                        );
-                                      }).toList(),
-                                    ),
-                                  );
-                                }
-                              )
-                          )
+                          // Expanded(
+                          //     child: Consumer<ResItemModel>(
+                          //       builder: (context, resItemModel, child) {
+                          //         return SingleChildScrollView(
+                          //           child: Column(
+                          //             children: resItemModel.restaurants.map((t) {
+                          //               return _buildRestaurantItem(
+                          //                 t.res_name,
+                          //                 t.closed_days,
+                          //                 t.res_address,
+                          //                 t.res_images
+                          //               );
+                          //             }).toList(),
+                          //           ),
+                          //         );
+                          //       }
+                          //     )
+                          // )
                         ],
                       )
                     ],
