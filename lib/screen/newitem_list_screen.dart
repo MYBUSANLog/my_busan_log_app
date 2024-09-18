@@ -310,9 +310,8 @@ class _NewitemListScreenState extends State<NewitemListScreen> {
                 return Column(
                   children: [
                     ...itemModel.items.asMap().entries.map((entry) {
-                      int index = entry.key;
                       Item item = entry.value;
-                      return NewItemList(item: item, rank: index + 1);
+                      return NewItemList(item: item);
                     }).toList(),
                     if (isLoading)
                       Padding(
@@ -332,9 +331,8 @@ class _NewitemListScreenState extends State<NewitemListScreen> {
 class NewItemList extends StatelessWidget {
   final formatter = NumberFormat('#,###');
   final Item item;
-  final int rank;
 
-  NewItemList({required this.item, required this.rank, super.key});
+  NewItemList({required this.item, super.key});
 
   String _formatAddress(String address) {
     final parts = address.split(' ');
@@ -446,28 +444,6 @@ class NewItemList extends StatelessWidget {
                       //   ),
                       // ),
                     ],
-                  ),
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: _getRankColor(rank),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        '$rank',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),

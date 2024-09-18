@@ -102,17 +102,12 @@ class _PayScreenState extends State<PayScreen> {
   }
 
   void bootpayTest(BuildContext context) async {
-    print('----------------------------------------------');
     Payload payload = getPayload();
-    print('----------------------------------------------');
     if (kIsWeb) {
       payload.extra?.openType = "iframe";
     }
-    print('----------------------------------------------');
 
     String orderNumber = await OrderHttp.generateOrderNumber();
-
-    print("----------------------------------------");
 
     Order ord = Order(
       u_idx: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
@@ -135,24 +130,7 @@ class _PayScreenState extends State<PayScreen> {
       }).toList(),
     );
 
-    print('Order created:');
-    print('u_idx: ${ord.u_idx}');
-    print('s_idx: ${ord.s_idx}');
-    print('i_idx: ${ord.i_idx}');
-    print('o_name: ${ord.o_name}');
-    print('o_email: ${ord.o_email}');
-    print('o_birth: ${ord.o_birth}');
-    print('o_p_number: ${ord.o_p_number}');
-    print('use_day: ${ord.use_day}');
-    print('payment_method: ${ord.payment_method}');
-    print('total_price: ${ord.total_price}');
-    print('status: ${ord.status}');
-    ord.orderOptions.forEach((option) {
-      print('Order Option - op_idx: ${option.op_idx}, i_idx: ${widget.item.i_idx}, op_quantity: ${option.op_quantity}');
-    });
-
     var result = await OrderHttp.saveOrder(ord, orderNumber);
-    print(result);
 
     // 저장된 주문의 ID를 가져오기 위해 fetchAll 호출
     List<Order> orders = await OrderHttp.fetchAll(Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx);
@@ -162,8 +140,6 @@ class _PayScreenState extends State<PayScreen> {
       Order latestOrder = orders.last;
       savedOrderIdx = latestOrder.o_idx;
       String initialOrderNumber = latestOrder.order_num;
-      print('Saved Order Index: $savedOrderIdx');
-      print('Saved Order Number: $initialOrderNumber');
 
       Bootpay().requestPayment(
         context: context,
@@ -197,9 +173,6 @@ class _PayScreenState extends State<PayScreen> {
           String methodOrigin = response['data']['method_origin'];
           String statusLocale = response['data']['status_locale'];
 
-          print(methodOrigin);
-          print(statusLocale);
-
           if (savedOrderIdx != null) {
             Order updatedOrder = Order(
               o_idx: savedOrderIdx!,
@@ -226,8 +199,6 @@ class _PayScreenState extends State<PayScreen> {
               }).toList(),
               order_num: initialOrderNumber,
             );
-
-            // OrderModel을 통해 업데이트
             Provider.of<OrderModel>(context, listen: false).updateOrder(updatedOrder.o_idx, updatedOrder);
           }
         },

@@ -192,8 +192,8 @@ class _RestaurantMapState extends State<RestaurantMap> {
                     controller.addOverlayAll(markers.toSet());
                     controller.setLocationTrackingMode(NLocationTrackingMode.follow);
 
-                    final onMarkerInfoWindow = NInfoWindow.onMarker(id: markers[0].info.id, text: "내위치");
-                    markers[0].openInfoWindow(onMarkerInfoWindow);
+                    // final onMarkerInfoWindow = NInfoWindow.onMarker(id: markers[0].info.id, text: "내위치");
+                    // markers[0].openInfoWindow(onMarkerInfoWindow);
                   },
                   onMapTapped: (point, latLng) {},
                   onSymbolTapped: (symbol) {},
