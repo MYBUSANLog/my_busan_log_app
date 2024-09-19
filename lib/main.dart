@@ -152,7 +152,6 @@ class MyApp extends StatelessWidget {
           '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
           // 리뷰 북마크 찜목록 공지사항 추가 안율현
           '/bookmark_list': (context) => BookmarkListScreen(),
-          '/heart_list': (context) => HeartListScreen(),
           '/announcement_list': (context) => AccouncementListScreen(),
           '/login': (context) => LoginScreen(),
           '/sign_up2': (context) => SignUp2(),

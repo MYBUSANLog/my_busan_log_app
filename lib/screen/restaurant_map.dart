@@ -27,6 +27,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
   double _currentSize = 0.3;
 
   List<dynamic> places = [];
+  List<dynamic> displayedPlaces = [];
   dynamic randomPlace;
   List<String> favorites = [];
   bool isModalOpen = false;
@@ -34,10 +35,11 @@ class _RestaurantMapState extends State<RestaurantMap> {
   late NLatLng target;
   late NLatLng? currentPosition;
   final ScrollController _scrollController = ScrollController();
-  final ScrollController sheetScrollController1 = ScrollController();
+  final DraggableScrollableController _draggableController = DraggableScrollableController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Completer<NaverMapController> _controller = Completer();
-  List<_buildRestaurantItem> feedCards = [];
+  int currentPage = 1;
+  int itemsPerPage = 10;
 
   static const initialPosition = NCameraPosition(
       target: NLatLng(35.15243682224479, 129.0596301491128),
@@ -51,8 +53,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
   }
 
   void _permission() async {
-    var requestStatus = await Permission.location.request
-      ();
+    var requestStatus = await Permission.location.request();
     var status = await Permission.location.status;
     if (requestStatus.isPermanentlyDenied || status.isPermanentlyDenied) {
       openAppSettings();
@@ -95,9 +96,6 @@ class _RestaurantMapState extends State<RestaurantMap> {
     currentPosition = NLatLng(35.17976459985454, 129.07506303273934);
     _permission();
     fetchData();
-    sheetScrollController1.addListener(() {
-      print(sheetScrollController1.offset);
-    });
     _scrollController.addListener(() {
       setState(() {
         _currentSize = _scrollController.hasClients
@@ -116,7 +114,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
     try {
       final response = await http.get(
         Uri.parse(
-            "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=YOUR_API_KEY&numOfRows=1000&pageNo=1&resultType=json",
+          "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=YOUR_API_KEY&numOfRows=1000&pageNo=1&resultType=json",
         ),
       );
       final data = json.decode(response.body);
@@ -135,6 +133,25 @@ class _RestaurantMapState extends State<RestaurantMap> {
       print("Failed to fetch places data: $error");
     }
   }
+
+  void loadMoreItems() {
+    int startIndex = (currentPage - 1) * itemsPerPage;
+    int endIndex = min(startIndex + itemsPerPage, places.length);
+
+    if (startIndex >= places.length) {
+      print('No more items to load');
+      return;
+    }
+
+    print('Loading items from index $startIndex to $endIndex');
+
+    setState(() {
+      displayedPlaces.addAll(places.sublist(startIndex, endIndex));
+      currentPage++;
+    });
+  }
+
+
 
   void toggleFavorite(dynamic place) {
     setState(() {
@@ -348,20 +365,21 @@ class _RestaurantMapState extends State<RestaurantMap> {
               initialChildSize: _minChildSize,
               minChildSize: _minChildSize,
               maxChildSize: _maxChildSize,
+              controller: _draggableController,
               builder: (BuildContext context, ScrollController sheetScrollController) {
                 return AnimatedContainer(
                   duration: Duration(milliseconds: 300),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        offset: Offset(0, -2),
-                        blurRadius: 4.0,
-                        spreadRadius: 0,
-                      ),
-                    ],
-                    color: Colors.white
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          offset: Offset(0, -2),
+                          blurRadius: 4.0,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                      color: Colors.white
                   ),
                   child: Stack(
                     children: [
@@ -417,7 +435,8 @@ class _RestaurantMapState extends State<RestaurantMap> {
                                     SizedBox(height: 10),
                                     GestureDetector(
                                       onTap: () {
-
+                                        print('Load more button tapped');
+                                        loadMoreItems();
                                       },
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -478,61 +497,61 @@ class _RestaurantMapState extends State<RestaurantMap> {
                 ),
                 SizedBox(width: 10),
                 Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                                height: 1.0,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                res_address,
-                                style: TextStyle(
-                                  fontFamily: 'NotoSansKR',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                  height: 1.0,
-                                ),
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 7),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            width: 200,
-                            child: Text(
-                              closed_days,
-                              style: TextStyle(
-                                fontFamily: 'NotoSansKR',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                              maxLines: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                              height: 1.0,
                             ),
                           ),
+                          SizedBox(height: 5),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              res_address,
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                color: Colors.grey,
+                                height: 1.0,
+                              ),
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 7),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          width: 200,
+                          child: Text(
+                            closed_days,
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.end,
+                            maxLines: 1,
+                          ),
                         ),
-                        SizedBox(height: 5),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 5),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -1,160 +1,216 @@
+import 'package:busan_trip/app_http/heart_list_http.dart';
+import 'package:busan_trip/model/heart_list_model.dart';
+import 'package:busan_trip/screen/item_detail_screen.dart';
+import 'package:busan_trip/vo/heart_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import 'package:provider/provider.dart';
 
 class HeartListScreen extends StatefulWidget {
-  const HeartListScreen({super.key});
+  final int userId;
+
+  HeartListScreen({required this.userId});
 
   @override
-  State<HeartListScreen> createState() => _HeartListScreenState();
+  _HeartListScreenState createState() => _HeartListScreenState();
 }
 
 class _HeartListScreenState extends State<HeartListScreen> {
+  late HeartListModel heartListModel;
+
+  @override
+  void initState() {
+    super.initState();
+    heartListModel = HeartListModel();
+    heartListModel.setHeartLists(widget.userId);
+  }
+
+  Future<void> _refreshHeartList() async {
+    await heartListModel.setHeartLists(widget.userId);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: EdgeInsets.only(left: 32.0), // 왼쪽 패딩을 32.0으로 설정하여 오른쪽으로 이동
-          child: Text(
-            '찜목록',
+    return ChangeNotifierProvider<HeartListModel>.value(
+      value: heartListModel,
+      child: Scaffold(
+        appBar: AppBar(
+          titleSpacing: 0,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+          elevation: 0,
+          title: Text(
+            '마음함',
             style: TextStyle(
               fontFamily: 'NotoSansKR',
-              fontWeight: FontWeight.w500,
-              fontSize: 23,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  offset: Offset(1.0, 1.0),
-                  blurRadius: 2.0,
-                  color: Colors.black.withOpacity(0.5),
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '내가 마음에 담은 상품 목록',
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                SizedBox(height: 15),
+                Expanded(
+                  child: Consumer<HeartListModel>(
+                    builder: (context, heartListModel, child) {
+                      return RefreshIndicator(
+                        onRefresh: _refreshHeartList,
+                        child: heartListModel.heartLists.isNotEmpty
+                            ? ListView.builder(
+                          itemCount: heartListModel.heartLists.length,
+                          itemBuilder: (context, index) {
+                            final heartListItem = heartListModel.heartLists[index];
+                            return Column(
+                              children: [
+                                FavoriteCard(
+                                  item: heartListItem,
+                                  heartListModel: heartListModel,
+                                  userId: widget.userId,
+                                  onDelete: (int wishIdx) {
+                                    setState(() {
+                                      heartListModel.heartLists.removeWhere((item) => item.wish_idx == wishIdx);
+                                    });
+                                  },
+                                ),
+                                SizedBox(height: 15),
+                              ],
+                            );
+                          },
+                        )
+                            : Center(child: Text('마음에 담은 상품이 없습니다.')),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        backgroundColor: Color(0xff0e4194),
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: Colors.transparent,
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: 9,
-        itemBuilder: (context, index) => HeartListItem(),
       ),
     );
   }
 }
 
-class HeartListItem extends StatelessWidget {
-  const HeartListItem({super.key});
+class FavoriteCard extends StatefulWidget {
+  final HeartList item;
+  final HeartListModel heartListModel;
+  final int userId;
+  final Function(int) onDelete; // Callback for deletion
+
+
+  const FavoriteCard({
+    super.key,
+    required this.item,
+    required this.heartListModel,
+    required this.userId,
+    required this.onDelete,
+  });
+
+  @override
+  _FavoriteCardState createState() => _FavoriteCardState();
+}
+
+class _FavoriteCardState extends State<FavoriteCard> {
+  late bool _isFavorited;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFavorited = true; // Assuming it is initially favorited
+  }
+
+  Future<void> _toggleFavorite() async {
+    print(widget.item.wish_idx);
+    await HeartListHttp.deleteWish(widget.item.wish_idx); // Call HTTP delete method
+    widget.onDelete(widget.item.wish_idx); // Notify parent to remove this card
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/detail_screen'); // 항목 클릭 시 상세 화면으로 이동
-      },
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Column(
-          children: [
-            Row(
+      onTap: () {},
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.network(
+              widget.item.i_image,
+              width: 75,
+              height: 75,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    'https://newsroom-prd-data.s3.ap-northeast-2.amazonaws.com/wp-content/uploads/2024/02/%EC%A7%80%EB%82%9C%ED%95%B4%EC%97%90-%EA%B0%80%EC%9E%A5-%EC%9D%B8%EA%B8%B0-%EC%9E%88%EB%8D%98-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%9D%BC%EB%B3%B8-%EB%9C%A8%EB%8A%94-%EC%97%AC%ED%96%89%EC%A7%80%EB%8A%94-%EC%96%B4%EB%94%94_02.png',
-                    width: 120,
-                    height: 120,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.item.i_name,
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          height: 1.0,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: _toggleFavorite, // Call toggle favorite function
+                      child: Column(
                         children: [
-                          Text(
-                            '장소 1',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                              height: 1.0,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          size: 20,
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(' 4.0'),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Icon(Icons.favorite_outline, size: 20, color: Colors.red),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Icon(
+                            _isFavorited ? Icons.favorite : Icons.favorite_outline,
+                            size: 25,
+                            color: _isFavorited ? Colors.red : Colors.grey,
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        '부산 사상구 · 맛집',
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: Colors.grey,
-                          height: 1.0,
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '410,000원~',
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 22),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '${widget.item.i_price}원~',
+                    style: TextStyle(
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                    ),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
