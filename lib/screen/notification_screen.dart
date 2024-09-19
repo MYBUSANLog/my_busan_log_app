@@ -12,6 +12,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -47,51 +48,72 @@ class FeedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
-      // child: Padding(
-      //   padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.add_alert), // 예약 아이콘 추가
-              // 아이콘과 텍스트 사이에 간격 추가
-              Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.notifications, size: 30, color: Colors.amber[700],),
+                  ],
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '초특가로<롯데월드 어드벤처 부산>떠나기!!',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      Text(
+                        '2024-07-22 15:55',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                          color: Colors.grey
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  // 상세보기 버튼 클릭 시 동작 추가
+                },
                 child: Text(
-                  '초특가로<롯데월드 어드벤처 부산>떠나기!!',
+                  '상세보기',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: Color(0xff0e4194),
                   ),
                 ),
               ),
-            ],
-          ),
-
-          Text(
-            '2024-07-22 15:55',
-            style: TextStyle(
-              fontSize: 18,
             ),
-          ),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                // 상세보기 버튼 클릭 시 동작 추가
-              },
-              child: Text(
-                '상세보기',
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
 
     );
