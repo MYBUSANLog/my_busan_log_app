@@ -10,6 +10,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../app_http/res_item_http.dart';
+import '../model/res_item_model.dart';
+
 class RestaurantMap extends StatefulWidget {
   const RestaurantMap({super.key});
 
@@ -19,7 +22,7 @@ class RestaurantMap extends StatefulWidget {
 
 class _RestaurantMapState extends State<RestaurantMap> {
 
-  double _minChildSize = 0.35;
+  double _minChildSize = 0.3;
   double _maxChildSize = 0.83;
   double _currentSize = 0.3;
 
@@ -30,7 +33,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
   late NMarker marker;
   late NLatLng target;
   late NLatLng? currentPosition;
-  final ScrollController _scrollController = ScrollController();// 기본 프로필 선택
+  final ScrollController _scrollController = ScrollController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Completer<NaverMapController> _controller = Completer();
 
@@ -78,7 +81,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // ResItemHttp.fetchAll();
+    Provider.of<ResItemModel>(context,listen: false).fetchRestaurants();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -89,6 +92,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
     marker = NMarker(id: "test", position: target);
     currentPosition = NLatLng(35.17976459985454, 129.07506303273934);
     _permission();
+    fetchData();
     _scrollController.addListener(() {
       setState(() {
         _currentSize = _scrollController.hasClients
@@ -144,6 +148,137 @@ class _RestaurantMapState extends State<RestaurantMap> {
       isModalOpen = true;
     });
   }
+
+  void _showRestaurantModal(BuildContext context, String name, String closedDays, String address, String image) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    image,
+                    width: double.infinity,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '주소: ',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$address',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '휴무일: ',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$closedDays',
+                            style: TextStyle(
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // 모달 닫기
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Color(0xff0e4194),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text('닫기',
+                        style: TextStyle(
+                          fontFamily: 'NotoSansKR',
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -208,8 +343,10 @@ class _RestaurantMapState extends State<RestaurantMap> {
               initialChildSize: _minChildSize,
               minChildSize: _minChildSize,
               maxChildSize: _maxChildSize,
-              builder: (BuildContext context, ScrollController scrollController) {
-                return Container(
+              builder: (BuildContext context, ScrollController sheetScrollController) {
+                return AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -223,12 +360,6 @@ class _RestaurantMapState extends State<RestaurantMap> {
                   ),
                   child: Stack(
                     children: [
-                      IgnorePointer(
-                        ignoring: false,
-                        child: Container(
-                          color: Colors.white,
-                        ),
-                      ),
                       Column(
                         children: [
                           Align(
@@ -243,24 +374,42 @@ class _RestaurantMapState extends State<RestaurantMap> {
                               ),
                             ),
                           ),
-                          // Expanded(
-                          //     child: Consumer<ResItemModel>(
-                          //       builder: (context, resItemModel, child) {
-                          //         return SingleChildScrollView(
-                          //           child: Column(
-                          //             children: resItemModel.restaurants.map((t) {
-                          //               return _buildRestaurantItem(
-                          //                 t.res_name,
-                          //                 t.closed_days,
-                          //                 t.res_address,
-                          //                 t.res_images
-                          //               );
-                          //             }).toList(),
-                          //           ),
-                          //         );
-                          //       }
-                          //     )
-                          // )
+                          Expanded(
+                            child: NotificationListener<ScrollNotification>(
+                              onNotification: (ScrollNotification notification) {
+                                if (notification is ScrollUpdateNotification) {
+                                  // 내부 리스트가 스크롤 가능하고 DraggableScrollableSheet이 최상단에 있는지 확인
+                                  if (sheetScrollController.position.pixels ==
+                                      sheetScrollController.position.minScrollExtent &&
+                                      notification.metrics.pixels > 0) {
+                                    sheetScrollController.jumpTo(
+                                      sheetScrollController.position.pixels +
+                                          notification.scrollDelta!,
+                                    );
+                                    return true; // 스크롤 이벤트가 내부로 전파되지 않도록 막음
+                                  }
+                                }
+                                return false;
+                              },
+                              child: SingleChildScrollView(
+                                controller: sheetScrollController,
+                                child: Consumer<ResItemModel>(
+                                  builder: (context, resItemModel, child) {
+                                    return Column(
+                                      children: resItemModel.restaurants.map((t) {
+                                        return _buildRestaurantItem(
+                                          t.res_name,
+                                          t.closed_days,
+                                          t.res_address,
+                                          t.res_image,
+                                        );
+                                      }).toList(),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       )
                     ],
@@ -272,80 +421,91 @@ class _RestaurantMapState extends State<RestaurantMap> {
       ),
     );
   }
-  Widget _buildRestaurantItem(String name, String closed_days, String address, String imageUrl) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+  Widget _buildRestaurantItem(String name, String closed_days, String res_address, String res_image) {
+    return GestureDetector(
+      onTap: () {
+        _showRestaurantModal(context, name, closed_days, res_address, res_image);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                imageUrl,
-                width: 75,
-                height: 75,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(width: 10),
-            Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    res_image,
+                    width: 75,
+                    height: 75,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          name,
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
-                            height: 1.0,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                                height: 1.0,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                res_address,
+                                style: TextStyle(
+                                  fontFamily: 'NotoSansKR',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                  height: 1.0,
+                                ),
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 7),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: 200,
+                            child: Text(
+                              closed_days,
+                              style: TextStyle(
+                                fontFamily: 'NotoSansKR',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                            ),
                           ),
                         ),
-                        Text(
-                          name,
-                          style: TextStyle(
-                            fontFamily: 'NotoSansKR',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            color: Colors.grey,
-                          ),
-                        ),
+                        SizedBox(height: 5),
                       ],
                     ),
-                    SizedBox(height: 7),
-                    Text(
-                      closed_days,
-                      style: TextStyle(
-                        fontFamily: 'NotoSansKR',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: Colors.grey,
-                        height: 1.0,
-                      ),
-                    ),
-                    SizedBox(height: 7),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        address,
-                        style: TextStyle(
-                          fontFamily: 'NotoSansKR',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                  ],
                 ),
+              ],
             ),
+            SizedBox(height: 15),
           ],
         ),
-        SizedBox(height: 15),
-      ],
+      ),
     );
   }
 }

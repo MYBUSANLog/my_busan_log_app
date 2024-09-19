@@ -1,6 +1,7 @@
 import 'package:busan_trip/model/item_model.dart';
 import 'package:busan_trip/model/join_model.dart';
 import 'package:busan_trip/model/option_model.dart';
+import 'package:busan_trip/model/res_item_model.dart';
 import 'package:busan_trip/model/review_model.dart';
 import 'package:busan_trip/model/store_model.dart';
 import 'package:busan_trip/model/user_model.dart';
@@ -101,6 +102,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => OptionModel()),
         ChangeNotifierProvider(create: (context) => OrderModel()),
         ChangeNotifierProvider(create: (context) => ReviewModel()),
+        ChangeNotifierProvider(create: (context) => ResItemModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

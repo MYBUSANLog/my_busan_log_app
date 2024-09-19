@@ -488,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: 0.53,
+                childAspectRatio: 0.52,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 5,
               ),
@@ -545,7 +545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: NeverScrollableScrollPhysics(), // 스크롤을 비활성화
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  childAspectRatio: 0.53,
+                  childAspectRatio: 0.52,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),

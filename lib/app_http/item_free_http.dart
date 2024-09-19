@@ -24,20 +24,20 @@ class ItemFreeHttp {
     return list;
   }
 
-  // static Future<int> fetchNum() async {
-  //   try {
-  //     var response = await http.get(Uri.parse('${apiUrl}/count'));
-  //     if (response.statusCode == 200) {
-  //       var reviewCount = jsonDecode(response.body); // 리뷰 개수를 파싱 (JSON으로 감싸져 있는 경우)
-  //       return reviewCount as int; // int로 형변환
-  //     } else {
-  //       throw Exception('Failed to load review count');
-  //     }
-  //   } catch (e) {
-  //     print('Error: $e');
-  //     return 0; // 에러가 발생하면 기본값 0 반환
-  //   }
-  // }
+  static Future<int> fetchNum() async {
+    try {
+      var response = await http.get(Uri.parse('${apiUrl}/count'));
+      if (response.statusCode == 200) {
+        var reviewCount = jsonDecode(response.body); // 리뷰 개수를 파싱 (JSON으로 감싸져 있는 경우)
+        return reviewCount as int; // int로 형변환
+      } else {
+        throw Exception('Failed to load review count');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return 0; // 에러가 발생하면 기본값 0 반환
+    }
+  }
 
 }
 
