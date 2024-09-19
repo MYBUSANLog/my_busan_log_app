@@ -10,7 +10,7 @@ class OrderHttp {
 
   static Future<List<Order>> fetchAll(int u_idx) async {
     try {
-      var response = await http.get(Uri.parse('${apiUrl}/findByUIdx?u_idx=${u_idx}'));
+      var response = await http.get(Uri.parse('${apiUrl}/findByUIdxApp?u_idx=${u_idx}&sortby=latest'));
       if (response.statusCode == 200) {
         // 응답을 JSON으로 디코딩
         var mapList = jsonDecode(utf8.decode(response.bodyBytes)) as List;

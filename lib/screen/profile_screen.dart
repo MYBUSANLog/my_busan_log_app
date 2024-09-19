@@ -100,33 +100,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
 
-  void _logoutKakao() async {
-    try {
-      // SharedPreferences에서 로그인 상태 해제
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', false); // 로그인 상태 해제
-
-      // 카카오 로그아웃 처리
-      await kko.UserApi.instance.logout();
-      print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
-
-      // Firebase 로그아웃 처리
-      await FirebaseAuth.instance.signOut();
-      print('Firebase 로그아웃 성공');
-
-      // 로그아웃 후 로그인 화면으로 이동
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginOpeningScreen(),
-        ),
-      );
-    } catch (error) {
-      print('로그아웃 실패 $error');
-      // 에러 처리: 필요시 추가적인 에러 핸들링 로직을 추가할 수 있습니다.
-    }
-  }
-
-
   void _logout() async {
     try {
       // SharedPreferences 인스턴스 가져오기
@@ -207,70 +180,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('이메일 로그아웃 실패 $error');
     }
   }
-
-
-  // void logout() async {
-  //   // 각 로그인 제공자에 맞는 로그아웃 호출
-  //   switch (_loginProvider) {
-  //     // case 'google':
-  //     //   await _logoutGoogle();
-  //     //   break;
-  //     case 'naver':
-  //       await _logoutNaver();
-  //       break;
-  //     case 'kakao':
-  //       await _logoutKakao();
-  //       break;
-  //     case 'basic':
-  //       await _logoutEmail();
-  //       break;
-  //     default:
-  //     // 알 수 없는 로그인 제공자
-  //       break;
-  //   }
-  //
-  //   // Firebase Auth 로그아웃
-  //   try {
-  //     await FirebaseAuth.instance.signOut();
-  //     print('Firebase 로그아웃 성공');
-  //   } catch (error) {
-  //     print('Firebase 로그아웃 실패 $error');
-  //   }
-  //
-  //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-  //     builder: (context) => LoginOpeningScreen(),
-  //   ));
-  // }
-
-  // void _showLogoutDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('로그아웃'),
-  //         content: Text('로그아웃 하시겠습니까?'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context); // 다이얼로그 닫기
-  //             },
-  //             child: Text('취소'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context); // 다이얼로그 닫기
-  //               Navigator.pushReplacement(
-  //                 context,
-  //                 MaterialPageRoute(builder: (context) => LoginOpeningScreen()), // 화면 이동
-  //               );
-  //             },
-  //             child: Text('예'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder:  (context) => MyReviewListScreen()),
+                            MaterialPageRoute(builder:  (context) => MyReviewListScreen(u_idx: userModel.loggedInUser.u_idx)),
                           );
                         },
                       ),
@@ -425,32 +334,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          // Positioned(
-          //   left: _fabOffset.dx,
-          //   top: _fabOffset.dy,
-          //   child: Draggable(
-          //     feedback: FloatingActionButton(
-          //       onPressed: () {
-          //         Navigator.pushNamed(context, '/chatbot');
-          //       },
-          //       child: Icon(Icons.chat, color: Colors.white),
-          //       backgroundColor: Color(0xff0e4194),
-          //     ),
-          //     childWhenDragging: Container(),
-          //     child: FloatingActionButton(
-          //       onPressed: () {
-          //         Navigator.pushNamed(context, '/chatbot');
-          //       },
-          //       child: Icon(Icons.chat, color: Colors.white),
-          //       backgroundColor: Color(0xff0e4194),
-          //     ),
-          //     onDragEnd: (details) {
-          //       setState(() {
-          //         _fabOffset = details.offset;
-          //       });
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );

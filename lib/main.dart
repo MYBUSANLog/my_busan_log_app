@@ -1,6 +1,7 @@
 import 'package:busan_trip/model/item_model.dart';
 import 'package:busan_trip/model/join_model.dart';
 import 'package:busan_trip/model/option_model.dart';
+import 'package:busan_trip/model/res_item_model.dart';
 import 'package:busan_trip/model/review_model.dart';
 import 'package:busan_trip/model/store_model.dart';
 import 'package:busan_trip/model/user_model.dart';
@@ -101,6 +102,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => OptionModel()),
         ChangeNotifierProvider(create: (context) => OrderModel()),
         ChangeNotifierProvider(create: (context) => ReviewModel()),
+        ChangeNotifierProvider(create: (context) => ResItemModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -126,15 +128,16 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         //인트로스크린 수진 추가
-        home: FutureBuilder(
-          future: Future.delayed(const Duration(seconds: 6), () => "Intro Completed."),
-          builder: (context, snapshot) {
-            return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 1000),
-                child: _splashLoadingWidget(snapshot)
-            );
-          },
-        ),
+        home: IntroScreen(),
+        // FutureBuilder(
+        //   future: Future.delayed(const Duration(seconds: 60), () => "Intro Completed."),
+        //   builder: (context, snapshot) {
+        //     return AnimatedSwitcher(
+        //         duration: const Duration(milliseconds: 1000),
+        //         child: _splashLoadingWidget(snapshot)
+        //     );
+        //   },
+        // ),
         //RootScreen(), //위에 주석하고 아래 추가 영욱
         // initialRoute: '/home',
         //영욱 추가 -> root_screen으로 대체(기존 코드 주석처리)
@@ -149,7 +152,6 @@ class MyApp extends StatelessWidget {
           '/sign_up': (context) => SignUpScreen(), // Sign up route 추가
           // 리뷰 북마크 찜목록 공지사항 추가 안율현
           '/bookmark_list': (context) => BookmarkListScreen(),
-          '/heart_list': (context) => HeartListScreen(),
           '/announcement_list': (context) => AccouncementListScreen(),
           '/login': (context) => LoginScreen(),
           '/sign_up2': (context) => SignUp2(),
@@ -166,17 +168,17 @@ class MyApp extends StatelessWidget {
   }
 }
 //intro screen 수진추가
-Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
-  if(snapshot.hasError) {
-    return const Text("Error!!");
-  } else if(snapshot.hasData) {
-    // return LoginOpeningScreen();
-    return LoginOpeningScreen();
-    // return StoreDetailScreen();
-  } else {
-    return IntroScreen();
-  }
-}
+// Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
+//   if(snapshot.hasError) {
+//     return const Text("Error!!");
+//   } else if(snapshot.hasData) {
+//     // return LoginOpeningScreen();
+//     return LoginOpeningScreen();
+//     // return StoreDetailScreen();
+//   } else {
+//     return IntroScreen();
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

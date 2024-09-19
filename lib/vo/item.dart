@@ -17,6 +17,7 @@ class Item {
   int i_wishes; // 누적 상품 좋아요 수
   double averageScore; // 상품 평점
   int review_count; // 누적 리뷰 갯수
+  String i_free; // 상점 이름
   String manual;
   String refund;
 
@@ -39,6 +40,7 @@ class Item {
     this.i_wishes=0,
     this.averageScore=0.0,
     this.review_count=0,
+    this.i_free='',
     this.manual='',
     this.refund='',
   });
@@ -63,6 +65,7 @@ class Item {
       i_wishes: json['i_wishes']??0,
       averageScore: json['average_score'] ?? 0.0,
       review_count: json['review_count']??0,
+      i_free: json['i_free']??'',
       manual: json['manual']??'',
       refund: json['refund']??'',
     );

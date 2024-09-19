@@ -5,13 +5,16 @@ import 'package:busan_trip/screen/store_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../vo/item.dart';
-import '../vo/store.dart';
+import '../app_http/heart_list_http.dart';
+import '../model/user_model.dart';
+import '../vo/heart_list.dart';
+import '../vo/item.dart' as itemVo;
 
 class ItemDetailScreen extends StatefulWidget {
-  final Item item; // Item 객체를 받도록 수정
+  final itemVo.Item item; // Item 객체를 받도록 수정
 
   const ItemDetailScreen({Key? key, required this.item}) : super(key: key);
 
@@ -22,11 +25,25 @@ class ItemDetailScreen extends StatefulWidget {
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   late Future<void> _loadingFuture;
+  bool isFavorited = false;
 
   @override
   void initState() {
     super.initState();
     _loadingFuture = _simulateLoading();
+    _checkIfFavorited();
+  }
+
+  Future<void> _checkIfFavorited() async {
+    try {
+      int userId = Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx;
+      List<HeartList> heartList = await HeartListHttp.fetchAll(userId);
+      setState(() {
+        isFavorited = heartList.any((item) => item.i_idx == widget.item.i_idx);
+      });
+    } catch (e) {
+      print('Error fetching wishlist: $e');
+    }
   }
 
   Future<void> _simulateLoading() async {
@@ -65,7 +82,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[100],
-                  padding: EdgeInsets.symmetric(vertical: 17,),
+                  padding: EdgeInsets.symmetric(vertical: 17),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -251,6 +268,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 content: widget.item.i_content,
                 manual: widget.item.manual,
                 refund: widget.item.refund,
+                item: widget.item,
+                itemId: widget.item.i_idx,
+                userId: Provider.of<UserModel>(context, listen: false).loggedInUser.u_idx,
+                isFavorited: isFavorited,
               ),
             ],
           ),
@@ -275,6 +296,10 @@ class DetailContent extends StatefulWidget {
   final String content;
   final String manual;
   final String refund;
+  final itemVo.Item item;
+  final int itemId;
+  final int userId;
+  final bool isFavorited;
 
   const DetailContent({
     Key? key,
@@ -292,6 +317,10 @@ class DetailContent extends StatefulWidget {
     required this.content,
     required this.manual,
     required this.refund,
+    required this.item,
+    required this.itemId,
+    required this.userId,
+    required this.isFavorited,
   }) : super(key: key);
 
   @override
@@ -302,10 +331,40 @@ class _DetailContentState extends State<DetailContent> {
   bool isFavorited = false;
   final formatter = NumberFormat('#,###');
 
-  void toggleFavorite() {
-    setState(() {
-      isFavorited = !isFavorited;
-    });
+  @override
+  void initState() {
+    super.initState();
+    isFavorited = widget.isFavorited;
+  }
+
+  void toggleFavorite() async {
+    try {
+      if (isFavorited) {
+        // Fetch the wishlist to find the corresponding wish_idx
+        List<HeartList> heartList = await HeartListHttp.fetchAll(widget.userId);
+        int? wishIdxToDelete;
+
+        // Find the corresponding wish_idx for the item
+        for (var wish in heartList) {
+          if (wish.i_idx == widget.itemId) {
+            wishIdxToDelete = wish.wish_idx; // Assuming HeartList has wish_idx
+            break;
+          }
+        }
+
+        if (wishIdxToDelete != null) {
+          await HeartListHttp.deleteWish(wishIdxToDelete);
+        }
+      } else {
+        await HeartListHttp.addWish(widget.userId, widget.itemId);
+      }
+
+      setState(() {
+        isFavorited = !isFavorited; // Toggle the favorite state
+      });
+    } catch (e) {
+      print('Error toggling favorite: $e');
+    }
   }
 
   @override
@@ -328,7 +387,7 @@ class _DetailContentState extends State<DetailContent> {
                       child: Container(
                         constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 100), // 32는 패딩 등을 고려한 너비
                         child: Text(
-                          '${widget.name}',
+                          widget.name,
                           style: TextStyle(
                             fontFamily: 'NotoSansKR',
                             fontWeight: FontWeight.w600,
@@ -356,6 +415,26 @@ class _DetailContentState extends State<DetailContent> {
                         ],
                       ),
                     )
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.favorite,
+                      size: 22,
+                      color: Colors.red,
+                    ),
+                    Text(
+                      ' ${widget.wishes}명이 찜했습니다',
+                      style: TextStyle(
+                        fontFamily: 'NotoSansKR',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Colors.grey[500]
+                      ),
+                    ),
                   ],
                 ),
                 Padding(
@@ -388,34 +467,11 @@ class _DetailContentState extends State<DetailContent> {
                               color: Colors.grey[400],
                             ),
                           ),
-                          Icon(
-                            Icons.favorite,
-                            size: 22,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: 2),
-                          Text(
-                            '${widget.wishes}',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            ' · ',
-                            style: TextStyle(
-                              fontFamily: 'NotoSansKR',
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: Colors.grey[400],
-                            ),
-                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen()),
+                                MaterialPageRoute(builder:  (context) => ItemReviewListScreen(i_idx: widget.item.i_idx)),
                               );
                             },
                             child: Container(

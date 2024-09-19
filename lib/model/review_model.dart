@@ -8,8 +8,6 @@ class ReviewModel extends ChangeNotifier {
   Review writeReview = Review();
   List<Review> myReviews = [];
 
-
-
   Future<void> setAllReviews({required int start, required int count}) async{
     try {
       List<Review> newReviews = await ReviewHttp.fetchAllReviews(start, count);
@@ -19,13 +17,6 @@ class ReviewModel extends ChangeNotifier {
       // 오류 처리
     }
   }
-
-
-  // Future<void> setAllReviews() async{
-  //   reviews = await ReviewHttp.fetchAllReviews();
-  //
-  //   notifyListeners();
-  // }
 
   Future<void> setMyReviews(int u_idx) async {
     try {

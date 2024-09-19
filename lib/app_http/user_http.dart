@@ -5,6 +5,28 @@ import 'package:http/http.dart' as http;
 class UserHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/user';
 
+  // 회원가입 이메일 존재 여부 검사 (나현 추가)
+  static Future<User?> findUserByEmail(String u_email) async {
+    var uri = Uri.parse('$apiUrl/findbymail').replace(queryParameters: {
+      'u_email': u_email,
+    });
+
+    final response = await http.get(uri);
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode == 200 && response.body.isNotEmpty) {
+      // 응답이 성공일 경우 JSON을 User 객체로 변환
+      final Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+      return User.fromJson(json);
+    } else {
+      // 에러 처리
+      print('사용자를 찾을 수 없습니다: ${response.statusCode}');
+      return null;
+    }
+  }
+
   // 회원탈퇴 수진추가
   static Future<bool> unjoin(int u_idx, String u_pw) async {
     var uri = Uri.parse('$apiUrl/unjoin1').replace(queryParameters: {

@@ -7,12 +7,23 @@ import 'package:http/http.dart' as http;
 
 class StoreModel extends ChangeNotifier {
   List<Store> stores = [];
+  List<Store> recommendstores = [];
   final Map<int, Store> _storeMap = {};
   Map<int, Store> get storeMap => _storeMap;
 
   Store? getStoreById(int s_idx) {
     return _storeMap[s_idx];
   }
+
+
+
+  Future<void> fetchRecommendStores(int u_idx) async {
+    List<Store> recommendStores = await StoreHttp.fetchRecommendStore(u_idx);
+    recommendstores = recommendStores;
+    notifyListeners();
+  }
+
+
 
   Future<void> fetchStoreById(int s_idx) async {
     if (!_storeMap.containsKey(s_idx)) {

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:busan_trip/screen/sign_up2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../model/join_model.dart';
@@ -22,6 +25,8 @@ class _SignUp1State extends State<SignUp1> {
   String? _errorText2;
   bool _isEmailSent = false;
   bool _isCodeEntered = false;
+  bool _isLoading = false;
+  String? _generatedCode;
 
   @override
   void initState() {
@@ -53,25 +58,57 @@ class _SignUp1State extends State<SignUp1> {
     });
   }
 
+  String _generateRandomCode() {
+    final random = Random();
+    final code = List.generate(6, (_) => random.nextInt(10)).join();
+    return code;
+  }
+
   Future<void> _emailCode() async {
+    setState(() {
+      _isLoading = true; // 로딩 상태 시작
+    });
+
     String email = _emailController.text.trim();
     if (email.isEmpty) {
       setState(() {
         _errorText1 = '이메일을 입력해주십시오';
         _isEmailSent = false;
+        _isLoading = false;
       });
     } else if (email.contains(' ')) {
       setState(() {
         _errorText1 = '이메일에 공백을 포함할 수 없습니다.';
         _isEmailSent = false;
+        _isLoading = false;
       });
     } else {
-      setState(() {
-        _isResendButton = true;
-        _isCodeFieldVisible = true;
-        _errorText1 = null;  // 에러 메시지 초기화
-        _isEmailSent = true;  // 이메일 전송 성공
-      });
+      bool isEmailExists = await Provider.of<JoinModel>(context, listen: false).checkEmailExists(email);
+
+      if (isEmailExists) {
+        setState(() {
+          _errorText1 = '가입된 이메일이 있습니다.';
+          _isResendButton = false;
+          _isCodeFieldVisible = false;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isResendButton = true;
+          _isCodeFieldVisible = true;
+          _errorText1 = null;  // 에러 메시지 초기화
+          _isEmailSent = true;  // 이메일 전송 성공
+          _generatedCode = _generateRandomCode();
+          _isLoading = false;
+        });
+        if (_generatedCode != null) {
+          await Clipboard.setData(ClipboardData(text: _generatedCode!));
+          // 클립보드에 인증번호 복사 완료 후, 사용자에게 알림 표시
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('인증번호를 전송하였습니다.')),
+          );
+        }
+      }
     }
   }
 
@@ -101,7 +138,7 @@ class _SignUp1State extends State<SignUp1> {
     }
 
     bool isCodeValid() {
-      return _codeController.text.length == 6;
+      return _codeController.text.length == 6 && _codeController.text == _generatedCode;
     }
 
     return Scaffold(
@@ -173,7 +210,7 @@ class _SignUp1State extends State<SignUp1> {
                   ),
                 ),
                 child: ElevatedButton(
-                  onPressed: _emailCode,
+                  onPressed: _isLoading ? null : _emailCode,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -184,7 +221,16 @@ class _SignUp1State extends State<SignUp1> {
                         ? const BorderSide(color: Color(0xff0e4194), width: 2.0)
                         : BorderSide.none, // Resend Button에 테두리 추가
                   ),
-                  child: Text(
+                  child: _isLoading
+                      ? SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: _isResendButton ? const Color(0xff0e4194) : Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
+                      : Text(
                     _isResendButton ? '인증번호 재전송' : '인증번호 전송',
                     style: TextStyle(
                       fontSize: 16,
@@ -217,6 +263,9 @@ class _SignUp1State extends State<SignUp1> {
                       ),
                     ),
                     errorText: _codeController.text.isEmpty ? null : _errorText2,
+                    suffixIcon: isCodeValid()
+                        ? const Icon(Icons.check_circle, color: Colors.green)
+                        : null,
                   ),
                   cursorColor: const Color(0xff0e4194),
                 ),
@@ -236,14 +285,14 @@ class _SignUp1State extends State<SignUp1> {
             width: double.infinity,
             height: 48,
             child: ElevatedButton(
-              onPressed: _isCodeEntered ? _validateAndNavigate : null,
+              onPressed: isCodeValid() ? _validateAndNavigate : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isCodeEntered
+                backgroundColor: isCodeValid()
                     ? const Color(0xff0e4194)
                     : Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
-                  side: _isCodeEntered
+                  side: isCodeValid()
                       ? BorderSide.none
                       : BorderSide.none,
                 ),

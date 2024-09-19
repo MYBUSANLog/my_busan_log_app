@@ -28,8 +28,8 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     super.initState();
     screens = [
-      NearbyScreen4(),
-      AiChatbotScreen(),
+      RestaurantMap(),
+      AiRecommendScreen(),
       HomeScreen(),
       NotificationScreen(),
       ProfileScreen(), // widget.order를 사용
@@ -74,8 +74,8 @@ class _RootScreenState extends State<RootScreen> {
                   label: '홈',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: '마음함',
+                  icon: Icon(Icons.notifications),
+                  label: '알림',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person),
