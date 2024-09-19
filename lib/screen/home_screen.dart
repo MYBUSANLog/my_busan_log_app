@@ -34,11 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
   var searHistory = [];
   final CarouselController _controller = CarouselController();
   List imgList = [
-    "https://plus.unsplash.com/premium_photo-1661962660197-6c2430fb49a6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1551279076-6887dee32c7e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1552873547-b88e7b2760e2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1561555804-4b9e0848fdbe?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1683041133704-1de1c55d050c?q=80&w=1075&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    'assets/images/haeundae_beach.png',
+    'assets/images/haeundae1.png',
+    'assets/images/haeundae2.png',
+    'assets/images/haeundae3.png',
+    'assets/images/haeundae4.png',
   ];
 
   bool isFavorited = false;
@@ -439,14 +439,52 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  Widget sliderWidget() {
+  // Widget sliderWidget() {
+  //
+  //   return ClipRRect(
+  //     borderRadius: BorderRadius.circular(15), // 전체 슬라이더 모서리를 둥글게
+  //     child: CarouselSlider(
+  //       carouselController: _controller,
+  //       items: imgList.map(
+  //             (imgLink) {
+  //           return Builder(
+  //             builder: (context) {
+  //               return Container(
+  //                 width: MediaQuery.of(context).size.width,
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(15), // 이미지 컨테이너도 둥글게
+  //                 ),
+  //                 child: ClipRRect(
+  //                   child: Image.network(
+  //                     imgLink,
+  //                     fit: BoxFit.cover, // 이미지의 BoxFit 설정
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           );
+  //         },
+  //       ).toList(),
+  //       options: CarouselOptions(
+  //         height: 200,
+  //         viewportFraction: 1.0,
+  //         autoPlay: true,
+  //         autoPlayInterval: const Duration(seconds: 4),
+  //         onPageChanged: (index, reason) {
+  //           setState(() {});
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
+  Widget sliderWidget() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(15), // 전체 슬라이더 모서리를 둥글게
       child: CarouselSlider(
         carouselController: _controller,
         items: imgList.map(
-              (imgLink) {
+              (imgAsset) { // imgLink를 imgAsset으로 변경
             return Builder(
               builder: (context) {
                 return Container(
@@ -455,8 +493,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(15), // 이미지 컨테이너도 둥글게
                   ),
                   child: ClipRRect(
-                    child: Image.network(
-                      imgLink,
+                    borderRadius: BorderRadius.circular(15), // 이미지도 둥글게
+                    child: Image.asset(
+                      imgAsset, // 로컬 이미지 로드
                       fit: BoxFit.cover, // 이미지의 BoxFit 설정
                     ),
                   ),
@@ -477,6 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 
   Widget _buildPopularItems() {
     return Column(
