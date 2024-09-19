@@ -34,8 +34,10 @@ class _RestaurantMapState extends State<RestaurantMap> {
   late NLatLng target;
   late NLatLng? currentPosition;
   final ScrollController _scrollController = ScrollController();
+  final ScrollController sheetScrollController1 = ScrollController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   Completer<NaverMapController> _controller = Completer();
+  List<_buildRestaurantItem> feedCards = [];
 
   static const initialPosition = NCameraPosition(
       target: NLatLng(35.15243682224479, 129.0596301491128),
@@ -93,6 +95,9 @@ class _RestaurantMapState extends State<RestaurantMap> {
     currentPosition = NLatLng(35.17976459985454, 129.07506303273934);
     _permission();
     fetchData();
+    sheetScrollController1.addListener(() {
+      print(sheetScrollController1.offset);
+    });
     _scrollController.addListener(() {
       setState(() {
         _currentSize = _scrollController.hasClients
@@ -393,19 +398,48 @@ class _RestaurantMapState extends State<RestaurantMap> {
                               },
                               child: SingleChildScrollView(
                                 controller: sheetScrollController,
-                                child: Consumer<ResItemModel>(
-                                  builder: (context, resItemModel, child) {
-                                    return Column(
-                                      children: resItemModel.restaurants.map((t) {
-                                        return _buildRestaurantItem(
-                                          t.res_name,
-                                          t.closed_days,
-                                          t.res_address,
-                                          t.res_image,
+                                child: Column(
+                                  children: [
+                                    Consumer<ResItemModel>(
+                                      builder: (context, resItemModel, child) {
+                                        return Column(
+                                          children: resItemModel.restaurants.map((t) {
+                                            return _buildRestaurantItem(
+                                              t.res_name,
+                                              t.closed_days,
+                                              t.res_address,
+                                              t.res_image,
+                                            );
+                                          }).toList(),
                                         );
-                                      }).toList(),
-                                    );
-                                  },
+                                      },
+                                    ),
+                                    SizedBox(height: 10),
+                                    GestureDetector(
+                                      onTap: () {
+
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 16),
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xff0e4194),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            '더보기',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
