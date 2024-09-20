@@ -40,6 +40,9 @@ class _RestaurantMapState extends State<RestaurantMap> {
   Completer<NaverMapController> _controller = Completer();
   int currentPage = 1;
   int itemsPerPage = 10;
+  int start = 0;
+  final count = 20;
+  bool canLoad = true;
 
   static const initialPosition = NCameraPosition(
       target: NLatLng(35.15243682224479, 129.0596301491128),
@@ -84,7 +87,7 @@ class _RestaurantMapState extends State<RestaurantMap> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<ResItemModel>(context,listen: false).fetchRestaurants();
+    Provider.of<ResItemModel>(context,listen: false).setAllRestaurants(start: start, count: count);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -134,21 +137,13 @@ class _RestaurantMapState extends State<RestaurantMap> {
     }
   }
 
-  void loadMoreItems() {
-    int startIndex = (currentPage - 1) * itemsPerPage;
-    int endIndex = min(startIndex + itemsPerPage, places.length);
-
-    if (startIndex >= places.length) {
-      print('No more items to load');
-      return;
+  void loadMoreItems() async {
+    if(canLoad) {
+      canLoad = false;
+      start = start + count;
+      await Provider.of<ResItemModel>(context,listen: false).setAllRestaurants(start: start, count: count);
+      canLoad = true;
     }
-
-    print('Loading items from index $startIndex to $endIndex');
-
-    setState(() {
-      displayedPlaces.addAll(places.sublist(startIndex, endIndex));
-      currentPage++;
-    });
   }
 
 

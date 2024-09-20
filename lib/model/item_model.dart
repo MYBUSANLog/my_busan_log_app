@@ -8,9 +8,9 @@ class ItemModel extends ChangeNotifier {
   List<Item> newItem6 = [];
 
 
-  Future<void> setAllItems({required String sortBy}) async{
+  Future<void> setAllItems({required String sortBy, required int start, required int count}) async{
     try {
-      List<Item> newitems = await ItemHttp.fetchAllSortBy(sortBy);
+      List<Item> newitems = await ItemHttp.fetchAllSortBy(sortBy, start, count);
       items.addAll(newitems);
       notifyListeners();
     } catch (e) {

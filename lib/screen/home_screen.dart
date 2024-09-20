@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../model/item_model.dart';
 import '../model/review_model.dart';
@@ -159,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
           future: _loadingFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return _buildDetailContent();
+              return _buildSkeletonLoader();
             } else {
               return _buildDetailContent();
             }
@@ -181,6 +182,192 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       )
           : null,
+    );
+  }
+
+  Widget _buildSkeletonLoader() {
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery
+              .of(context)
+              .size
+              .height, // 최소 높이를 화면 높이로 설정
+        ),
+        child: IntrinsicHeight(
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.white,
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                SizedBox(height: 80),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        'assets/images/006.png',
+                        width: 120,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SearchScreen()),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.search_outlined,
+                            size: 35,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20,),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    color: Colors.grey[300],
+                    height: 250,
+                    width: double.infinity,
+                  ),
+                ),
+                SizedBox(height: 30,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          color: Colors.grey[300],
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 30,
+                        width: 200,
+                      ),
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 20,
+                        width: 30,
+                      ),
+                    ),
+                  ],
+                ),
+                Divider(color: Colors.grey, thickness: 1.0,),
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 100,
+                        width: MediaQuery.of(context).size.width/4,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 100,
+                        width: MediaQuery.of(context).size.width/4,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        color: Colors.grey[300],
+                        height: 100,
+                        width: MediaQuery.of(context).size.width/4,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15,),
+                SizedBox(height: 15,),
+                SizedBox(height: 15,),
+                SizedBox(height: 15,),
+                SizedBox(height: 10,),
+                Divider(color: Colors.grey, thickness: 1.0,),
+                SizedBox(height: 30,),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 

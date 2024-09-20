@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 class ItemHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/item';
 
-  static Future<List<Item>> fetchAllSortBy(String sortBy) async {
-    var url = await http.get(Uri.parse('${apiUrl}/findItems?sortBy=$sortBy&start=0&count=10'));
+  static Future<List<Item>> fetchAllSortBy(String sortBy, int start, int count) async {
+    var url = await http.get(Uri.parse('${apiUrl}/findItems?sortBy=$sortBy&start=$start&count=$count'));
     var mapList = jsonDecode(utf8.decode(url.bodyBytes));
 
     List<Item> list = [];

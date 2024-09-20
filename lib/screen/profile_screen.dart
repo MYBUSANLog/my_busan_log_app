@@ -1,4 +1,5 @@
 import 'package:busan_trip/model/user_model.dart';
+import 'package:busan_trip/screen/heart_list_screen.dart';
 import 'package:busan_trip/screen/login_opening_screen.dart';
 import 'package:busan_trip/screen/my_review_list_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
@@ -289,6 +290,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder:  (context) => MyReviewListScreen(u_idx: userModel.loggedInUser.u_idx)),
+                          );
+                        },
+                      ),
+                      Divider(color: Colors.grey, thickness: 1.0),
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                        leading: Icon(Icons.favorite, color: Color(0xff0e4194)),
+                        title: Text(
+                          '마음함',
+                          style: TextStyle(
+                            fontFamily: 'NotoSansKR',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder:  (context) => HeartListScreen(userId: userModel.loggedInUser.u_idx)),
                           );
                         },
                       ),
