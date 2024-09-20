@@ -25,6 +25,7 @@ import 'package:daum_postcode_search/daum_postcode_search.dart';
 import 'package:flutter/material.dart';
 import 'package:busan_trip/screen/ai_chatbot_screen.dart';
 import 'package:busan_trip/screen/profile_alter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_user.dart';
@@ -41,14 +42,19 @@ import 'model/order_model.dart';
 
 
 void main() async {
+  await dotenv.load(fileName: ".env");
+  String? naverMapKey = dotenv.env['NaverMapKey'];
+  String? kakaoNativeKey = dotenv.env['KakaoNativeKey'];
+  String? kakaoJavaScriptKey = dotenv.env['KakaoJavaScriptKey'];
+
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp(); //구글로그인 영욱
   await NaverMapSdk.instance.initialize(
-    clientId: 'qzi0n4lbj9',
+    clientId: '$naverMapKey',
   );
   KakaoSdk.init(
-    nativeAppKey: '3cbc4103340e6be3c6247d5228d55534',
-    javaScriptAppKey: 'e09856d7367e723cf282ead8d304029a',
+    nativeAppKey: '$kakaoNativeKey',
+    javaScriptAppKey: '$kakaoJavaScriptKey',
   );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
