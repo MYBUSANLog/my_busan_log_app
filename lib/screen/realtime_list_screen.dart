@@ -27,13 +27,16 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
   bool isLoading = false;
   bool _showScrollToTopButton = false;
   late Future<void> _loadingFuture;
+  int start = 0;
+  final count = 20;
+  bool canLoad = true;
 
   @override
   void initState() {
     super.initState();
     _loadingFuture = _simulateLoading();
     
-    Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD');
+    Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD', start: start, count: count);
     Provider.of<ItemModel>(context, listen: false).clearItems();
     _listScrollController.addListener(_scrollListener);
     _loadMoreItems();
@@ -58,24 +61,11 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
   }
 
   Future<void> _loadMoreItems() async {
-    if (isLoading) return;
-
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      await Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD');
-
-      setState(() {
-        currentPage++;
-      });
-    } catch (e) {
-      // 오류 처리
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+    if(canLoad) {
+      canLoad = false;
+      start = start + count;
+      await Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD', start: start, count: count);
+      canLoad = true;
     }
   }
 
@@ -103,7 +93,7 @@ class _RealtimeListScreenState extends State<RealtimeListScreen> {
     await Future.delayed(Duration(seconds: 1)); // 예시로 1초 딜레이
     // 데이터 갱신 로직 추가
     setState(() {
-      Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD');
+      Provider.of<ItemModel>(context, listen: false).setAllItems(sortBy: 'popularityD', start: start, count: count);
       Provider.of<ItemModel>(context, listen: false).clearItems();
     });
   }

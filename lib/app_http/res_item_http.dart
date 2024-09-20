@@ -8,7 +8,7 @@ class ResItemHttp {
   static const String apiUrl = 'http://13.125.57.206:8080/my_busan_log/api/res';
 
   static Future<List<ResItem>> fetchAllRestaurants(int start, int count) async {
-    var url = await http.get(Uri.parse('${apiUrl}/findPage?start=$start&count=$count'));
+    var url = await http.get(Uri.parse('${apiUrl}/findpage?start=$start&count=$count'));
     var mapList = jsonDecode(utf8.decode(url.bodyBytes));
 
     List<ResItem> list = [];
