@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="qzi0n4lbj9" />
+            android:value="${NAVER_MAP_KEY}" />
 
         <activity
             android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity"
@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="kakao3cbc4103340e6be3c6247d5228d55534" android:host="oauth"/>
+                <data android:scheme="kakao${KAKAO_NATIVE_KEY}" android:host="oauth"/>
             </intent-filter>
         </activity>
 

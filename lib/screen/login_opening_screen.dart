@@ -4,6 +4,7 @@ import 'package:busan_trip/screen/root_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart' as kko;
@@ -43,8 +44,8 @@ class _LoginOpeningScreenState extends State<LoginOpeningScreen> {
   @override
   void initState() {
     super.initState();
-
-    kko.KakaoSdk.init(nativeAppKey: '3cbc4103340e6be3c6247d5228d55534'); // 네이티브 앱 키 설정
+    String? kakaoNativeKey = dotenv.env['KakaoNativeKey'];
+    kko.KakaoSdk.init(nativeAppKey: '$kakaoNativeKey'); // 네이티브 앱 키 설정
 
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
       setState(() {
