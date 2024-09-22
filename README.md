@@ -10,7 +10,7 @@ Flutter를 활용하여 "빅데이터 활용 상품 AI 추천 WEB/APP 서비스"
   
 ## :two_men_holding_hands: 팀원 소개
   
-• 김나현(팀장): Flutter 화면 구현 및 api 연동  
+• 김나현(팀장): Flutter 화면 구현 및 api 연동 / 앱 UI 디자인  
 • 신영욱(팀원): React 화면 구현 및 api 연동  
 • 안율현(팀원): 데이터 베이스 ERD 관리  
 • 이수진(팀원): AWS 서버 관리  
