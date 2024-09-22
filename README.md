@@ -21,7 +21,7 @@ Flutter를 활용하여 "빅데이터 활용 상품 AI 추천 WEB/APP 서비스"
 
 ## :wrench: 개발 환경
 
-• Dart
+• Dart \n
 • Firebase Storage
 • MariaDB
 • AWS LightSail
